@@ -7,7 +7,10 @@
   --text: #1f2328;
   --muted: #656d76;
   --accent: #0969da;
+  --accent-hover: #0860ca;
   --accent-soft: #ddf4ff;
+  --success-soft: #dafbe1;
+  --success: #1a7f37;
   --danger-soft: #fff1e5;
   --danger: #9a6700;
 }
@@ -45,8 +48,13 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   background: #f3f4f6;
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
 }
 
 button:focus-visible,
@@ -54,6 +62,18 @@ input:focus-visible,
 a:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+.primary-button {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 650;
+}
+
+.primary-button:hover:not(:disabled) {
+  border-color: var(--accent-hover);
+  background: var(--accent-hover);
 }
 
 .icon-button {
@@ -116,14 +136,30 @@ a:focus-visible {
   font-weight: 650;
 }
 
-.dirty-badge {
+.dirty-badge,
+.github-badge {
   padding: 3px 7px;
   border-radius: 999px;
-  background: var(--danger-soft);
-  color: var(--danger);
   font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
+}
+
+.dirty-badge {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.github-badge {
+  background: #f6f8fa;
+  color: var(--muted);
+  border: 1px solid var(--border-soft);
+}
+
+.github-badge.connected {
+  background: var(--success-soft);
+  color: var(--success);
+  border-color: #aceebb;
 }
 
 .actions {
@@ -327,7 +363,7 @@ body.sidebar-collapsed .sidebar {
   top: 12px;
   right: 12px;
   z-index: 5;
-  max-width: min(460px, calc(100% - 96px));
+  max-width: min(500px, calc(100% - 96px));
   padding: 8px 10px;
   border: 1px solid var(--border-soft);
   border-radius: 8px;
@@ -341,11 +377,15 @@ body.sidebar-collapsed .sidebar {
   color: var(--text);
 }
 
-.model-path {
+.model-path,
+.save-info {
   margin-top: 2px;
   color: var(--muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 10px;
+}
+
+.model-path {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 #canvas {
@@ -359,7 +399,7 @@ body.sidebar-collapsed .sidebar {
   left: 14px;
   bottom: 14px;
   z-index: 6;
-  max-width: min(620px, calc(100% - 28px));
+  max-width: min(680px, calc(100% - 28px));
   padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: 7px;
@@ -375,8 +415,95 @@ body.sidebar-collapsed .sidebar {
   box-shadow: 0 2px 12px rgba(31, 35, 40, .12);
 }
 
+.github-dialog {
+  width: min(560px, calc(100% - 32px));
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 18px 60px rgba(31, 35, 40, .22);
+}
+
+.github-dialog::backdrop {
+  background: rgba(31, 35, 40, .4);
+}
+
+.github-form {
+  padding: 18px;
+}
+
+.dialog-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dialog-heading h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.dialog-heading p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.token-field {
+  display: grid;
+  gap: 6px;
+  margin-top: 18px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.token-field input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.security-note {
+  margin-top: 10px;
+  padding: 9px 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  background: #f6f8fa;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.dialog-actions {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dialog-actions a {
+  color: var(--accent);
+  font-size: 12px;
+  text-decoration: none;
+}
+
 .sidebar-backdrop {
   display: none;
+}
+
+@media (max-width: 1100px) {
+  .github-badge {
+    display: none;
+  }
 }
 
 @media (max-width: 900px) {
@@ -385,7 +512,7 @@ body.sidebar-collapsed .sidebar {
   }
 
   #model-name {
-    max-width: 38vw;
+    max-width: 34vw;
   }
 
   .actions button:not(.icon-button) {
@@ -437,7 +564,7 @@ body.sidebar-collapsed .sidebar {
   }
 
   #model-name {
-    max-width: 42vw;
+    max-width: 34vw;
     font-size: 14px;
   }
 
@@ -451,6 +578,7 @@ body.sidebar-collapsed .sidebar {
 
   .actions #copy-link,
   .actions #fit,
+  .actions #github-connect,
   .toolbar-separator {
     display: none;
   }
@@ -462,5 +590,14 @@ body.sidebar-collapsed .sidebar {
 
   .workspace-meta {
     display: none;
+  }
+
+  .dialog-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dialog-actions .primary-button {
+    width: 100%;
   }
 }
