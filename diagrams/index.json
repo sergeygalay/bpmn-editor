@@ -13,6 +13,20 @@
       "group": "Продажи",
       "description": "Процесс возврата ранее купленного товара",
       "path": "diagrams/return.bpmn"
+    },
+    {
+      "id": "bio-antimotivation-as-is",
+      "name": "Антимотивация БИО — AS IS",
+      "group": "БИО",
+      "description": "Текущий процесс: длительная неактивность пользователя не изменяет баллы и уровень",
+      "path": "diagrams/bio-antimotivation-as-is.bpmn"
+    },
+    {
+      "id": "bio-antimotivation-to-be",
+      "name": "Антимотивация БИО — TO BE",
+      "group": "БИО",
+      "description": "Целевой процесс: контроль полезной активности, учет отпусков и больничных, прогрессивное списание баллов и состояние Равнодушный",
+      "path": "diagrams/bio-antimotivation-to-be.bpmn"
     }
   ]
 }
