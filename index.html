@@ -14,8 +14,16 @@
   <header class="toolbar">
     <div class="brand">
       <strong>BPMN 2.0 Editor</strong>
-      <span id="model-name">Покупка в магазине</span>
+      <span id="model-name">Загрузка…</span>
     </div>
+
+    <div class="diagram-picker">
+      <label for="diagram-select">Диаграмма</label>
+      <select id="diagram-select" disabled aria-label="Выбор BPMN-диаграммы">
+        <option>Загрузка списка…</option>
+      </select>
+    </div>
+
     <div class="actions">
       <button id="reload" type="button">Обновить из GitHub</button>
       <button id="undo" type="button" title="Отменить">↶</button>
