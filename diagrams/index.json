@@ -18,15 +18,29 @@
       "id": "bio-antimotivation-as-is",
       "name": "Антимотивация БИО — AS IS",
       "group": "БИО",
-      "description": "Текущий процесс: длительная неактивность пользователя не изменяет баллы и уровень",
+      "description": "Текущий процесс: баллы начисляются только после модерации, а длительная неактивность не изменяет накопленные баллы и статус",
       "path": "diagrams/bio-antimotivation-as-is.bpmn"
     },
     {
-      "id": "bio-antimotivation-to-be",
-      "name": "Антимотивация БИО — TO BE",
+      "id": "bio-antimotivation-to-be-a",
+      "name": "Антимотивация БИО — TO BE A: сгорание баллов",
       "group": "БИО",
-      "description": "Целевой процесс: контроль полезной активности, учет отпусков и больничных, прогрессивное списание баллов и состояние Равнодушный",
-      "path": "diagrams/bio-antimotivation-to-be.bpmn"
+      "description": "Вариант A: снижение баллов при длительной неактивности начиная с уровня Энтузиаст с учетом отпусков и больничных из АСУП",
+      "path": "diagrams/bio-antimotivation-to-be-a.bpmn"
+    },
+    {
+      "id": "bio-antimotivation-to-be-b",
+      "name": "Антимотивация БИО — TO BE B: ограниченный Топ",
+      "group": "БИО",
+      "description": "Вариант B: баллы не сгорают, высокий статус определяется попаданием пользователя в ограниченный Топ-N рейтинга",
+      "path": "diagrams/bio-antimotivation-to-be-b.bpmn"
+    },
+    {
+      "id": "bio-antimotivation-to-be-c",
+      "name": "Антимотивация БИО — TO BE C: сезоны",
+      "group": "БИО",
+      "description": "Вариант C: сезонный рейтинг с фиксацией итогов, сохранением исторических достижений и запуском нового рейтингового цикла",
+      "path": "diagrams/bio-antimotivation-to-be-c.bpmn"
     },
     {
       "id": "incident-investigation-as-is",
