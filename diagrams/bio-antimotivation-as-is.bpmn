@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_BIO_Antimotivation_ASIS" targetNamespace="https://sergeygalay.github.io/bpmn-editor/bio-antimotivation-as-is">
+  <bpmn:collaboration id="Collaboration_BIO_ASIS">
+    <bpmn:participant id="Participant_User_ASIS" name="Пользователь" />
+    <bpmn:participant id="Participant_BIO_ASIS" name="БИО" processRef="Process_BIO_ASIS" />
+    <bpmn:messageFlow id="MessageFlow_UserActivity_ASIS" name="Полезная активность" sourceRef="Participant_User_ASIS" targetRef="CatchEvent_UsefulActivity_ASIS" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_BIO_ASIS" name="Учет прогресса пользователя — AS IS" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_BIO_ASIS">
+      <bpmn:lane id="Lane_Progress_ASIS" name="Учет прогресса">
+        <bpmn:flowNodeRef>StartEvent_State_ASIS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Wait_ASIS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>CatchEvent_UsefulActivity_ASIS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>CatchEvent_Inactivity_ASIS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AwardPoints_ASIS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_RecalculateLevel_ASIS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_KeepProgress_ASIS</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_State_ASIS" name="Прогресс пользователя зафиксирован"><bpmn:outgoing>Flow_ASIS_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:eventBasedGateway id="Gateway_Wait_ASIS" name="Ожидание события">
+      <bpmn:incoming>Flow_ASIS_1</bpmn:incoming><bpmn:incoming>Flow_ASIS_4</bpmn:incoming><bpmn:incoming>Flow_ASIS_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_ASIS_2</bpmn:outgoing><bpmn:outgoing>Flow_ASIS_5</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="CatchEvent_UsefulActivity_ASIS" name="Получена полезная активность">
+      <bpmn:incoming>Flow_ASIS_2</bpmn:incoming><bpmn:outgoing>Flow_ASIS_3</bpmn:outgoing><bpmn:messageEventDefinition id="MessageEventDefinition_Activity_ASIS" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="Task_AwardPoints_ASIS" name="Начислить баллы по действующим правилам"><bpmn:incoming>Flow_ASIS_3</bpmn:incoming><bpmn:outgoing>Flow_ASIS_3A</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_RecalculateLevel_ASIS" name="Пересчитать уровень"><bpmn:incoming>Flow_ASIS_3A</bpmn:incoming><bpmn:outgoing>Flow_ASIS_4</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:intermediateCatchEvent id="CatchEvent_Inactivity_ASIS" name="Наступила длительная неактивность">
+      <bpmn:incoming>Flow_ASIS_5</bpmn:incoming><bpmn:outgoing>Flow_ASIS_5A</bpmn:outgoing><bpmn:timerEventDefinition id="TimerEventDefinition_Inactivity_ASIS" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="Task_KeepProgress_ASIS" name="Сохранить баллы и уровень без изменений"><bpmn:incoming>Flow_ASIS_5A</bpmn:incoming><bpmn:outgoing>Flow_ASIS_6</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_ASIS_1" sourceRef="StartEvent_State_ASIS" targetRef="Gateway_Wait_ASIS" />
+    <bpmn:sequenceFlow id="Flow_ASIS_2" sourceRef="Gateway_Wait_ASIS" targetRef="CatchEvent_UsefulActivity_ASIS" />
+    <bpmn:sequenceFlow id="Flow_ASIS_3" sourceRef="CatchEvent_UsefulActivity_ASIS" targetRef="Task_AwardPoints_ASIS" />
+    <bpmn:sequenceFlow id="Flow_ASIS_3A" sourceRef="Task_AwardPoints_ASIS" targetRef="Task_RecalculateLevel_ASIS" />
+    <bpmn:sequenceFlow id="Flow_ASIS_4" sourceRef="Task_RecalculateLevel_ASIS" targetRef="Gateway_Wait_ASIS" />
+    <bpmn:sequenceFlow id="Flow_ASIS_5" sourceRef="Gateway_Wait_ASIS" targetRef="CatchEvent_Inactivity_ASIS" />
+    <bpmn:sequenceFlow id="Flow_ASIS_5A" sourceRef="CatchEvent_Inactivity_ASIS" targetRef="Task_KeepProgress_ASIS" />
+    <bpmn:sequenceFlow id="Flow_ASIS_6" sourceRef="Task_KeepProgress_ASIS" targetRef="Gateway_Wait_ASIS" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_BIO_ASIS">
+    <bpmndi:BPMNPlane id="BPMNPlane_BIO_ASIS" bpmnElement="Collaboration_BIO_ASIS">
+      <bpmndi:BPMNShape id="Participant_User_ASIS_di" bpmnElement="Participant_User_ASIS" isHorizontal="true"><dc:Bounds x="50" y="40" width="1450" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_BIO_ASIS_di" bpmnElement="Participant_BIO_ASIS" isHorizontal="true"><dc:Bounds x="50" y="150" width="1450" height="330" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Progress_ASIS_di" bpmnElement="Lane_Progress_ASIS" isHorizontal="true"><dc:Bounds x="80" y="150" width="1420" height="330" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_State_ASIS_di" bpmnElement="StartEvent_State_ASIS"><dc:Bounds x="125" y="292" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="95" y="335" width="100" height="42" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Wait_ASIS_di" bpmnElement="Gateway_Wait_ASIS" isMarkerVisible="true"><dc:Bounds x="230" y="285" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="205" y="342" width="100" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CatchEvent_UsefulActivity_ASIS_di" bpmnElement="CatchEvent_UsefulActivity_ASIS"><dc:Bounds x="370" y="207" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="335" y="250" width="110" height="42" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AwardPoints_ASIS_di" bpmnElement="Task_AwardPoints_ASIS"><dc:Bounds x="485" y="185" width="165" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_RecalculateLevel_ASIS_di" bpmnElement="Task_RecalculateLevel_ASIS"><dc:Bounds x="725" y="185" width="145" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CatchEvent_Inactivity_ASIS_di" bpmnElement="CatchEvent_Inactivity_ASIS"><dc:Bounds x="370" y="377" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="332" y="420" width="115" height="42" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_KeepProgress_ASIS_di" bpmnElement="Task_KeepProgress_ASIS"><dc:Bounds x="485" y="355" width="185" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_ASIS_1_di" bpmnElement="Flow_ASIS_1"><di:waypoint x="161" y="310" /><di:waypoint x="230" y="310" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ASIS_2_di" bpmnElement="Flow_ASIS_2"><di:waypoint x="255" y="285" /><di:waypoint x="255" y="225" /><di:waypoint x="370" y="225" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ASIS_3_di" bpmnElement="Flow_ASIS_3"><di:waypoint x="406" y="225" /><di:waypoint x="485" y="225" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ASIS_3A_di" bpmnElement="Flow_ASIS_3A"><di:waypoint x="650" y="225" /><di:waypoint x="725" y="225" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ASIS_4_di" bpmnElement="Flow_ASIS_4"><di:waypoint x="797" y="265" /><di:waypoint x="797" y="310" /><di:waypoint x="280" y="310" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ASIS_5_di" bpmnElement="Flow_ASIS_5"><di:waypoint x="255" y="335" /><di:waypoint x="255" y="395" /><di:waypoint x="370" y="395" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ASIS_5A_di" bpmnElement="Flow_ASIS_5A"><di:waypoint x="406" y="395" /><di:waypoint x="485" y="395" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ASIS_6_di" bpmnElement="Flow_ASIS_6"><di:waypoint x="577" y="355" /><di:waypoint x="577" y="330" /><di:waypoint x="280" y="330" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_UserActivity_ASIS_di" bpmnElement="MessageFlow_UserActivity_ASIS"><di:waypoint x="388" y="120" /><di:waypoint x="388" y="207" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
