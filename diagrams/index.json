@@ -3,11 +3,15 @@
     {
       "id": "shop",
       "name": "Покупка в магазине",
+      "group": "Продажи",
+      "description": "Выбор товара, касса, оплата и проверка на выходе",
       "path": "diagrams/shop.bpmn"
     },
     {
       "id": "return",
       "name": "Возврат товара",
+      "group": "Продажи",
+      "description": "Процесс возврата ранее купленного товара",
       "path": "diagrams/return.bpmn"
     }
   ]
