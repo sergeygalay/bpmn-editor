@@ -18,14 +18,16 @@
         <strong>BPMN 2.0 Editor</strong>
         <div class="model-heading">
           <span id="model-name">Загрузка…</span>
-          <span id="dirty-badge" class="dirty-badge" hidden>Изменено локально</span>
+          <span id="dirty-badge" class="dirty-badge" hidden>Не сохранено</span>
+          <span id="saved-badge" class="saved-badge" hidden>Сохранено локально</span>
         </div>
       </div>
     </div>
 
     <div class="actions">
+      <button id="save" class="primary-button" type="button" title="Сохранить изменения в этом браузере (Ctrl/Cmd+S)">Сохранить</button>
       <button id="copy-link" type="button" title="Скопировать прямую ссылку на текущую диаграмму">Ссылка</button>
-      <button id="reload" type="button" title="Загрузить последнюю версию из GitHub">Обновить</button>
+      <button id="reload" type="button" title="Удалить локальную версию и загрузить последнюю версию из GitHub">Из GitHub</button>
       <span class="toolbar-separator" aria-hidden="true"></span>
       <button id="undo" class="icon-button" type="button" title="Отменить">↶</button>
       <button id="redo" class="icon-button" type="button" title="Повторить">↷</button>
@@ -68,6 +70,7 @@
         <div>
           <div id="model-description" class="model-description"></div>
           <div id="model-path" class="model-path"></div>
+          <div id="save-info" class="save-info"></div>
         </div>
       </div>
       <div id="canvas"></div>
