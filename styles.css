@@ -43,6 +43,30 @@ body {
   white-space: nowrap;
 }
 
+.diagram-picker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 240px;
+}
+
+.diagram-picker label {
+  font-size: 13px;
+  color: #59636e;
+}
+
+.diagram-picker select {
+  min-height: 36px;
+  min-width: 190px;
+  max-width: 320px;
+  padding: 0 32px 0 10px;
+  border: 1px solid #c7ced6;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #1f2328;
+  font: inherit;
+}
+
 .actions {
   display: flex;
   gap: 6px;
@@ -101,11 +125,28 @@ main {
   box-shadow: 0 2px 12px rgba(31, 35, 40, 0.12);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .toolbar {
     align-items: flex-start;
+    flex-wrap: wrap;
   }
 
+  .brand {
+    flex: 1 1 280px;
+  }
+
+  .diagram-picker {
+    order: 3;
+    flex: 1 1 100%;
+  }
+
+  .diagram-picker select {
+    flex: 1;
+    max-width: none;
+  }
+}
+
+@media (max-width: 720px) {
   .brand {
     flex-direction: column;
     gap: 2px;
