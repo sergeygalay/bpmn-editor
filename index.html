@@ -12,32 +12,68 @@
 </head>
 <body>
   <header class="toolbar">
-    <div class="brand">
-      <strong>BPMN 2.0 Editor</strong>
-      <span id="model-name">Загрузка…</span>
-    </div>
-
-    <div class="diagram-picker">
-      <label for="diagram-select">Диаграмма</label>
-      <select id="diagram-select" disabled aria-label="Выбор BPMN-диаграммы">
-        <option>Загрузка списка…</option>
-      </select>
+    <div class="toolbar-left">
+      <button id="sidebar-toggle" class="icon-button" type="button" title="Показать или скрыть список диаграмм" aria-label="Показать или скрыть список диаграмм">☰</button>
+      <div class="brand">
+        <strong>BPMN 2.0 Editor</strong>
+        <div class="model-heading">
+          <span id="model-name">Загрузка…</span>
+          <span id="dirty-badge" class="dirty-badge" hidden>Изменено локально</span>
+        </div>
+      </div>
     </div>
 
     <div class="actions">
-      <button id="reload" type="button">Обновить из GitHub</button>
-      <button id="undo" type="button" title="Отменить">↶</button>
-      <button id="redo" type="button" title="Повторить">↷</button>
+      <button id="copy-link" type="button" title="Скопировать прямую ссылку на текущую диаграмму">Ссылка</button>
+      <button id="reload" type="button" title="Загрузить последнюю версию из GitHub">Обновить</button>
+      <span class="toolbar-separator" aria-hidden="true"></span>
+      <button id="undo" class="icon-button" type="button" title="Отменить">↶</button>
+      <button id="redo" class="icon-button" type="button" title="Повторить">↷</button>
       <button id="fit" type="button">Вписать</button>
-      <button id="zoom-out" type="button">−</button>
-      <button id="zoom-in" type="button">+</button>
+      <button id="zoom-out" class="icon-button" type="button" title="Уменьшить масштаб">−</button>
+      <button id="zoom-in" class="icon-button" type="button" title="Увеличить масштаб">+</button>
     </div>
   </header>
 
-  <main>
-    <div id="canvas"></div>
-    <div id="status" class="status">Загрузка BPMN…</div>
-  </main>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar" aria-label="Каталог BPMN-диаграмм">
+      <div class="sidebar-header">
+        <div>
+          <h2>Диаграммы</h2>
+          <span id="diagram-count" class="sidebar-count">0</span>
+        </div>
+        <button id="sidebar-close" class="icon-button sidebar-close" type="button" aria-label="Закрыть список диаграмм">×</button>
+      </div>
+
+      <label class="search-box" for="diagram-search">
+        <span aria-hidden="true">⌕</span>
+        <input id="diagram-search" type="search" placeholder="Поиск диаграмм…" autocomplete="off">
+        <kbd>⌘K</kbd>
+      </label>
+
+      <nav id="diagram-list" class="diagram-list" aria-label="Список диаграмм">
+        <div class="catalog-loading">Загрузка каталога…</div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span>Источник: GitHub</span>
+        <a href="https://github.com/sergeygalay/bpmn-editor/tree/main/diagrams" target="_blank" rel="noreferrer">Открыть каталог</a>
+      </div>
+    </aside>
+
+    <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
+
+    <main class="workspace">
+      <div class="workspace-meta">
+        <div>
+          <div id="model-description" class="model-description"></div>
+          <div id="model-path" class="model-path"></div>
+        </div>
+      </div>
+      <div id="canvas"></div>
+      <div id="status" class="status" aria-live="polite">Загрузка BPMN…</div>
+    </main>
+  </div>
 
   <script src="https://unpkg.com/bpmn-js@18.24.0/dist/bpmn-modeler.development.js"></script>
   <script src="app.js"></script>
