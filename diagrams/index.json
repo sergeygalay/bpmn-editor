@@ -1,0 +1,14 @@
+{
+  "diagrams": [
+    {
+      "id": "shop",
+      "name": "Покупка в магазине",
+      "path": "diagrams/shop.bpmn"
+    },
+    {
+      "id": "return",
+      "name": "Возврат товара",
+      "path": "diagrams/return.bpmn"
+    }
+  ]
+}
