@@ -6,7 +6,6 @@
   <title>BPMN 2.0 Editor</title>
 
   <link rel="stylesheet" href="https://unpkg.com/bpmn-js@18.24.0/dist/assets/diagram-js.css">
-  <link rel="stylesheet" href="https://unpkg.com/bpmn-js@18.24.0/dist/assets/bpmn-js.css">
   <link rel="stylesheet" href="https://unpkg.com/bpmn-js@18.24.0/dist/assets/bpmn-font/css/bpmn.css">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -19,15 +18,16 @@
         <div class="model-heading">
           <span id="model-name">Загрузка…</span>
           <span id="dirty-badge" class="dirty-badge" hidden>Не сохранено</span>
-          <span id="saved-badge" class="saved-badge" hidden>Сохранено локально</span>
+          <span id="github-badge" class="github-badge">GitHub не подключён</span>
         </div>
       </div>
     </div>
 
     <div class="actions">
-      <button id="save" class="primary-button" type="button" title="Сохранить изменения в этом браузере (Ctrl/Cmd+S)">Сохранить</button>
+      <button id="github-connect" type="button" title="Подключить GitHub для сохранения">Подключить GitHub</button>
+      <button id="save" class="primary-button" type="button" title="Сохранить BPMN в репозиторий (Ctrl/Cmd+S)" disabled>Сохранить</button>
       <button id="copy-link" type="button" title="Скопировать прямую ссылку на текущую диаграмму">Ссылка</button>
-      <button id="reload" type="button" title="Удалить локальную версию и загрузить последнюю версию из GitHub">Из GitHub</button>
+      <button id="reload" type="button" title="Загрузить последнюю версию из GitHub">Обновить</button>
       <span class="toolbar-separator" aria-hidden="true"></span>
       <button id="undo" class="icon-button" type="button" title="Отменить">↶</button>
       <button id="redo" class="icon-button" type="button" title="Повторить">↷</button>
@@ -70,13 +70,37 @@
         <div>
           <div id="model-description" class="model-description"></div>
           <div id="model-path" class="model-path"></div>
-          <div id="save-info" class="save-info"></div>
+          <div id="save-info" class="save-info">Изменения сохраняются коммитом в GitHub.</div>
         </div>
       </div>
       <div id="canvas"></div>
       <div id="status" class="status" aria-live="polite">Загрузка BPMN…</div>
     </main>
   </div>
+
+  <dialog id="github-dialog" class="github-dialog">
+    <form id="github-form" class="github-form">
+      <div class="dialog-heading">
+        <div>
+          <h2>Подключить GitHub</h2>
+          <p>Введите fine-grained token с доступом только к <strong>sergeygalay/bpmn-editor</strong> и правом <strong>Contents: Read and write</strong>.</p>
+        </div>
+        <button id="github-dialog-close" class="icon-button" type="button" aria-label="Закрыть">×</button>
+      </div>
+
+      <label class="token-field">
+        <span>GitHub token</span>
+        <input id="github-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…" required>
+      </label>
+
+      <div class="security-note">Токен не сохраняется в localStorage, cookies или репозитории. Он существует только в памяти этой вкладки.</div>
+
+      <div class="dialog-actions">
+        <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">Создать fine-grained token</a>
+        <button id="github-submit" class="primary-button" type="submit">Подключить</button>
+      </div>
+    </form>
+  </dialog>
 
   <script src="https://unpkg.com/bpmn-js@18.24.0/dist/bpmn-modeler.development.js"></script>
   <script src="app.js"></script>
