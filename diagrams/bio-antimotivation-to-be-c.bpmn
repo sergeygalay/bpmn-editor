@@ -1,197 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
- xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
- xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
- xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
- id="Definitions_BIO_TOBE_MVP"
- targetNamespace="https://sergeygalay.github.io/bpmn-editor/bio-antimotivation-to-be-c">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_BIO_TOBE_MVP" targetNamespace="https://sergeygalay.github.io/bpmn-editor/bio-antimotivation-to-be-c">
   <bpmn:collaboration id="Collaboration_BIO_TOBE_MVP">
-    <bpmn:participant id="Participant_BIO_TOBE_MVP" name="БИО — MVP: сезонная модель и общий Топ" processRef="Process_BIO_TOBE_MVP"/>
+    <bpmn:participant id="Participant_BIO_TOBE_MVP" name="БИО — MVP: сезонная модель и общий Топ" processRef="Process_BIO_TOBE_MVP" />
   </bpmn:collaboration>
-
   <bpmn:process id="Process_BIO_TOBE_MVP" name="TO-BE MVP — сезонная геймификация с единым корпоративным рейтингом" isExecutable="false">
     <bpmn:laneSet id="LaneSet_TOBE_MVP">
       <bpmn:lane id="Lane_User_TOBE_MVP" name="Пользователь">
-        <bpmn:flowNodeRef>Start_Danger_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_Register_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_UserDetails_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_ViewSeasonPosition_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_Activity_TOBE</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_ViewSeasonResult_TOBE</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_NewSeason_TOBE</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_Admin_TOBE_MVP" name="Администратор / модератор">
-        <bpmn:flowNodeRef>Task_InitialModeration_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_Confirmed_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_MarkRejected_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_MarkConfirmed_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Catch_Eliminated_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_FinalModeration_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_SetFlags_TOBE</bpmn:flowNodeRef>
-      </bpmn:lane>
       <bpmn:lane id="Lane_System_TOBE_MVP" name="Система БИО / сезонная геймификация">
-        <bpmn:flowNodeRef>Task_NotifyRejected_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_Rejected_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_CalcPoints_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_AwardPoints_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_AddSeasonPoints_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_RecalcStatus_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_RecalcCompanyTop_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_NotifyPosition_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Start_SeasonEnd_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_FixTop_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_SaveAchievement_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_ArchiveSeason_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_ResetSeason_TOBE</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_StartNewSeason_TOBE</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_NotifySeason_TOBE</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_StartNewSeason_TOBE</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ResetSeason_TOBE</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ArchiveSeason_TOBE</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SaveAchievement_TOBE</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FixTop_TOBE</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start_SeasonEnd_TOBE</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-
-    <bpmn:startEvent id="Start_Danger_TOBE" name="Опасность выявлена"/>
-    <bpmn:userTask id="Task_Register_TOBE" name="Зарегистрировать опасность и заполнить заявку"/>
-    <bpmn:userTask id="Task_UserDetails_TOBE" name="Указать сведения об участии / рекомендации (если есть)"/>
-
-    <bpmn:userTask id="Task_InitialModeration_TOBE" name="Проверить заявку и достоверность опасности"/>
-    <bpmn:exclusiveGateway id="Gateway_Confirmed_TOBE" name="Опасность подтверждена?"/>
-    <bpmn:userTask id="Task_MarkRejected_TOBE" name="Проставить признак «Опасность отклонена»"/>
-    <bpmn:sendTask id="Task_NotifyRejected_TOBE" name="Уведомить пользователя об отклонении"/>
-    <bpmn:endEvent id="End_Rejected_TOBE" name="Заявка закрыта без баллов"/>
-
-    <bpmn:userTask id="Task_MarkConfirmed_TOBE" name="Проставить признак «Опасность подтверждена»"/>
-    <bpmn:intermediateCatchEvent id="Catch_Eliminated_TOBE" name="Получен факт устранения опасности">
-      <bpmn:messageEventDefinition id="MessageDef_Eliminated_TOBE"/>
-    </bpmn:intermediateCatchEvent>
-    <bpmn:userTask id="Task_FinalModeration_TOBE" name="Проверить карточку после устранения"/>
-    <bpmn:userTask id="Task_SetFlags_TOBE" name="Проставить / скорректировать признаки: устранено; участие; рекомендация; рекомендация применена; доп. баллы">
-      <bpmn:documentation>Администратор вручную подтверждает или снимает признаки, указанные пользователем, и может добавить подтвержденные признаки, даже если пользователь их не указал.</bpmn:documentation>
-    </bpmn:userTask>
-
-    <bpmn:serviceTask id="Task_CalcPoints_TOBE" name="Рассчитать баллы: базовые + подтвержденные дополнительные">
-      <bpmn:documentation>Дополнительные баллы за подтвержденное участие в устранении и подтвержденные рекомендации суммируются. Числовые значения задаются отдельными правилами и в BPMN не фиксируются.</bpmn:documentation>
-    </bpmn:serviceTask>
-    <bpmn:serviceTask id="Task_AwardPoints_TOBE" name="Начислить баллы после устранения опасности"/>
-    <bpmn:serviceTask id="Task_AddSeasonPoints_TOBE" name="Добавить начисленные баллы в результат текущего сезона"/>
-    <bpmn:serviceTask id="Task_RecalcStatus_TOBE" name="Пересчитать игровой статус по текущему сезонному результату"/>
-    <bpmn:serviceTask id="Task_RecalcCompanyTop_TOBE" name="Пересчитать единый корпоративный Топ сезона (без деления по БЕ)">
-      <bpmn:documentation>Для MVP используется единый рейтинг пользователей компании. Дробление рейтинга по балансовым единицам (БЕ) не применяется.</bpmn:documentation>
-    </bpmn:serviceTask>
-    <bpmn:sendTask id="Task_NotifyPosition_TOBE" name="Показать баллы, статус и позицию в общем Топе"/>
-    <bpmn:userTask id="Task_ViewSeasonPosition_TOBE" name="Ознакомиться с текущим сезонным результатом"/>
-    <bpmn:endEvent id="End_Activity_TOBE" name="Сезонный прогресс обновлен"/>
-
+    <bpmn:sequenceFlow id="F_TOBE_26" sourceRef="Task_NotifySeason_TOBE" targetRef="Task_ViewSeasonResult_TOBE" />
+    <bpmn:sequenceFlow id="F_TOBE_27" sourceRef="Task_ViewSeasonResult_TOBE" targetRef="End_NewSeason_TOBE" />
+    <bpmn:sendTask id="Task_NotifySeason_TOBE" name="Показать итоги прошлого сезона и старт нового" />
+    <bpmn:serviceTask id="Task_StartNewSeason_TOBE" name="Создать новый сезон и пустой общий Топ" />
+    <bpmn:serviceTask id="Task_ResetSeason_TOBE" name="Обнулить сезонные баллы и сезонный рейтинг" />
+    <bpmn:serviceTask id="Task_ArchiveSeason_TOBE" name="Сохранить историю завершенного сезона" />
+    <bpmn:serviceTask id="Task_SaveAchievement_TOBE" name="Сохранить итог / цифровое достижение пользователя" />
+    <bpmn:serviceTask id="Task_FixTop_TOBE" name="Зафиксировать итоговый единый Топ пользователей сезона" />
     <bpmn:startEvent id="Start_SeasonEnd_TOBE" name="Наступило завершение сезона">
-      <bpmn:timerEventDefinition id="Timer_SeasonEnd_TOBE"/>
+      <bpmn:timerEventDefinition id="Timer_SeasonEnd_TOBE" />
     </bpmn:startEvent>
-    <bpmn:serviceTask id="Task_FixTop_TOBE" name="Зафиксировать итоговый единый Топ пользователей сезона"/>
-    <bpmn:serviceTask id="Task_SaveAchievement_TOBE" name="Сохранить итог / цифровое достижение пользователя"/>
-    <bpmn:serviceTask id="Task_ArchiveSeason_TOBE" name="Сохранить историю завершенного сезона"/>
-    <bpmn:serviceTask id="Task_ResetSeason_TOBE" name="Обнулить сезонные баллы и сезонный рейтинг"/>
-    <bpmn:serviceTask id="Task_StartNewSeason_TOBE" name="Создать новый сезон и пустой общий Топ"/>
-    <bpmn:sendTask id="Task_NotifySeason_TOBE" name="Показать итоги прошлого сезона и старт нового"/>
-    <bpmn:userTask id="Task_ViewSeasonResult_TOBE" name="Ознакомиться с итогом сезона и сохраненным достижением"/>
-    <bpmn:endEvent id="End_NewSeason_TOBE" name="Новый сезон начат"/>
-
-    <bpmn:sequenceFlow id="F_TOBE_1" sourceRef="Start_Danger_TOBE" targetRef="Task_Register_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_2" sourceRef="Task_Register_TOBE" targetRef="Task_UserDetails_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_3" sourceRef="Task_UserDetails_TOBE" targetRef="Task_InitialModeration_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_4" sourceRef="Task_InitialModeration_TOBE" targetRef="Gateway_Confirmed_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_5N" name="Нет" sourceRef="Gateway_Confirmed_TOBE" targetRef="Task_MarkRejected_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_6N" sourceRef="Task_MarkRejected_TOBE" targetRef="Task_NotifyRejected_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_7N" sourceRef="Task_NotifyRejected_TOBE" targetRef="End_Rejected_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_5Y" name="Да" sourceRef="Gateway_Confirmed_TOBE" targetRef="Task_MarkConfirmed_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_6Y" sourceRef="Task_MarkConfirmed_TOBE" targetRef="Catch_Eliminated_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_7Y" sourceRef="Catch_Eliminated_TOBE" targetRef="Task_FinalModeration_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_8Y" sourceRef="Task_FinalModeration_TOBE" targetRef="Task_SetFlags_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_9Y" sourceRef="Task_SetFlags_TOBE" targetRef="Task_CalcPoints_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_10Y" sourceRef="Task_CalcPoints_TOBE" targetRef="Task_AwardPoints_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_11Y" sourceRef="Task_AwardPoints_TOBE" targetRef="Task_AddSeasonPoints_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_12Y" sourceRef="Task_AddSeasonPoints_TOBE" targetRef="Task_RecalcStatus_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_13Y" sourceRef="Task_RecalcStatus_TOBE" targetRef="Task_RecalcCompanyTop_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_14Y" sourceRef="Task_RecalcCompanyTop_TOBE" targetRef="Task_NotifyPosition_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_15Y" sourceRef="Task_NotifyPosition_TOBE" targetRef="Task_ViewSeasonPosition_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_16Y" sourceRef="Task_ViewSeasonPosition_TOBE" targetRef="End_Activity_TOBE"/>
-
-    <bpmn:sequenceFlow id="F_TOBE_20" sourceRef="Start_SeasonEnd_TOBE" targetRef="Task_FixTop_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_21" sourceRef="Task_FixTop_TOBE" targetRef="Task_SaveAchievement_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_22" sourceRef="Task_SaveAchievement_TOBE" targetRef="Task_ArchiveSeason_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_23" sourceRef="Task_ArchiveSeason_TOBE" targetRef="Task_ResetSeason_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_24" sourceRef="Task_ResetSeason_TOBE" targetRef="Task_StartNewSeason_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_25" sourceRef="Task_StartNewSeason_TOBE" targetRef="Task_NotifySeason_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_26" sourceRef="Task_NotifySeason_TOBE" targetRef="Task_ViewSeasonResult_TOBE"/>
-    <bpmn:sequenceFlow id="F_TOBE_27" sourceRef="Task_ViewSeasonResult_TOBE" targetRef="End_NewSeason_TOBE"/>
+    <bpmn:sequenceFlow id="F_TOBE_25" sourceRef="Task_StartNewSeason_TOBE" targetRef="Task_NotifySeason_TOBE" />
+    <bpmn:sequenceFlow id="F_TOBE_24" sourceRef="Task_ResetSeason_TOBE" targetRef="Task_StartNewSeason_TOBE" />
+    <bpmn:sequenceFlow id="F_TOBE_23" sourceRef="Task_ArchiveSeason_TOBE" targetRef="Task_ResetSeason_TOBE" />
+    <bpmn:sequenceFlow id="F_TOBE_22" sourceRef="Task_SaveAchievement_TOBE" targetRef="Task_ArchiveSeason_TOBE" />
+    <bpmn:sequenceFlow id="F_TOBE_21" sourceRef="Task_FixTop_TOBE" targetRef="Task_SaveAchievement_TOBE" />
+    <bpmn:sequenceFlow id="F_TOBE_20" sourceRef="Start_SeasonEnd_TOBE" targetRef="Task_FixTop_TOBE" />
+    <bpmn:userTask id="Task_ViewSeasonResult_TOBE" name="Ознакомиться с итогом сезона и сохраненным достижением" />
+    <bpmn:endEvent id="End_NewSeason_TOBE" name="Новый сезон начат" />
   </bpmn:process>
-
   <bpmndi:BPMNDiagram id="Diagram_TOBE_MVP">
     <bpmndi:BPMNPlane id="Plane_TOBE_MVP" bpmnElement="Collaboration_BIO_TOBE_MVP">
-      <bpmndi:BPMNShape id="Participant_BIO_TOBE_MVP_di" bpmnElement="Participant_BIO_TOBE_MVP" isHorizontal="true"><dc:Bounds x="40" y="30" width="3160" height="750"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_User_TOBE_MVP_di" bpmnElement="Lane_User_TOBE_MVP" isHorizontal="true"><dc:Bounds x="70" y="30" width="3130" height="190"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_Admin_TOBE_MVP_di" bpmnElement="Lane_Admin_TOBE_MVP" isHorizontal="true"><dc:Bounds x="70" y="220" width="3130" height="250"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_System_TOBE_MVP_di" bpmnElement="Lane_System_TOBE_MVP" isHorizontal="true"><dc:Bounds x="70" y="470" width="3130" height="310"/></bpmndi:BPMNShape>
-
-      <bpmndi:BPMNShape id="Start_Danger_TOBE_di" bpmnElement="Start_Danger_TOBE"><dc:Bounds x="120" y="105" width="36" height="36"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_Register_TOBE_di" bpmnElement="Task_Register_TOBE"><dc:Bounds x="210" y="80" width="180" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_UserDetails_TOBE_di" bpmnElement="Task_UserDetails_TOBE"><dc:Bounds x="450" y="80" width="230" height="80"/></bpmndi:BPMNShape>
-
-      <bpmndi:BPMNShape id="Task_InitialModeration_TOBE_di" bpmnElement="Task_InitialModeration_TOBE"><dc:Bounds x="750" y="270" width="190" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_Confirmed_TOBE_di" bpmnElement="Gateway_Confirmed_TOBE" isMarkerVisible="true"><dc:Bounds x="1010" y="285" width="50" height="50"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_MarkRejected_TOBE_di" bpmnElement="Task_MarkRejected_TOBE"><dc:Bounds x="1135" y="235" width="185" height="70"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_MarkConfirmed_TOBE_di" bpmnElement="Task_MarkConfirmed_TOBE"><dc:Bounds x="1135" y="350" width="195" height="70"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Catch_Eliminated_TOBE_di" bpmnElement="Catch_Eliminated_TOBE"><dc:Bounds x="1405" y="367" width="36" height="36"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_FinalModeration_TOBE_di" bpmnElement="Task_FinalModeration_TOBE"><dc:Bounds x="1515" y="345" width="190" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_SetFlags_TOBE_di" bpmnElement="Task_SetFlags_TOBE"><dc:Bounds x="1775" y="330" width="280" height="110"/></bpmndi:BPMNShape>
-
-      <bpmndi:BPMNShape id="Task_NotifyRejected_TOBE_di" bpmnElement="Task_NotifyRejected_TOBE"><dc:Bounds x="1390" y="500" width="180" height="70"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_Rejected_TOBE_di" bpmnElement="End_Rejected_TOBE"><dc:Bounds x="1640" y="517" width="36" height="36"/></bpmndi:BPMNShape>
-
-      <bpmndi:BPMNShape id="Task_CalcPoints_TOBE_di" bpmnElement="Task_CalcPoints_TOBE"><dc:Bounds x="2115" y="495" width="210" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_AwardPoints_TOBE_di" bpmnElement="Task_AwardPoints_TOBE"><dc:Bounds x="2385" y="495" width="190" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_AddSeasonPoints_TOBE_di" bpmnElement="Task_AddSeasonPoints_TOBE"><dc:Bounds x="2635" y="495" width="210" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_RecalcStatus_TOBE_di" bpmnElement="Task_RecalcStatus_TOBE"><dc:Bounds x="2905" y="495" width="220" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_RecalcCompanyTop_TOBE_di" bpmnElement="Task_RecalcCompanyTop_TOBE"><dc:Bounds x="2635" y="605" width="250" height="90"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_NotifyPosition_TOBE_di" bpmnElement="Task_NotifyPosition_TOBE"><dc:Bounds x="2950" y="610" width="175" height="80"/></bpmndi:BPMNShape>
-
-      <bpmndi:BPMNShape id="Task_ViewSeasonPosition_TOBE_di" bpmnElement="Task_ViewSeasonPosition_TOBE"><dc:Bounds x="2635" y="110" width="230" height="70"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_Activity_TOBE_di" bpmnElement="End_Activity_TOBE"><dc:Bounds x="2950" y="127" width="36" height="36"/></bpmndi:BPMNShape>
-
-      <bpmndi:BPMNShape id="Start_SeasonEnd_TOBE_di" bpmnElement="Start_SeasonEnd_TOBE"><dc:Bounds x="120" y="690" width="36" height="36"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_FixTop_TOBE_di" bpmnElement="Task_FixTop_TOBE"><dc:Bounds x="210" y="665" width="210" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_SaveAchievement_TOBE_di" bpmnElement="Task_SaveAchievement_TOBE"><dc:Bounds x="480" y="665" width="220" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_ArchiveSeason_TOBE_di" bpmnElement="Task_ArchiveSeason_TOBE"><dc:Bounds x="760" y="665" width="190" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_ResetSeason_TOBE_di" bpmnElement="Task_ResetSeason_TOBE"><dc:Bounds x="1010" y="665" width="210" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_StartNewSeason_TOBE_di" bpmnElement="Task_StartNewSeason_TOBE"><dc:Bounds x="1280" y="665" width="210" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_NotifySeason_TOBE_di" bpmnElement="Task_NotifySeason_TOBE"><dc:Bounds x="1550" y="665" width="210" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_ViewSeasonResult_TOBE_di" bpmnElement="Task_ViewSeasonResult_TOBE"><dc:Bounds x="1830" y="110" width="240" height="70"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_NewSeason_TOBE_di" bpmnElement="End_NewSeason_TOBE"><dc:Bounds x="2140" y="127" width="36" height="36"/></bpmndi:BPMNShape>
-
-      <bpmndi:BPMNEdge id="F_TOBE_1_di" bpmnElement="F_TOBE_1"><di:waypoint x="156" y="123"/><di:waypoint x="210" y="120"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_2_di" bpmnElement="F_TOBE_2"><di:waypoint x="390" y="120"/><di:waypoint x="450" y="120"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_3_di" bpmnElement="F_TOBE_3"><di:waypoint x="680" y="120"/><di:waypoint x="715" y="120"/><di:waypoint x="715" y="310"/><di:waypoint x="750" y="310"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_4_di" bpmnElement="F_TOBE_4"><di:waypoint x="940" y="310"/><di:waypoint x="1010" y="310"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_5N_di" bpmnElement="F_TOBE_5N"><di:waypoint x="1035" y="285"/><di:waypoint x="1035" y="270"/><di:waypoint x="1135" y="270"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_6N_di" bpmnElement="F_TOBE_6N"><di:waypoint x="1320" y="270"/><di:waypoint x="1355" y="270"/><di:waypoint x="1355" y="535"/><di:waypoint x="1390" y="535"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_7N_di" bpmnElement="F_TOBE_7N"><di:waypoint x="1570" y="535"/><di:waypoint x="1640" y="535"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_5Y_di" bpmnElement="F_TOBE_5Y"><di:waypoint x="1035" y="335"/><di:waypoint x="1035" y="385"/><di:waypoint x="1135" y="385"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_6Y_di" bpmnElement="F_TOBE_6Y"><di:waypoint x="1330" y="385"/><di:waypoint x="1405" y="385"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_7Y_di" bpmnElement="F_TOBE_7Y"><di:waypoint x="1441" y="385"/><di:waypoint x="1515" y="385"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_8Y_di" bpmnElement="F_TOBE_8Y"><di:waypoint x="1705" y="385"/><di:waypoint x="1775" y="385"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_9Y_di" bpmnElement="F_TOBE_9Y"><di:waypoint x="2055" y="385"/><di:waypoint x="2085" y="385"/><di:waypoint x="2085" y="535"/><di:waypoint x="2115" y="535"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_10Y_di" bpmnElement="F_TOBE_10Y"><di:waypoint x="2325" y="535"/><di:waypoint x="2385" y="535"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_11Y_di" bpmnElement="F_TOBE_11Y"><di:waypoint x="2575" y="535"/><di:waypoint x="2635" y="535"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_12Y_di" bpmnElement="F_TOBE_12Y"><di:waypoint x="2845" y="535"/><di:waypoint x="2905" y="535"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_13Y_di" bpmnElement="F_TOBE_13Y"><di:waypoint x="3015" y="575"/><di:waypoint x="3015" y="650"/><di:waypoint x="2885" y="650"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_14Y_di" bpmnElement="F_TOBE_14Y"><di:waypoint x="2885" y="650"/><di:waypoint x="2950" y="650"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_15Y_di" bpmnElement="F_TOBE_15Y"><di:waypoint x="3038" y="610"/><di:waypoint x="3038" y="205"/><di:waypoint x="2750" y="205"/><di:waypoint x="2750" y="180"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_16Y_di" bpmnElement="F_TOBE_16Y"><di:waypoint x="2865" y="145"/><di:waypoint x="2950" y="145"/></bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="F_TOBE_20_di" bpmnElement="F_TOBE_20"><di:waypoint x="156" y="708"/><di:waypoint x="210" y="705"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_21_di" bpmnElement="F_TOBE_21"><di:waypoint x="420" y="705"/><di:waypoint x="480" y="705"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_22_di" bpmnElement="F_TOBE_22"><di:waypoint x="700" y="705"/><di:waypoint x="760" y="705"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_23_di" bpmnElement="F_TOBE_23"><di:waypoint x="950" y="705"/><di:waypoint x="1010" y="705"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_24_di" bpmnElement="F_TOBE_24"><di:waypoint x="1220" y="705"/><di:waypoint x="1280" y="705"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_25_di" bpmnElement="F_TOBE_25"><di:waypoint x="1490" y="705"/><di:waypoint x="1550" y="705"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_26_di" bpmnElement="F_TOBE_26"><di:waypoint x="1655" y="665"/><di:waypoint x="1655" y="145"/><di:waypoint x="1830" y="145"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F_TOBE_27_di" bpmnElement="F_TOBE_27"><di:waypoint x="2070" y="145"/><di:waypoint x="2140" y="145"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_BIO_TOBE_MVP_di" bpmnElement="Participant_BIO_TOBE_MVP" isHorizontal="true">
+        <dc:Bounds x="40" y="150" width="2156" height="380" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_System_TOBE_MVP_di" bpmnElement="Lane_System_TOBE_MVP" isHorizontal="true">
+        <dc:Bounds x="70" y="345" width="2126" height="185" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_User_TOBE_MVP_di" bpmnElement="Lane_User_TOBE_MVP" isHorizontal="true">
+        <dc:Bounds x="70" y="150" width="2126" height="195" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_NotifySeason_TOBE_di" bpmnElement="Task_NotifySeason_TOBE">
+        <dc:Bounds x="1550" y="400" width="210" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_StartNewSeason_TOBE_di" bpmnElement="Task_StartNewSeason_TOBE">
+        <dc:Bounds x="1280" y="400" width="210" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ResetSeason_TOBE_di" bpmnElement="Task_ResetSeason_TOBE">
+        <dc:Bounds x="1010" y="400" width="210" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ArchiveSeason_TOBE_di" bpmnElement="Task_ArchiveSeason_TOBE">
+        <dc:Bounds x="760" y="400" width="190" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SaveAchievement_TOBE_di" bpmnElement="Task_SaveAchievement_TOBE">
+        <dc:Bounds x="480" y="400" width="220" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_FixTop_TOBE_di" bpmnElement="Task_FixTop_TOBE">
+        <dc:Bounds x="210" y="400" width="210" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_SeasonEnd_TOBE_di" bpmnElement="Start_SeasonEnd_TOBE">
+        <dc:Bounds x="120" y="425" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="107" y="461" width="63" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ViewSeasonResult_TOBE_di" bpmnElement="Task_ViewSeasonResult_TOBE">
+        <dc:Bounds x="1830" y="205" width="240" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_NewSeason_TOBE_di" bpmnElement="End_NewSeason_TOBE">
+        <dc:Bounds x="2140" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2125" y="258" width="66" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F_TOBE_26_di" bpmnElement="F_TOBE_26">
+        <di:waypoint x="1655" y="400" />
+        <di:waypoint x="1655" y="240" />
+        <di:waypoint x="1830" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TOBE_27_di" bpmnElement="F_TOBE_27">
+        <di:waypoint x="2070" y="240" />
+        <di:waypoint x="2140" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TOBE_25_di" bpmnElement="F_TOBE_25">
+        <di:waypoint x="1490" y="440" />
+        <di:waypoint x="1550" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TOBE_24_di" bpmnElement="F_TOBE_24">
+        <di:waypoint x="1220" y="440" />
+        <di:waypoint x="1280" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TOBE_23_di" bpmnElement="F_TOBE_23">
+        <di:waypoint x="950" y="440" />
+        <di:waypoint x="1010" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TOBE_22_di" bpmnElement="F_TOBE_22">
+        <di:waypoint x="700" y="440" />
+        <di:waypoint x="760" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TOBE_21_di" bpmnElement="F_TOBE_21">
+        <di:waypoint x="420" y="440" />
+        <di:waypoint x="480" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TOBE_20_di" bpmnElement="F_TOBE_20">
+        <di:waypoint x="156" y="443" />
+        <di:waypoint x="210" y="440" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
