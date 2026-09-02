@@ -29,20 +29,6 @@
       "path": "diagrams/bio-antimotivation-to-be-c.bpmn"
     },
     {
-      "id": "bio-antimotivation-to-be-a",
-      "name": "Антимотивация БИО — альтернатива A: сгорание баллов",
-      "group": "БИО — дальнейшее развитие",
-      "description": "Альтернативная концепция после MVP: снижение баллов при длительной неактивности. Не является приоритетом первого этапа",
-      "path": "diagrams/bio-antimotivation-to-be-a.bpmn"
-    },
-    {
-      "id": "bio-antimotivation-to-be-b",
-      "name": "Антимотивация БИО — альтернатива B: ограниченный Топ",
-      "group": "БИО — дальнейшее развитие",
-      "description": "Альтернативная концепция после MVP: ограничение количества мест для высокого статуса. Не является приоритетом первого этапа",
-      "path": "diagrams/bio-antimotivation-to-be-b.bpmn"
-    },
-    {
       "id": "incident-investigation-as-is",
       "name": "Расследование происшествий — AS IS",
       "group": "Промышленная безопасность",
