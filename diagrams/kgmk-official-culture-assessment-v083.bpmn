@@ -1,10 +1,334 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_kgmk-official-culture-assessment-v083" targetNamespace="https://sergeygalay.github.io/bpmn-editor/kgmk-official-culture-assessment-v083">
-<bpmn:collaboration id="Collab_kgmk-official-culture-assessment-v083"><bpmn:participant id="Part_kgmk-official-culture-assessment-v083" name="Публикация официального годового замера культуры 0.8.3" processRef="Proc_kgmk-official-culture-assessment-v083"/></bpmn:collaboration>
-<bpmn:process id="Proc_kgmk-official-culture-assessment-v083" name="Публикация официального годового замера культуры 0.8.3" isExecutable="false"><bpmn:laneSet id="LaneSet_kgmk-official-culture-assessment-v083"><bpmn:lane id="L_Corp" name="Корпоративный ПБиОТ"><bpmn:flowNodeRef>S</bpmn:flowNodeRef><bpmn:flowNodeRef>Prepare</bpmn:flowNodeRef><bpmn:flowNodeRef>Confirm</bpmn:flowNodeRef><bpmn:flowNodeRef>Cancel</bpmn:flowNodeRef></bpmn:lane><bpmn:lane id="L_System" name="Программа «Культура безопасности»"><bpmn:flowNodeRef>Parse</bpmn:flowNodeRef><bpmn:flowNodeRef>Parsed</bpmn:flowNodeRef><bpmn:flowNodeRef>ParseError</bpmn:flowNodeRef><bpmn:flowNodeRef>Coverage</bpmn:flowNodeRef><bpmn:flowNodeRef>CoverageGate</bpmn:flowNodeRef><bpmn:flowNodeRef>CoverageError</bpmn:flowNodeRef><bpmn:flowNodeRef>YearCheck</bpmn:flowNodeRef><bpmn:flowNodeRef>YearGate</bpmn:flowNodeRef><bpmn:flowNodeRef>YearError</bpmn:flowNodeRef><bpmn:flowNodeRef>SameCheck</bpmn:flowNodeRef><bpmn:flowNodeRef>SameGate</bpmn:flowNodeRef><bpmn:flowNodeRef>ConfirmMerge</bpmn:flowNodeRef><bpmn:flowNodeRef>ConfirmGate</bpmn:flowNodeRef><bpmn:flowNodeRef>Fix</bpmn:flowNodeRef><bpmn:flowNodeRef>PreviousGate</bpmn:flowNodeRef><bpmn:flowNodeRef>Archive</bpmn:flowNodeRef><bpmn:flowNodeRef>ArchiveMerge</bpmn:flowNodeRef><bpmn:flowNodeRef>E</bpmn:flowNodeRef></bpmn:lane></bpmn:laneSet>
-<bpmn:startEvent id="S" name="Получены результаты годового замера"/><bpmn:userTask id="Prepare" name="Указать год и загрузить данные по всем БЕ"/><bpmn:serviceTask id="Parse" name="Разобрать и сопоставить данные"/><bpmn:exclusiveGateway id="Parsed" name="Данные разобраны?"/><bpmn:endEvent id="ParseError" name="Замер не зафиксирован: ошибка данных"/><bpmn:businessRuleTask id="Coverage" name="Проверить полноту и известность БЕ"/><bpmn:exclusiveGateway id="CoverageGate" name="Состав БЕ корректен?"/><bpmn:endEvent id="CoverageError" name="Замер не зафиксирован: состав БЕ некорректен"/><bpmn:businessRuleTask id="YearCheck" name="Проверить допустимость года"/><bpmn:exclusiveGateway id="YearGate" name="Год допустим?"/><bpmn:endEvent id="YearError" name="Замер не зафиксирован: год недопустим"/><bpmn:serviceTask id="SameCheck" name="Проверить наличие замера за этот год"/><bpmn:exclusiveGateway id="SameGate" name="Замер этого года уже существует?"/><bpmn:exclusiveGateway id="ConfirmMerge" name="Переход к фиксации замера"/><bpmn:userTask id="Confirm" name="Подтвердить перезапись замера за этот год"/><bpmn:exclusiveGateway id="ConfirmGate" name="Перезапись подтверждена?"/><bpmn:endEvent id="Cancel" name="Замер не изменён"/><bpmn:serviceTask id="Fix" name="Зафиксировать официальный замер и уровни БЕ"/><bpmn:exclusiveGateway id="PreviousGate" name="Есть предыдущий замер другого года?"/><bpmn:serviceTask id="Archive" name="Перенести предыдущий замер в архив"/><bpmn:exclusiveGateway id="ArchiveMerge" name="Завершить публикацию"/><bpmn:endEvent id="E" name="Официальные уровни БЕ доступны магазину"/>
-<bpmn:sequenceFlow id="F1" sourceRef="S" targetRef="Prepare"/><bpmn:sequenceFlow id="F2" sourceRef="Prepare" targetRef="Parse"/><bpmn:sequenceFlow id="F3" sourceRef="Parse" targetRef="Parsed"/><bpmn:sequenceFlow id="F4" sourceRef="Parsed" targetRef="Coverage" name="Да"/><bpmn:sequenceFlow id="F5" sourceRef="Parsed" targetRef="ParseError" name="Нет"/><bpmn:sequenceFlow id="F6" sourceRef="Coverage" targetRef="CoverageGate"/><bpmn:sequenceFlow id="F7" sourceRef="CoverageGate" targetRef="YearCheck" name="Да"/><bpmn:sequenceFlow id="F8" sourceRef="CoverageGate" targetRef="CoverageError" name="Нет"/><bpmn:sequenceFlow id="F9" sourceRef="YearCheck" targetRef="YearGate"/><bpmn:sequenceFlow id="F10" sourceRef="YearGate" targetRef="SameCheck" name="Да"/><bpmn:sequenceFlow id="F11" sourceRef="YearGate" targetRef="YearError" name="Нет"/><bpmn:sequenceFlow id="F12" sourceRef="SameCheck" targetRef="SameGate"/><bpmn:sequenceFlow id="F13" sourceRef="SameGate" targetRef="ConfirmMerge" name="Нет"/><bpmn:sequenceFlow id="F14" sourceRef="SameGate" targetRef="Confirm" name="Да"/><bpmn:sequenceFlow id="F15" sourceRef="Confirm" targetRef="ConfirmGate"/><bpmn:sequenceFlow id="F16" sourceRef="ConfirmGate" targetRef="ConfirmMerge" name="Да"/><bpmn:sequenceFlow id="F17" sourceRef="ConfirmGate" targetRef="Cancel" name="Нет"/><bpmn:sequenceFlow id="F18" sourceRef="ConfirmMerge" targetRef="Fix"/><bpmn:sequenceFlow id="F19" sourceRef="Fix" targetRef="PreviousGate"/><bpmn:sequenceFlow id="F20" sourceRef="PreviousGate" targetRef="Archive" name="Да"/><bpmn:sequenceFlow id="F21" sourceRef="PreviousGate" targetRef="ArchiveMerge" name="Нет"/><bpmn:sequenceFlow id="F22" sourceRef="Archive" targetRef="ArchiveMerge"/><bpmn:sequenceFlow id="F23" sourceRef="ArchiveMerge" targetRef="E"/>
-<bpmn:textAnnotation id="AnnO"><bpmn:text>Кто именно организационно выполняет роль «Корпоративный ПБиОТ», прототип не определяет. В BRD роль описана как функциональная и оставлена для подтверждения заказчиком.</bpmn:text></bpmn:textAnnotation><bpmn:association id="AssocO" sourceRef="Prepare" targetRef="AnnO"/></bpmn:process>
-<bpmndi:BPMNDiagram id="Diagram_kgmk-official-culture-assessment-v083"><bpmndi:BPMNPlane id="Plane_kgmk-official-culture-assessment-v083" bpmnElement="Collab_kgmk-official-culture-assessment-v083"><bpmndi:BPMNShape id="Part_di" bpmnElement="Part_kgmk-official-culture-assessment-v083" isHorizontal="true"><dc:Bounds x="30" y="40" width="3720" height="400"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="L_Corp_di" bpmnElement="L_Corp" isHorizontal="true"><dc:Bounds x="60" y="40" width="3600" height="200"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="L_System_di" bpmnElement="L_System" isHorizontal="true"><dc:Bounds x="60" y="240" width="3600" height="200"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="S_di" bpmnElement="S"><dc:Bounds x="100" y="110" width="50" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Prepare_di" bpmnElement="Prepare"><dc:Bounds x="200" y="90" width="250" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Parse_di" bpmnElement="Parse"><dc:Bounds x="500" y="290" width="230" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Parsed_di" bpmnElement="Parsed" isMarkerVisible="true"><dc:Bounds x="780" y="305" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="ParseError_di" bpmnElement="ParseError"><dc:Bounds x="840" y="235" width="50" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Coverage_di" bpmnElement="Coverage"><dc:Bounds x="910" y="290" width="250" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="CoverageGate_di" bpmnElement="CoverageGate" isMarkerVisible="true"><dc:Bounds x="1210" y="305" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="CoverageError_di" bpmnElement="CoverageError"><dc:Bounds x="1210" y="235" width="50" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="YearCheck_di" bpmnElement="YearCheck"><dc:Bounds x="1340" y="290" width="230" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="YearGate_di" bpmnElement="YearGate" isMarkerVisible="true"><dc:Bounds x="1620" y="305" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="YearError_di" bpmnElement="YearError"><dc:Bounds x="1620" y="235" width="50" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="SameCheck_di" bpmnElement="SameCheck"><dc:Bounds x="1750" y="290" width="250" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="SameGate_di" bpmnElement="SameGate" isMarkerVisible="true"><dc:Bounds x="2050" y="305" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="ConfirmMerge_di" bpmnElement="ConfirmMerge" isMarkerVisible="true"><dc:Bounds x="2450" y="305" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Confirm_di" bpmnElement="Confirm"><dc:Bounds x="2180" y="90" width="260" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="ConfirmGate_di" bpmnElement="ConfirmGate" isMarkerVisible="true"><dc:Bounds x="2180" y="305" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Cancel_di" bpmnElement="Cancel"><dc:Bounds x="2480" y="112" width="50" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Fix_di" bpmnElement="Fix"><dc:Bounds x="2570" y="290" width="280" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="PreviousGate_di" bpmnElement="PreviousGate" isMarkerVisible="true"><dc:Bounds x="2900" y="305" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Archive_di" bpmnElement="Archive"><dc:Bounds x="3020" y="290" width="250" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="ArchiveMerge_di" bpmnElement="ArchiveMerge" isMarkerVisible="true"><dc:Bounds x="3330" y="305" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="E_di" bpmnElement="E"><dc:Bounds x="3460" y="312" width="50" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="AnnO_di" bpmnElement="AnnO"><dc:Bounds x="190" y="410" width="480" height="90"/></bpmndi:BPMNShape>
-<bpmndi:BPMNEdge id="F1_di" bpmnElement="F1"><di:waypoint x="150" y="128"/><di:waypoint x="200" y="130"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F2_di" bpmnElement="F2"><di:waypoint x="450" y="130"/><di:waypoint x="475" y="130"/><di:waypoint x="475" y="330"/><di:waypoint x="500" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F3_di" bpmnElement="F3"><di:waypoint x="730" y="330"/><di:waypoint x="780" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F4_di" bpmnElement="F4"><di:waypoint x="830" y="330"/><di:waypoint x="910" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F5_di" bpmnElement="F5"><di:waypoint x="830" y="330"/><di:waypoint x="835" y="330"/><di:waypoint x="835" y="253"/><di:waypoint x="840" y="253"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F6_di" bpmnElement="F6"><di:waypoint x="1160" y="330"/><di:waypoint x="1210" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F7_di" bpmnElement="F7"><di:waypoint x="1260" y="330"/><di:waypoint x="1340" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F8_di" bpmnElement="F8"><di:waypoint x="1260" y="330"/><di:waypoint x="1295" y="330"/><di:waypoint x="1295" y="400"/><di:waypoint x="1175" y="400"/><di:waypoint x="1175" y="253"/><di:waypoint x="1210" y="253"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F9_di" bpmnElement="F9"><di:waypoint x="1570" y="330"/><di:waypoint x="1620" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F10_di" bpmnElement="F10"><di:waypoint x="1670" y="330"/><di:waypoint x="1750" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F11_di" bpmnElement="F11"><di:waypoint x="1670" y="330"/><di:waypoint x="1705" y="330"/><di:waypoint x="1705" y="400"/><di:waypoint x="1585" y="400"/><di:waypoint x="1585" y="253"/><di:waypoint x="1620" y="253"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F12_di" bpmnElement="F12"><di:waypoint x="2000" y="330"/><di:waypoint x="2050" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F13_di" bpmnElement="F13"><di:waypoint x="2100" y="330"/><di:waypoint x="2450" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F14_di" bpmnElement="F14"><di:waypoint x="2100" y="330"/><di:waypoint x="2140" y="330"/><di:waypoint x="2140" y="130"/><di:waypoint x="2180" y="130"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F15_di" bpmnElement="F15"><di:waypoint x="2440" y="130"/><di:waypoint x="2475" y="130"/><di:waypoint x="2475" y="400"/><di:waypoint x="2145" y="400"/><di:waypoint x="2145" y="330"/><di:waypoint x="2180" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F16_di" bpmnElement="F16"><di:waypoint x="2230" y="330"/><di:waypoint x="2450" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F17_di" bpmnElement="F17"><di:waypoint x="2230" y="330"/><di:waypoint x="2355" y="330"/><di:waypoint x="2355" y="130"/><di:waypoint x="2480" y="130"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F18_di" bpmnElement="F18"><di:waypoint x="2500" y="330"/><di:waypoint x="2570" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F19_di" bpmnElement="F19"><di:waypoint x="2850" y="330"/><di:waypoint x="2900" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F20_di" bpmnElement="F20"><di:waypoint x="2950" y="330"/><di:waypoint x="3020" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F21_di" bpmnElement="F21"><di:waypoint x="2950" y="330"/><di:waypoint x="3330" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F22_di" bpmnElement="F22"><di:waypoint x="3270" y="330"/><di:waypoint x="3330" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="F23_di" bpmnElement="F23"><di:waypoint x="3380" y="330"/><di:waypoint x="3460" y="330"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="AssocO_di" bpmnElement="AssocO"><di:waypoint x="450" y="130"/><di:waypoint x="485" y="130"/><di:waypoint x="485" y="535"/><di:waypoint x="155" y="535"/><di:waypoint x="155" y="455"/><di:waypoint x="190" y="455"/></bpmndi:BPMNEdge></bpmndi:BPMNPlane></bpmndi:BPMNDiagram></bpmn:definitions>
+  <bpmn:collaboration id="Collab_kgmk-official-culture-assessment-v083">
+    <bpmn:participant id="Part_kgmk-official-culture-assessment-v083" name="Публикация официального годового замера культуры 0.8.3" processRef="Proc_kgmk-official-culture-assessment-v083" />
+    <bpmn:textAnnotation id="AnnO">
+      <bpmn:text>Кто именно организационно выполняет роль «Корпоративный ПБиОТ», прототип не определяет. В BRD роль описана как функциональная и оставлена для подтверждения заказчиком.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="AssocO" sourceRef="Prepare" targetRef="AnnO" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_kgmk-official-culture-assessment-v083" name="Публикация официального годового замера культуры 0.8.3" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_kgmk-official-culture-assessment-v083">
+      <bpmn:lane id="L_Corp" name="Корпоративный ПБиОТ">
+        <bpmn:flowNodeRef>S</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Prepare</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Confirm</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_System" name="Программа «Культура безопасности»">
+        <bpmn:flowNodeRef>Parse</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Parsed</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Coverage</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>CoverageGate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>YearCheck</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>YearGate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SameCheck</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SameGate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ConfirmMerge</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ConfirmGate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Fix</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PreviousGate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Archive</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ArchiveMerge</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ParseError</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>CoverageError</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>YearError</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Cancel</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="S" name="Получены результаты годового замера" />
+    <bpmn:userTask id="Prepare" name="Указать год и загрузить данные по всем БЕ" />
+    <bpmn:serviceTask id="Parse" name="Разобрать и сопоставить данные" />
+    <bpmn:exclusiveGateway id="Parsed" name="Данные разобраны?" />
+    <bpmn:businessRuleTask id="Coverage" name="Проверить полноту и известность БЕ" />
+    <bpmn:exclusiveGateway id="CoverageGate" name="Состав БЕ корректен?" />
+    <bpmn:businessRuleTask id="YearCheck" name="Проверить допустимость года" />
+    <bpmn:exclusiveGateway id="YearGate" name="Год допустим?" />
+    <bpmn:serviceTask id="SameCheck" name="Проверить наличие замера за этот год" />
+    <bpmn:exclusiveGateway id="SameGate" name="Замер этого года уже существует?" />
+    <bpmn:exclusiveGateway id="ConfirmMerge" name="Переход к фиксации замера" />
+    <bpmn:exclusiveGateway id="ConfirmGate" name="Перезапись подтверждена?" />
+    <bpmn:serviceTask id="Fix" name="Зафиксировать официальный замер и уровни БЕ" />
+    <bpmn:exclusiveGateway id="PreviousGate" name="Есть предыдущий замер другого года?" />
+    <bpmn:serviceTask id="Archive" name="Перенести предыдущий замер в архив" />
+    <bpmn:exclusiveGateway id="ArchiveMerge" name="Завершить публикацию" />
+    <bpmn:endEvent id="E" name="Официальные уровни БЕ доступны магазину" />
+    <bpmn:sequenceFlow id="F1" sourceRef="S" targetRef="Prepare" />
+    <bpmn:sequenceFlow id="F2" sourceRef="Prepare" targetRef="Parse" />
+    <bpmn:sequenceFlow id="F3" sourceRef="Parse" targetRef="Parsed" />
+    <bpmn:sequenceFlow id="F4" name="Да" sourceRef="Parsed" targetRef="Coverage" />
+    <bpmn:sequenceFlow id="F5" name="Нет" sourceRef="Parsed" targetRef="ParseError" />
+    <bpmn:sequenceFlow id="F6" sourceRef="Coverage" targetRef="CoverageGate" />
+    <bpmn:sequenceFlow id="F7" name="Да" sourceRef="CoverageGate" targetRef="YearCheck" />
+    <bpmn:sequenceFlow id="F8" name="Нет" sourceRef="CoverageGate" targetRef="CoverageError" />
+    <bpmn:sequenceFlow id="F9" sourceRef="YearCheck" targetRef="YearGate" />
+    <bpmn:sequenceFlow id="F10" name="Да" sourceRef="YearGate" targetRef="SameCheck" />
+    <bpmn:sequenceFlow id="F11" name="Нет" sourceRef="YearGate" targetRef="YearError" />
+    <bpmn:sequenceFlow id="F12" sourceRef="SameCheck" targetRef="SameGate" />
+    <bpmn:sequenceFlow id="F13" name="Нет" sourceRef="SameGate" targetRef="ConfirmMerge" />
+    <bpmn:sequenceFlow id="F14" name="Да" sourceRef="SameGate" targetRef="Confirm" />
+    <bpmn:sequenceFlow id="F15" sourceRef="Confirm" targetRef="ConfirmGate" />
+    <bpmn:sequenceFlow id="F16" name="Да" sourceRef="ConfirmGate" targetRef="ConfirmMerge" />
+    <bpmn:sequenceFlow id="F17" name="Нет" sourceRef="ConfirmGate" targetRef="Cancel" />
+    <bpmn:sequenceFlow id="F18" sourceRef="ConfirmMerge" targetRef="Fix" />
+    <bpmn:sequenceFlow id="F19" sourceRef="Fix" targetRef="PreviousGate" />
+    <bpmn:sequenceFlow id="F20" name="Да" sourceRef="PreviousGate" targetRef="Archive" />
+    <bpmn:sequenceFlow id="F21" name="Нет" sourceRef="PreviousGate" targetRef="ArchiveMerge" />
+    <bpmn:sequenceFlow id="F22" sourceRef="Archive" targetRef="ArchiveMerge" />
+    <bpmn:sequenceFlow id="F23" sourceRef="ArchiveMerge" targetRef="E" />
+    <bpmn:endEvent id="ParseError" name="Замер не зафиксирован: ошибка данных" />
+    <bpmn:endEvent id="CoverageError" name="Замер не зафиксирован: состав БЕ некорректен" />
+    <bpmn:endEvent id="YearError" name="Замер не зафиксирован: год недопустим" />
+    <bpmn:userTask id="Confirm" name="Подтвердить перезапись замера за этот год" />
+    <bpmn:endEvent id="Cancel" name="Замер не изменён" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_kgmk-official-culture-assessment-v083">
+    <bpmndi:BPMNPlane id="Plane_kgmk-official-culture-assessment-v083" bpmnElement="Collab_kgmk-official-culture-assessment-v083">
+      <bpmndi:BPMNShape id="Part_di" bpmnElement="Part_kgmk-official-culture-assessment-v083" isHorizontal="true">
+        <dc:Bounds x="30" y="40" width="3720" height="480" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_System_di" bpmnElement="L_System" isHorizontal="true">
+        <dc:Bounds x="60" y="240" width="3600" height="280" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Corp_di" bpmnElement="L_Corp" isHorizontal="true">
+        <dc:Bounds x="60" y="40" width="3600" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_di" bpmnElement="S">
+        <dc:Bounds x="100" y="110" width="50" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Prepare_di" bpmnElement="Prepare">
+        <dc:Bounds x="200" y="90" width="250" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Parse_di" bpmnElement="Parse">
+        <dc:Bounds x="500" y="290" width="230" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Parsed_di" bpmnElement="Parsed" isMarkerVisible="true">
+        <dc:Bounds x="780" y="305" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="774" y="267.5" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Coverage_di" bpmnElement="Coverage">
+        <dc:Bounds x="910" y="290" width="250" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CoverageGate_di" bpmnElement="CoverageGate" isMarkerVisible="true">
+        <dc:Bounds x="1210" y="305" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1206" y="267.5" width="58" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="YearCheck_di" bpmnElement="YearCheck">
+        <dc:Bounds x="1340" y="290" width="230" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="YearGate_di" bpmnElement="YearGate" isMarkerVisible="true">
+        <dc:Bounds x="1620" y="305" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1607" y="281" width="75" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SameCheck_di" bpmnElement="SameCheck">
+        <dc:Bounds x="1750" y="290" width="250" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SameGate_di" bpmnElement="SameGate" isMarkerVisible="true">
+        <dc:Bounds x="2050" y="305" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1996" y="266" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ConfirmMerge_di" bpmnElement="ConfirmMerge" isMarkerVisible="true">
+        <dc:Bounds x="2450" y="305" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2449" y="255" width="52" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ConfirmGate_di" bpmnElement="ConfirmGate" isMarkerVisible="true">
+        <dc:Bounds x="2180" y="305" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2110" y="285.5" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fix_di" bpmnElement="Fix">
+        <dc:Bounds x="2570" y="290" width="280" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PreviousGate_di" bpmnElement="PreviousGate" isMarkerVisible="true">
+        <dc:Bounds x="2900" y="305" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Archive_di" bpmnElement="Archive">
+        <dc:Bounds x="3020" y="290" width="250" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ArchiveMerge_di" bpmnElement="ArchiveMerge" isMarkerVisible="true">
+        <dc:Bounds x="3330" y="305" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E_di" bpmnElement="E">
+        <dc:Bounds x="3460" y="312" width="50" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3448" y="368" width="75" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ParseError_di" bpmnElement="ParseError">
+        <dc:Bounds x="965" y="412" width="50" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="950" y="448" width="80" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CoverageError_di" bpmnElement="CoverageError">
+        <dc:Bounds x="1395" y="412" width="50" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1382" y="453" width="77" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="YearError_di" bpmnElement="YearError">
+        <dc:Bounds x="1795" y="402" width="50" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1780" y="448" width="80" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Confirm_di" bpmnElement="Confirm">
+        <dc:Bounds x="2090" y="70" width="260" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Cancel_di" bpmnElement="Cancel">
+        <dc:Bounds x="2355" y="372" width="50" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2356" y="416" width="48" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1">
+        <di:waypoint x="150" y="128" />
+        <di:waypoint x="200" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2">
+        <di:waypoint x="450" y="130" />
+        <di:waypoint x="475" y="130" />
+        <di:waypoint x="475" y="330" />
+        <di:waypoint x="500" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3">
+        <di:waypoint x="730" y="330" />
+        <di:waypoint x="780" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4">
+        <di:waypoint x="830" y="330" />
+        <di:waypoint x="910" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5">
+        <di:waypoint x="805" y="355" />
+        <di:waypoint x="805" y="430" />
+        <di:waypoint x="965" y="430" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="810" y="388" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F6_di" bpmnElement="F6">
+        <di:waypoint x="1160" y="330" />
+        <di:waypoint x="1210" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F7_di" bpmnElement="F7">
+        <di:waypoint x="1260" y="330" />
+        <di:waypoint x="1340" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F8_di" bpmnElement="F8">
+        <di:waypoint x="1235" y="355" />
+        <di:waypoint x="1235" y="430" />
+        <di:waypoint x="1395" y="430" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1243" y="384" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9">
+        <di:waypoint x="1570" y="330" />
+        <di:waypoint x="1620" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10">
+        <di:waypoint x="1670" y="330" />
+        <di:waypoint x="1750" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
+        <di:waypoint x="1645" y="355" />
+        <di:waypoint x="1645" y="420" />
+        <di:waypoint x="1795" y="420" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1709" y="395" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
+        <di:waypoint x="2000" y="330" />
+        <di:waypoint x="2050" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F13_di" bpmnElement="F13">
+        <di:waypoint x="2075" y="355" />
+        <di:waypoint x="2075" y="460" />
+        <di:waypoint x="2475" y="460" />
+        <di:waypoint x="2475" y="355" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2080" y="373" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14">
+        <di:waypoint x="2075" y="305" />
+        <di:waypoint x="2075" y="110" />
+        <di:waypoint x="2090" y="110" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2083" y="198" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
+        <di:waypoint x="2350" y="110" />
+        <di:waypoint x="2380" y="110" />
+        <di:waypoint x="2380" y="280" />
+        <di:waypoint x="2205" y="280" />
+        <di:waypoint x="2205" y="305" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F16_di" bpmnElement="F16">
+        <di:waypoint x="2230" y="330" />
+        <di:waypoint x="2450" y="330" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2233" y="333" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F17_di" bpmnElement="F17">
+        <di:waypoint x="2205" y="355" />
+        <di:waypoint x="2205" y="390" />
+        <di:waypoint x="2355" y="390" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2207" y="361" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F18_di" bpmnElement="F18">
+        <di:waypoint x="2500" y="330" />
+        <di:waypoint x="2570" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F19_di" bpmnElement="F19">
+        <di:waypoint x="2850" y="330" />
+        <di:waypoint x="2900" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F20_di" bpmnElement="F20">
+        <di:waypoint x="2950" y="330" />
+        <di:waypoint x="3020" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F21_di" bpmnElement="F21">
+        <di:waypoint x="2925" y="305" />
+        <di:waypoint x="2925" y="270" />
+        <di:waypoint x="3355" y="270" />
+        <di:waypoint x="3355" y="305" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3131" y="245" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F22_di" bpmnElement="F22">
+        <di:waypoint x="3270" y="330" />
+        <di:waypoint x="3330" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F23_di" bpmnElement="F23">
+        <di:waypoint x="3380" y="330" />
+        <di:waypoint x="3460" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AssocO_di" bpmnElement="AssocO">
+        <di:waypoint x="290" y="170" />
+        <di:waypoint x="290" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="AnnO_di" bpmnElement="AnnO">
+        <dc:Bounds x="50" y="520" width="480" height="90" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
