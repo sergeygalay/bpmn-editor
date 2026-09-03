@@ -1,23 +1,27 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_kgmk-safety-culture-program-v083" targetNamespace="https://sergeygalay.github.io/bpmn-editor/kgmk-safety-culture-program-v083">
   <bpmn:collaboration id="Collab_kgmk-safety-culture-program-v083">
-    <bpmn:participant id="Part_kgmk-safety-culture-program-v083" name="Культура безопасности — сквозной бизнес-процесс 0.8.3" processRef="Proc_kgmk-safety-culture-program-v083"/>
+    <bpmn:participant id="Part_kgmk-safety-culture-program-v083" name="Культура безопасности — сквозной бизнес-процесс 0.8.3" processRef="Proc_kgmk-safety-culture-program-v083" />
+    <bpmn:textAnnotation id="AnnL1">
+      <bpmn:text>Глобальный процесс начинается с наступления нового цикла программы, а не с действия отдельного сотрудника. Массовая оценка сотрудников и публикация официального замера — самостоятельные процессы. Прототип не определяет, должен ли этап «Магазин проектов» ожидать завершения массового опроса; подтверждена зависимость каталога от официального уровня БЕ.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="AssocL1" sourceRef="AssessFork" targetRef="AnnL1" />
   </bpmn:collaboration>
   <bpmn:process id="Proc_kgmk-safety-culture-program-v083" name="Культура безопасности — сквозной бизнес-процесс 0.8.3" isExecutable="false">
     <bpmn:laneSet id="LaneSet_kgmk-safety-culture-program-v083">
       <bpmn:lane id="L_System" name="Программа «Культура безопасности»">
-        <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>AssessFork</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>OpenStore</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>SelectionMerge</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ValidateSelection</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>SelectionValid</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ApproveProjects</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>OpenExecution</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>MilestoneMerge</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>CheckAll</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>AllDone</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Finish</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AssessFork</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SelectionValid</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="L_Employee" name="Сотрудники БЕ">
         <bpmn:flowNodeRef>CollectPulse</bpmn:flowNodeRef>
@@ -40,129 +44,338 @@
         <bpmn:flowNodeRef>MilestoneDecision</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:startEvent id="Start" name="Наступил новый цикл программы">
-      <bpmn:timerEventDefinition/>
-    </bpmn:startEvent>
-    <bpmn:parallelGateway id="AssessFork" name="Запустить этап оценки"/>
     <bpmn:callActivity id="CollectPulse" name="Собрать пульс культуры сотрудников" calledElement="Proc_kgmk-culture-pulse-assessment-v083">
-      <bpmn:multiInstanceLoopCharacteristics isSequential="false"/>
+      <bpmn:multiInstanceLoopCharacteristics />
     </bpmn:callActivity>
-    <bpmn:callActivity id="PublishOfficial" name="Опубликовать официальный годовой замер" calledElement="Proc_kgmk-official-culture-assessment-v083"/>
+    <bpmn:callActivity id="PublishOfficial" name="Опубликовать официальный годовой замер" calledElement="Proc_kgmk-official-culture-assessment-v083" />
     <bpmn:intermediateCatchEvent id="OpenStore" name="Наступил этап «Магазин проектов»">
-      <bpmn:timerEventDefinition/>
+      <bpmn:timerEventDefinition />
     </bpmn:intermediateCatchEvent>
-    <bpmn:exclusiveGateway id="SelectionMerge" name="Точка повторного выбора"/>
-    <bpmn:userTask id="SelectProjects" name="Выбрать проекты своего подразделения"/>
-    <bpmn:businessRuleTask id="ValidateSelection" name="Проверить права и допустимость выбранных проектов"/>
-    <bpmn:exclusiveGateway id="SelectionValid" name="Заявка допустима?"/>
-    <bpmn:userTask id="SubmitRequest" name="Отправить заявку на одобрение"/>
-    <bpmn:userTask id="ReviewRequest" name="Рассмотреть заявку"/>
-    <bpmn:exclusiveGateway id="ReqDecision" name="Заявка одобрена?"/>
-    <bpmn:endEvent id="RejectedEnd" name="Заявка отклонена; проекты не переданы в реализацию"/>
-    <bpmn:serviceTask id="ApproveProjects" name="Зафиксировать одобрение и передать проекты в реализацию"/>
+    <bpmn:exclusiveGateway id="SelectionMerge" name="Точка повторного выбора" />
+    <bpmn:userTask id="SelectProjects" name="Выбрать проекты своего подразделения" />
+    <bpmn:businessRuleTask id="ValidateSelection" name="Проверить права и допустимость выбранных проектов" />
+    <bpmn:userTask id="SubmitRequest" name="Отправить заявку на одобрение" />
+    <bpmn:userTask id="ReviewRequest" name="Рассмотреть заявку" />
+    <bpmn:exclusiveGateway id="ReqDecision" name="Заявка одобрена?" />
+    <bpmn:endEvent id="RejectedEnd" name="Заявка отклонена; проекты не переданы в реализацию" />
+    <bpmn:serviceTask id="ApproveProjects" name="Зафиксировать одобрение и передать проекты в реализацию" />
     <bpmn:intermediateCatchEvent id="OpenExecution" name="Наступил этап «Реализация»">
-      <bpmn:timerEventDefinition/>
+      <bpmn:timerEventDefinition />
     </bpmn:intermediateCatchEvent>
-    <bpmn:exclusiveGateway id="MilestoneMerge" name="Точка перехода к очередной вехе"/>
-    <bpmn:userTask id="ImplementReport" name="Выполнить очередную веху и отправить отчёт"/>
-    <bpmn:userTask id="ReviewMilestone" name="Проверить отчёт по вехе"/>
-    <bpmn:exclusiveGateway id="MilestoneDecision" name="Веха подтверждена?"/>
-    <bpmn:userTask id="Rework" name="Доработать отклонённую веху"/>
-    <bpmn:businessRuleTask id="CheckAll" name="Проверить, подтверждены ли все вехи проекта"/>
-    <bpmn:exclusiveGateway id="AllDone" name="Все вехи подтверждены?"/>
-    <bpmn:endEvent id="Finish" name="Проект реализован по подтверждённым вехам"/>
-    <bpmn:endEvent id="PulseEnd" name="Сбор пульса сотрудников завершён"/>
-    <bpmn:sequenceFlow id="F1" sourceRef="Start" targetRef="AssessFork"/>
-    <bpmn:sequenceFlow id="F2" sourceRef="AssessFork" targetRef="CollectPulse" name="Пульс сотрудников"/>
-    <bpmn:sequenceFlow id="F3" sourceRef="AssessFork" targetRef="PublishOfficial" name="Официальный замер"/>
-    <bpmn:sequenceFlow id="F4" sourceRef="CollectPulse" targetRef="PulseEnd"/>
-    <bpmn:sequenceFlow id="F5" sourceRef="PublishOfficial" targetRef="OpenStore" name="Официальный уровень БЕ зафиксирован"/>
-    <bpmn:sequenceFlow id="F7" sourceRef="OpenStore" targetRef="SelectionMerge"/>
-    <bpmn:sequenceFlow id="F8" sourceRef="SelectionMerge" targetRef="SelectProjects"/>
-    <bpmn:sequenceFlow id="F9" sourceRef="SelectProjects" targetRef="ValidateSelection"/>
-    <bpmn:sequenceFlow id="F10" sourceRef="ValidateSelection" targetRef="SelectionValid"/>
-    <bpmn:sequenceFlow id="F11" sourceRef="SelectionValid" targetRef="SubmitRequest" name="Да"/>
-    <bpmn:sequenceFlow id="F12" sourceRef="SelectionValid" targetRef="SelectionMerge" name="Нет — скорректировать выбор"/>
-    <bpmn:sequenceFlow id="F13" sourceRef="SubmitRequest" targetRef="ReviewRequest"/>
-    <bpmn:sequenceFlow id="F14" sourceRef="ReviewRequest" targetRef="ReqDecision"/>
-    <bpmn:sequenceFlow id="F15" sourceRef="ReqDecision" targetRef="ApproveProjects" name="Да"/>
-    <bpmn:sequenceFlow id="F16" sourceRef="ReqDecision" targetRef="RejectedEnd" name="Нет"/>
-    <bpmn:sequenceFlow id="F17" sourceRef="ApproveProjects" targetRef="OpenExecution"/>
-    <bpmn:sequenceFlow id="F18" sourceRef="OpenExecution" targetRef="MilestoneMerge"/>
-    <bpmn:sequenceFlow id="F19" sourceRef="MilestoneMerge" targetRef="ImplementReport"/>
-    <bpmn:sequenceFlow id="F20" sourceRef="ImplementReport" targetRef="ReviewMilestone"/>
-    <bpmn:sequenceFlow id="F21" sourceRef="ReviewMilestone" targetRef="MilestoneDecision"/>
-    <bpmn:sequenceFlow id="F22" sourceRef="MilestoneDecision" targetRef="CheckAll" name="Да"/>
-    <bpmn:sequenceFlow id="F23" sourceRef="MilestoneDecision" targetRef="Rework" name="Нет"/>
-    <bpmn:sequenceFlow id="F24" sourceRef="Rework" targetRef="MilestoneMerge" name="Повторный отчёт"/>
-    <bpmn:sequenceFlow id="F25" sourceRef="CheckAll" targetRef="AllDone"/>
-    <bpmn:sequenceFlow id="F26" sourceRef="AllDone" targetRef="Finish" name="Да"/>
-    <bpmn:sequenceFlow id="F27" sourceRef="AllDone" targetRef="MilestoneMerge" name="Нет — следующая веха"/>
-    <bpmn:textAnnotation id="AnnL1">
-      <bpmn:text>Глобальный процесс начинается с наступления нового цикла программы, а не с действия отдельного сотрудника. Массовая оценка сотрудников и публикация официального замера — самостоятельные процессы. Прототип не определяет, должен ли этап «Магазин проектов» ожидать завершения массового опроса; подтверждена зависимость каталога от официального уровня БЕ.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="AssocL1" sourceRef="AssessFork" targetRef="AnnL1"/>
+    <bpmn:exclusiveGateway id="MilestoneMerge" name="Точка перехода к очередной вехе" />
+    <bpmn:userTask id="ImplementReport" name="Выполнить очередную веху и отправить отчёт" />
+    <bpmn:userTask id="ReviewMilestone" name="Проверить отчёт по вехе" />
+    <bpmn:exclusiveGateway id="MilestoneDecision" name="Веха подтверждена?" />
+    <bpmn:userTask id="Rework" name="Доработать отклонённую веху" />
+    <bpmn:businessRuleTask id="CheckAll" name="Проверить, подтверждены ли все вехи проекта" />
+    <bpmn:exclusiveGateway id="AllDone" name="Все вехи подтверждены?" />
+    <bpmn:endEvent id="Finish" name="Проект реализован по подтверждённым вехам" />
+    <bpmn:endEvent id="PulseEnd" name="Сбор пульса сотрудников завершён" />
+    <bpmn:sequenceFlow id="F1" sourceRef="Start" targetRef="AssessFork" />
+    <bpmn:sequenceFlow id="F2" name="Пульс сотрудников" sourceRef="AssessFork" targetRef="CollectPulse" />
+    <bpmn:sequenceFlow id="F3" name="Официальный замер" sourceRef="AssessFork" targetRef="PublishOfficial" />
+    <bpmn:sequenceFlow id="F4" sourceRef="CollectPulse" targetRef="PulseEnd" />
+    <bpmn:sequenceFlow id="F5" name="Официальный уровень БЕ зафиксирован" sourceRef="PublishOfficial" targetRef="OpenStore" />
+    <bpmn:sequenceFlow id="F7" sourceRef="OpenStore" targetRef="SelectionMerge" />
+    <bpmn:sequenceFlow id="F8" sourceRef="SelectionMerge" targetRef="SelectProjects" />
+    <bpmn:sequenceFlow id="F9" sourceRef="SelectProjects" targetRef="ValidateSelection" />
+    <bpmn:sequenceFlow id="F10" sourceRef="ValidateSelection" targetRef="SelectionValid" />
+    <bpmn:sequenceFlow id="F11" name="Да" sourceRef="SelectionValid" targetRef="SubmitRequest" />
+    <bpmn:sequenceFlow id="F12" name="Нет — скорректировать выбор" sourceRef="SelectionValid" targetRef="SelectionMerge" />
+    <bpmn:sequenceFlow id="F13" sourceRef="SubmitRequest" targetRef="ReviewRequest" />
+    <bpmn:sequenceFlow id="F14" sourceRef="ReviewRequest" targetRef="ReqDecision" />
+    <bpmn:sequenceFlow id="F15" name="Да" sourceRef="ReqDecision" targetRef="ApproveProjects" />
+    <bpmn:sequenceFlow id="F16" name="Нет" sourceRef="ReqDecision" targetRef="RejectedEnd" />
+    <bpmn:sequenceFlow id="F17" sourceRef="ApproveProjects" targetRef="OpenExecution" />
+    <bpmn:sequenceFlow id="F18" sourceRef="OpenExecution" targetRef="MilestoneMerge" />
+    <bpmn:sequenceFlow id="F19" sourceRef="MilestoneMerge" targetRef="ImplementReport" />
+    <bpmn:sequenceFlow id="F20" sourceRef="ImplementReport" targetRef="ReviewMilestone" />
+    <bpmn:sequenceFlow id="F21" sourceRef="ReviewMilestone" targetRef="MilestoneDecision" />
+    <bpmn:sequenceFlow id="F22" name="Да" sourceRef="MilestoneDecision" targetRef="CheckAll" />
+    <bpmn:sequenceFlow id="F23" name="Нет" sourceRef="MilestoneDecision" targetRef="Rework" />
+    <bpmn:sequenceFlow id="F24" name="Повторный отчёт" sourceRef="Rework" targetRef="MilestoneMerge" />
+    <bpmn:sequenceFlow id="F25" sourceRef="CheckAll" targetRef="AllDone" />
+    <bpmn:sequenceFlow id="F26" name="Да" sourceRef="AllDone" targetRef="Finish" />
+    <bpmn:sequenceFlow id="F27" name="Нет — следующая веха" sourceRef="AllDone" targetRef="MilestoneMerge" />
+    <bpmn:startEvent id="Start" name="Наступил новый цикл программы">
+      <bpmn:timerEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:parallelGateway id="AssessFork" name="Запустить этап оценки" />
+    <bpmn:exclusiveGateway id="SelectionValid" name="Заявка допустима?" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="Diagram_kgmk-safety-culture-program-v083">
     <bpmndi:BPMNPlane id="Plane_kgmk-safety-culture-program-v083" bpmnElement="Collab_kgmk-safety-culture-program-v083">
-      <bpmndi:BPMNShape id="Part_kgmk-safety-culture-program-v083_di" bpmnElement="Part_kgmk-safety-culture-program-v083" isHorizontal="true"><dc:Bounds x="30" y="40" width="4420" height="900"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="L_System_di" bpmnElement="L_System" isHorizontal="true"><dc:Bounds x="60" y="40" width="4300" height="180"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="L_Employee_di" bpmnElement="L_Employee" isHorizontal="true"><dc:Bounds x="60" y="220" width="4300" height="180"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="L_Corp_di" bpmnElement="L_Corp" isHorizontal="true"><dc:Bounds x="60" y="400" width="4300" height="180"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="L_ZGD_di" bpmnElement="L_ZGD" isHorizontal="true"><dc:Bounds x="60" y="580" width="4300" height="180"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="L_Admin_di" bpmnElement="L_Admin" isHorizontal="true"><dc:Bounds x="60" y="760" width="4300" height="180"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Start_di" bpmnElement="Start"><dc:Bounds x="100" y="110" width="50" height="36"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="AssessFork_di" bpmnElement="AssessFork" isMarkerVisible="true"><dc:Bounds x="200" y="103" width="50" height="50"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectPulse_di" bpmnElement="CollectPulse"><dc:Bounds x="310" y="250" width="240" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="PublishOfficial_di" bpmnElement="PublishOfficial"><dc:Bounds x="310" y="430" width="250" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="PulseEnd_di" bpmnElement="PulseEnd"><dc:Bounds x="610" y="272" width="50" height="36"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OpenStore_di" bpmnElement="OpenStore"><dc:Bounds x="750" y="103" width="50" height="50"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="SelectionMerge_di" bpmnElement="SelectionMerge" isMarkerVisible="true"><dc:Bounds x="870" y="103" width="50" height="50"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="SelectProjects_di" bpmnElement="SelectProjects"><dc:Bounds x="990" y="610" width="240" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ValidateSelection_di" bpmnElement="ValidateSelection"><dc:Bounds x="1280" y="90" width="260" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="SelectionValid_di" bpmnElement="SelectionValid" isMarkerVisible="true"><dc:Bounds x="1590" y="103" width="50" height="50"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="SubmitRequest_di" bpmnElement="SubmitRequest"><dc:Bounds x="1710" y="610" width="230" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ReviewRequest_di" bpmnElement="ReviewRequest"><dc:Bounds x="2000" y="790" width="220" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ReqDecision_di" bpmnElement="ReqDecision" isMarkerVisible="true"><dc:Bounds x="2280" y="805" width="50" height="50"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="RejectedEnd_di" bpmnElement="RejectedEnd"><dc:Bounds x="2420" y="812" width="50" height="36"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ApproveProjects_di" bpmnElement="ApproveProjects"><dc:Bounds x="2420" y="90" width="280" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OpenExecution_di" bpmnElement="OpenExecution"><dc:Bounds x="2760" y="103" width="50" height="50"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="MilestoneMerge_di" bpmnElement="MilestoneMerge" isMarkerVisible="true"><dc:Bounds x="2880" y="103" width="50" height="50"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ImplementReport_di" bpmnElement="ImplementReport"><dc:Bounds x="3000" y="610" width="270" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ReviewMilestone_di" bpmnElement="ReviewMilestone"><dc:Bounds x="3330" y="790" width="230" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="MilestoneDecision_di" bpmnElement="MilestoneDecision" isMarkerVisible="true"><dc:Bounds x="3620" y="805" width="50" height="50"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Rework_di" bpmnElement="Rework"><dc:Bounds x="3740" y="610" width="230" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CheckAll_di" bpmnElement="CheckAll"><dc:Bounds x="3740" y="90" width="260" height="80"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="AllDone_di" bpmnElement="AllDone" isMarkerVisible="true"><dc:Bounds x="4050" y="103" width="50" height="50"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Finish_di" bpmnElement="Finish"><dc:Bounds x="4200" y="110" width="50" height="36"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="AnnL1_di" bpmnElement="AnnL1"><dc:Bounds x="590" y="205" width="520" height="100"/></bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1"><di:waypoint x="150" y="128"/><di:waypoint x="200" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2"><di:waypoint x="250" y="128"/><di:waypoint x="280" y="128"/><di:waypoint x="280" y="290"/><di:waypoint x="310" y="290"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3"><di:waypoint x="250" y="128"/><di:waypoint x="280" y="128"/><di:waypoint x="280" y="470"/><di:waypoint x="310" y="470"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4"><di:waypoint x="550" y="290"/><di:waypoint x="610" y="290"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5"><di:waypoint x="560" y="470"/><di:waypoint x="700" y="470"/><di:waypoint x="700" y="128"/><di:waypoint x="750" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F7_di" bpmnElement="F7"><di:waypoint x="800" y="128"/><di:waypoint x="870" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F8_di" bpmnElement="F8"><di:waypoint x="920" y="128"/><di:waypoint x="955" y="128"/><di:waypoint x="955" y="650"/><di:waypoint x="990" y="650"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9"><di:waypoint x="1230" y="650"/><di:waypoint x="1255" y="650"/><di:waypoint x="1255" y="130"/><di:waypoint x="1280" y="130"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10"><di:waypoint x="1540" y="130"/><di:waypoint x="1590" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11"><di:waypoint x="1640" y="128"/><di:waypoint x="1675" y="128"/><di:waypoint x="1675" y="650"/><di:waypoint x="1710" y="650"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12"><di:waypoint x="1640" y="128"/><di:waypoint x="1675" y="128"/><di:waypoint x="1675" y="198"/><di:waypoint x="835" y="198"/><di:waypoint x="835" y="128"/><di:waypoint x="870" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F13_di" bpmnElement="F13"><di:waypoint x="1940" y="650"/><di:waypoint x="1970" y="650"/><di:waypoint x="1970" y="830"/><di:waypoint x="2000" y="830"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14"><di:waypoint x="2220" y="830"/><di:waypoint x="2280" y="830"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15"><di:waypoint x="2330" y="830"/><di:waypoint x="2375" y="830"/><di:waypoint x="2375" y="130"/><di:waypoint x="2420" y="130"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F16_di" bpmnElement="F16"><di:waypoint x="2330" y="830"/><di:waypoint x="2420" y="830"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F17_di" bpmnElement="F17"><di:waypoint x="2700" y="130"/><di:waypoint x="2760" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F18_di" bpmnElement="F18"><di:waypoint x="2810" y="128"/><di:waypoint x="2880" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F19_di" bpmnElement="F19"><di:waypoint x="2930" y="128"/><di:waypoint x="2965" y="128"/><di:waypoint x="2965" y="650"/><di:waypoint x="3000" y="650"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F20_di" bpmnElement="F20"><di:waypoint x="3270" y="650"/><di:waypoint x="3300" y="650"/><di:waypoint x="3300" y="830"/><di:waypoint x="3330" y="830"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F21_di" bpmnElement="F21"><di:waypoint x="3560" y="830"/><di:waypoint x="3620" y="830"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F22_di" bpmnElement="F22"><di:waypoint x="3670" y="830"/><di:waypoint x="3705" y="830"/><di:waypoint x="3705" y="130"/><di:waypoint x="3740" y="130"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F23_di" bpmnElement="F23"><di:waypoint x="3670" y="830"/><di:waypoint x="3705" y="830"/><di:waypoint x="3705" y="650"/><di:waypoint x="3740" y="650"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F24_di" bpmnElement="F24"><di:waypoint x="3970" y="650"/><di:waypoint x="4005" y="650"/><di:waypoint x="4005" y="725"/><di:waypoint x="2845" y="725"/><di:waypoint x="2845" y="128"/><di:waypoint x="2880" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F25_di" bpmnElement="F25"><di:waypoint x="4000" y="130"/><di:waypoint x="4050" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F26_di" bpmnElement="F26"><di:waypoint x="4100" y="128"/><di:waypoint x="4200" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F27_di" bpmnElement="F27"><di:waypoint x="4100" y="128"/><di:waypoint x="4135" y="128"/><di:waypoint x="4135" y="198"/><di:waypoint x="2845" y="198"/><di:waypoint x="2845" y="128"/><di:waypoint x="2880" y="128"/></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="AssocL1_di" bpmnElement="AssocL1"><di:waypoint x="225" y="128"/><di:waypoint x="260" y="128"/><di:waypoint x="260" y="255"/><di:waypoint x="590" y="255"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Part_kgmk-safety-culture-program-v083_di" bpmnElement="Part_kgmk-safety-culture-program-v083" isHorizontal="true">
+        <dc:Bounds x="-20" y="40" width="4470" height="900" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Admin_di" bpmnElement="L_Admin" isHorizontal="true">
+        <dc:Bounds x="10" y="760" width="4350" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_ZGD_di" bpmnElement="L_ZGD" isHorizontal="true">
+        <dc:Bounds x="10" y="580" width="4350" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Corp_di" bpmnElement="L_Corp" isHorizontal="true">
+        <dc:Bounds x="10" y="400" width="4350" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Employee_di" bpmnElement="L_Employee" isHorizontal="true">
+        <dc:Bounds x="10" y="220" width="4350" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_System_di" bpmnElement="L_System" isHorizontal="true">
+        <dc:Bounds x="10" y="40" width="4350" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectPulse_di" bpmnElement="CollectPulse">
+        <dc:Bounds x="310" y="250" width="240" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PublishOfficial_di" bpmnElement="PublishOfficial">
+        <dc:Bounds x="310" y="430" width="250" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OpenStore_di" bpmnElement="OpenStore">
+        <dc:Bounds x="750" y="103" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SelectionMerge_di" bpmnElement="SelectionMerge" isMarkerVisible="true">
+        <dc:Bounds x="870" y="103" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SelectProjects_di" bpmnElement="SelectProjects">
+        <dc:Bounds x="990" y="610" width="240" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ValidateSelection_di" bpmnElement="ValidateSelection">
+        <dc:Bounds x="1280" y="90" width="260" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SelectionValid_di" bpmnElement="SelectionValid" isMarkerVisible="true">
+        <dc:Bounds x="1590" y="103" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1585" y="153" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubmitRequest_di" bpmnElement="SubmitRequest">
+        <dc:Bounds x="1710" y="610" width="230" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReviewRequest_di" bpmnElement="ReviewRequest">
+        <dc:Bounds x="2000" y="790" width="220" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReqDecision_di" bpmnElement="ReqDecision" isMarkerVisible="true">
+        <dc:Bounds x="2280" y="805" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RejectedEnd_di" bpmnElement="RejectedEnd">
+        <dc:Bounds x="2420" y="812" width="50" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2414" y="857" width="63" height="66" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ApproveProjects_di" bpmnElement="ApproveProjects">
+        <dc:Bounds x="2420" y="90" width="280" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OpenExecution_di" bpmnElement="OpenExecution">
+        <dc:Bounds x="2760" y="103" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="MilestoneMerge_di" bpmnElement="MilestoneMerge" isMarkerVisible="true">
+        <dc:Bounds x="2880" y="103" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ImplementReport_di" bpmnElement="ImplementReport">
+        <dc:Bounds x="3000" y="610" width="270" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReviewMilestone_di" bpmnElement="ReviewMilestone">
+        <dc:Bounds x="3330" y="790" width="230" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="MilestoneDecision_di" bpmnElement="MilestoneDecision" isMarkerVisible="true">
+        <dc:Bounds x="3620" y="805" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Rework_di" bpmnElement="Rework">
+        <dc:Bounds x="3740" y="610" width="230" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CheckAll_di" bpmnElement="CheckAll">
+        <dc:Bounds x="3740" y="90" width="260" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AllDone_di" bpmnElement="AllDone" isMarkerVisible="true">
+        <dc:Bounds x="4050" y="103" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Finish_di" bpmnElement="Finish">
+        <dc:Bounds x="4200" y="110" width="50" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PulseEnd_di" bpmnElement="PulseEnd">
+        <dc:Bounds x="610" y="272" width="50" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="607" y="320" width="65" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_di" bpmnElement="Start">
+        <dc:Bounds x="65" y="110" width="50" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="48" y="146" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AssessFork_di" bpmnElement="AssessFork" isMarkerVisible="true">
+        <dc:Bounds x="175" y="103" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="161" y="65.5" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1">
+        <di:waypoint x="115" y="128" />
+        <di:waypoint x="175" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2">
+        <di:waypoint x="225" y="128" />
+        <di:waypoint x="280" y="128" />
+        <di:waypoint x="280" y="290" />
+        <di:waypoint x="310" y="290" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="248" y="96" width="64" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3">
+        <di:waypoint x="200" y="153" />
+        <di:waypoint x="200" y="470" />
+        <di:waypoint x="310" y="470" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="132" y="186" width="75" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4">
+        <di:waypoint x="550" y="290" />
+        <di:waypoint x="610" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5">
+        <di:waypoint x="560" y="470" />
+        <di:waypoint x="700" y="470" />
+        <di:waypoint x="700" y="128" />
+        <di:waypoint x="750" y="128" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="582" y="430" width="75" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F7_di" bpmnElement="F7">
+        <di:waypoint x="800" y="128" />
+        <di:waypoint x="870" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F8_di" bpmnElement="F8">
+        <di:waypoint x="920" y="128" />
+        <di:waypoint x="955" y="128" />
+        <di:waypoint x="955" y="650" />
+        <di:waypoint x="990" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9">
+        <di:waypoint x="1230" y="650" />
+        <di:waypoint x="1255" y="650" />
+        <di:waypoint x="1255" y="130" />
+        <di:waypoint x="1280" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10">
+        <di:waypoint x="1540" y="130" />
+        <di:waypoint x="1590" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
+        <di:waypoint x="1640" y="128" />
+        <di:waypoint x="1675" y="128" />
+        <di:waypoint x="1675" y="650" />
+        <di:waypoint x="1710" y="650" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1653" y="113" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
+        <di:waypoint x="1615" y="103" />
+        <di:waypoint x="1615" y="60" />
+        <di:waypoint x="895" y="60" />
+        <di:waypoint x="895" y="100" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1617" y="50" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F13_di" bpmnElement="F13">
+        <di:waypoint x="1940" y="650" />
+        <di:waypoint x="1970" y="650" />
+        <di:waypoint x="1970" y="830" />
+        <di:waypoint x="2000" y="830" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14">
+        <di:waypoint x="2220" y="830" />
+        <di:waypoint x="2280" y="830" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
+        <di:waypoint x="2305" y="805" />
+        <di:waypoint x="2305" y="130" />
+        <di:waypoint x="2420" y="130" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2313" y="783" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F16_di" bpmnElement="F16">
+        <di:waypoint x="2330" y="830" />
+        <di:waypoint x="2420" y="830" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2340" y="813" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F17_di" bpmnElement="F17">
+        <di:waypoint x="2700" y="130" />
+        <di:waypoint x="2760" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F18_di" bpmnElement="F18">
+        <di:waypoint x="2810" y="128" />
+        <di:waypoint x="2880" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F19_di" bpmnElement="F19">
+        <di:waypoint x="2930" y="128" />
+        <di:waypoint x="2965" y="128" />
+        <di:waypoint x="2965" y="650" />
+        <di:waypoint x="3000" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F20_di" bpmnElement="F20">
+        <di:waypoint x="3270" y="650" />
+        <di:waypoint x="3300" y="650" />
+        <di:waypoint x="3300" y="830" />
+        <di:waypoint x="3330" y="830" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F21_di" bpmnElement="F21">
+        <di:waypoint x="3560" y="830" />
+        <di:waypoint x="3620" y="830" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F22_di" bpmnElement="F22">
+        <di:waypoint x="3670" y="830" />
+        <di:waypoint x="3705" y="830" />
+        <di:waypoint x="3705" y="130" />
+        <di:waypoint x="3740" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F23_di" bpmnElement="F23">
+        <di:waypoint x="3670" y="830" />
+        <di:waypoint x="3705" y="830" />
+        <di:waypoint x="3705" y="650" />
+        <di:waypoint x="3740" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F24_di" bpmnElement="F24">
+        <di:waypoint x="3970" y="650" />
+        <di:waypoint x="4005" y="650" />
+        <di:waypoint x="4005" y="725" />
+        <di:waypoint x="2845" y="725" />
+        <di:waypoint x="2845" y="128" />
+        <di:waypoint x="2880" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F25_di" bpmnElement="F25">
+        <di:waypoint x="4000" y="130" />
+        <di:waypoint x="4050" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F26_di" bpmnElement="F26">
+        <di:waypoint x="4100" y="128" />
+        <di:waypoint x="4200" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F27_di" bpmnElement="F27">
+        <di:waypoint x="4100" y="128" />
+        <di:waypoint x="4135" y="128" />
+        <di:waypoint x="4135" y="198" />
+        <di:waypoint x="2845" y="198" />
+        <di:waypoint x="2845" y="128" />
+        <di:waypoint x="2880" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AssocL1_di" bpmnElement="AssocL1">
+        <di:waypoint x="175" y="128" />
+        <di:waypoint x="160" y="128" />
+        <di:waypoint x="146" y="10" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="AnnL1_di" bpmnElement="AnnL1">
+        <dc:Bounds x="-120" y="-90" width="520" height="100" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
