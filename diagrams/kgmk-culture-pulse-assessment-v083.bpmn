@@ -107,7 +107,7 @@
       <bpmndi:BPMNShape id="AnswerMerge_di" bpmnElement="AnswerMerge" isMarkerVisible="true">
         <dc:Bounds x="1320" y="305" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1358" y="340" width="63" height="40" />
+          <dc:Bounds x="1248" y="320" width="63" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Answer_di" bpmnElement="Answer">
@@ -217,9 +217,8 @@
       <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
         <di:waypoint x="1735" y="355" />
         <di:waypoint x="1735" y="390" />
-        <di:waypoint x="1285" y="390" />
-        <di:waypoint x="1285" y="330" />
-        <di:waypoint x="1320" y="330" />
+        <di:waypoint x="1345" y="390" />
+        <di:waypoint x="1345" y="355" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1740" y="353" width="19" height="14" />
         </bpmndi:BPMNLabel>
@@ -273,20 +272,23 @@
         <di:waypoint x="925" y="400" />
         <di:waypoint x="925" y="355" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1983" y="375" width="14" height="14" />
+          <dc:Bounds x="3063" y="375" width="14" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F21_di" bpmnElement="F21">
         <di:waypoint x="3080" y="330" />
         <di:waypoint x="3180" y="330" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3100" y="305" width="19" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AssocP_di" bpmnElement="AssocP">
         <di:waypoint x="522" y="338" />
         <di:waypoint x="565" y="360" />
-        <di:waypoint x="565" y="570" />
+        <di:waypoint x="565" y="480" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="AnnP_di" bpmnElement="AnnP">
-        <dc:Bounds x="340" y="570" width="450" height="90" />
+        <dc:Bounds x="340" y="480" width="450" height="90" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
