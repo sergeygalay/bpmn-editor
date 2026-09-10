@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_SafetyStatsPublication" targetNamespace="https://sergeygalay.github.io/bpmn-editor/vns-safety-statistics-publication-l1">
+  <bpmn:collaboration id="Collab_SafetyStatsPublication">
+    <bpmn:participant id="Participant_SafetyStatsPublication" name="Предоставление актуальной статистики ПБиОТ руководству" processRef="Process_SafetyStatsPublication"/>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_SafetyStatsPublication" name="Предоставление актуальной статистики ПБиОТ — L1" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_SafetyStatsPublication">
+      <bpmn:lane id="Lane_DataOwners" name="Ответственные за ведение данных ПБиОТ">
+        <bpmn:flowNodeRef>Start_DataActualized</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CorrectSource</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_SmartApp" name="SmartApp «Статистика»">
+        <bpmn:flowNodeRef>Task_RefreshView</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_DataAvailable</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PublishView</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Management" name="Руководство">
+        <bpmn:flowNodeRef>Task_OpenStatistics</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_StatisticsAvailable</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_DataActualized" name="В АС КУБ актуализированы данные ПБиОТ"/>
+    <bpmn:serviceTask id="Task_RefreshView" name="Обновить представление статистики"/>
+    <bpmn:exclusiveGateway id="Gateway_DataAvailable" name="Данные доступны для отображения?"/>
+    <bpmn:userTask id="Task_CorrectSource" name="Уточнить или исправить данные в источнике"/>
+    <bpmn:serviceTask id="Task_PublishView" name="Предоставить актуальный срез статистики"/>
+    <bpmn:userTask id="Task_OpenStatistics" name="Открыть статистику ПБиОТ"/>
+    <bpmn:endEvent id="End_StatisticsAvailable" name="Актуальная картина ПБиОТ доступна руководству"/>
+    <bpmn:sequenceFlow id="Flow_P1" sourceRef="Start_DataActualized" targetRef="Task_RefreshView"/>
+    <bpmn:sequenceFlow id="Flow_P2" sourceRef="Task_RefreshView" targetRef="Gateway_DataAvailable"/>
+    <bpmn:sequenceFlow id="Flow_P3" sourceRef="Gateway_DataAvailable" targetRef="Task_PublishView" name="Да"/>
+    <bpmn:sequenceFlow id="Flow_P4" sourceRef="Gateway_DataAvailable" targetRef="Task_CorrectSource" name="Нет"/>
+    <bpmn:sequenceFlow id="Flow_P5" sourceRef="Task_CorrectSource" targetRef="Task_RefreshView"/>
+    <bpmn:sequenceFlow id="Flow_P6" sourceRef="Task_PublishView" targetRef="Task_OpenStatistics"/>
+    <bpmn:sequenceFlow id="Flow_P7" sourceRef="Task_OpenStatistics" targetRef="End_StatisticsAvailable"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_SafetyStatsPublication">
+    <bpmndi:BPMNPlane id="Plane_SafetyStatsPublication" bpmnElement="Collab_SafetyStatsPublication">
+      <bpmndi:BPMNShape id="Participant_SafetyStatsPublication_di" bpmnElement="Participant_SafetyStatsPublication" isHorizontal="true"><dc:Bounds x="30" y="40" width="1820" height="570"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_DataOwners_di" bpmnElement="Lane_DataOwners" isHorizontal="true"><dc:Bounds x="60" y="40" width="1790" height="180"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_SmartApp_di" bpmnElement="Lane_SmartApp" isHorizontal="true"><dc:Bounds x="60" y="220" width="1790" height="190"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Management_di" bpmnElement="Lane_Management" isHorizontal="true"><dc:Bounds x="60" y="410" width="1790" height="200"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_DataActualized_di" bpmnElement="Start_DataActualized"><dc:Bounds x="110" y="105" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_RefreshView_di" bpmnElement="Task_RefreshView"><dc:Bounds x="250" y="270" width="220" height="90"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_DataAvailable_di" bpmnElement="Gateway_DataAvailable" isMarkerVisible="true"><dc:Bounds x="550" y="290" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CorrectSource_di" bpmnElement="Task_CorrectSource"><dc:Bounds x="680" y="90" width="230" height="100"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PublishView_di" bpmnElement="Task_PublishView"><dc:Bounds x="720" y="270" width="230" height="90"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpenStatistics_di" bpmnElement="Task_OpenStatistics"><dc:Bounds x="1080" y="465" width="220" height="90"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_StatisticsAvailable_di" bpmnElement="End_StatisticsAvailable"><dc:Bounds x="1470" y="492" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_P1_di" bpmnElement="Flow_P1"><di:waypoint x="146" y="123"/><di:waypoint x="200" y="123"/><di:waypoint x="200" y="315"/><di:waypoint x="250" y="315"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_P2_di" bpmnElement="Flow_P2"><di:waypoint x="470" y="315"/><di:waypoint x="550" y="315"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_P3_di" bpmnElement="Flow_P3"><di:waypoint x="600" y="315"/><di:waypoint x="720" y="315"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_P4_di" bpmnElement="Flow_P4"><di:waypoint x="575" y="290"/><di:waypoint x="575" y="140"/><di:waypoint x="680" y="140"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_P5_di" bpmnElement="Flow_P5"><di:waypoint x="795" y="190"/><di:waypoint x="795" y="235"/><di:waypoint x="360" y="235"/><di:waypoint x="360" y="270"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_P6_di" bpmnElement="Flow_P6"><di:waypoint x="950" y="315"/><di:waypoint x="1020" y="315"/><di:waypoint x="1020" y="510"/><di:waypoint x="1080" y="510"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_P7_di" bpmnElement="Flow_P7"><di:waypoint x="1300" y="510"/><di:waypoint x="1470" y="510"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
