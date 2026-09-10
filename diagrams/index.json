@@ -113,6 +113,27 @@
       "path": "diagrams/kgmk-milestone-deadline-change-v083.bpmn"
     },
     {
+      "id": "kgmk-mvp-administration-v1",
+      "name": "MVP — Администрирование приложения",
+      "group": "Культура безопасности · MVP",
+      "description": "Администратор приложения актуализирует контент, справочники и уровни культуры БЕ, назначает роли и закрепление пользователей за БЕ",
+      "path": "diagrams/kgmk-mvp-administration-v1.bpmn"
+    },
+    {
+      "id": "kgmk-mvp-project-approval-v1",
+      "name": "MVP — Выбор и согласование проекта",
+      "group": "Культура безопасности · MVP",
+      "description": "Заказчик БЕ выбирает допустимый проект и направляет его Руководителю ПМКБ; согласованный проект получает статус To Do, отклонённый не переходит в реализацию",
+      "path": "diagrams/kgmk-mvp-project-approval-v1.bpmn"
+    },
+    {
+      "id": "kgmk-mvp-project-delivery-v1",
+      "name": "MVP — Реализация проекта",
+      "group": "Культура безопасности · MVP",
+      "description": "Заказчик БЕ ведёт проект по статусам To Do → In Progress → Review; Руководитель ПМКБ согласует завершение, после чего проект получает Done, иначе остаётся в Review",
+      "path": "diagrams/kgmk-mvp-project-delivery-v1.bpmn"
+    },
+    {
       "id": "incident-investigation-concept-l1",
       "name": "ИИ-расследование — концепция, TO-BE верхнего уровня",
       "group": "Промышленная безопасность",
