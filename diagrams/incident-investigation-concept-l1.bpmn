@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_Incident_L1" targetNamespace="https://sergeygalay.github.io/bpmn-editor/incident-investigation-concept-l1">
+  <bpmn:collaboration id="Collaboration_L1">
+    <bpmn:participant id="Pool" name="ИИ-помощник: от создания дела до принятия отчета" processRef="Process_L1"/>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_L1" isExecutable="false">
+    <bpmn:laneSet id="Lanes">
+      <bpmn:lane id="Chair" name="Председатель&#10;комиссии">
+        <bpmn:flowNodeRef>Review</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Accepted</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="People" name="Комиссия /&#10;эксперты ПБиОТ">
+        <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Init</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Validate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Evidence</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Collect</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Confirm</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Rework</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="AI" name="ИИ-помощник&#10;Автоматизация">
+        <bpmn:flowNodeRef>Merge</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Analyze</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Actions</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Report</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start" name="Дело создано">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Init" name="Уточнить план, загрузить материалы и исходные гипотезы">
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Merge" name="" gatewayDirection="Converging">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Analyze" name="Извлечь факты; предложить гипотезы и причины">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Validate" name="Проверить гипотезы; подтвердить факты и причины">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Evidence" name="Причины&#10;обоснованы?" gatewayDirection="Diverging">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Collect" name="Дособрать материалы / уточнить анализ">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Actions" name="Предложить меры по подтвержденным причинам">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Confirm" name="Подтвердить / уточнить мероприятия">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Report" name="Подготовить отчет из подтвержденных данных">
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Review" name="Рассмотреть итоговый отчет">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Accepted" name="Отчет&#10;принят?" gatewayDirection="Diverging">
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Rework" name="Уточнить данные / выводы по замечаниям">
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+      <bpmn:outgoing>Flow_14</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="End" name="Отчет принят">
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="Start" targetRef="Init" name=""/>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Init" targetRef="Merge" name=""/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Merge" targetRef="Analyze" name=""/>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Analyze" targetRef="Validate" name=""/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Validate" targetRef="Evidence" name=""/>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Evidence" targetRef="Collect" name="Нет"/>
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Collect" targetRef="Merge" name="Повторный анализ"/>
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Evidence" targetRef="Actions" name="Да"/>
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Actions" targetRef="Confirm" name=""/>
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Confirm" targetRef="Report" name=""/>
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Report" targetRef="Review" name=""/>
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="Review" targetRef="Accepted" name=""/>
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Accepted" targetRef="End" name="Да"/>
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="Accepted" targetRef="Rework" name="Нет"/>
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="Rework" targetRef="Merge" name="Повторная проверка"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram">
+    <bpmndi:BPMNPlane id="Plane" bpmnElement="Collaboration_L1">
+      <bpmndi:BPMNShape id="DI_Pool" bpmnElement="Pool" isHorizontal="false">
+        <dc:Bounds x="40" y="50" width="920" height="1330"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Chair" bpmnElement="Chair" isHorizontal="false">
+        <dc:Bounds x="40" y="90" width="290" height="1290"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_People" bpmnElement="People" isHorizontal="false">
+        <dc:Bounds x="330" y="90" width="330" height="1290"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_AI" bpmnElement="AI" isHorizontal="false">
+        <dc:Bounds x="660" y="90" width="300" height="1290"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Start" bpmnElement="Start" bioc:fill="#ffffff">
+        <dc:Bounds x="472" y="145" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="377" y="185" width="225" height="25"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Init" bpmnElement="Init" bioc:fill="#ffffff">
+        <dc:Bounds x="365" y="210" width="250" height="85"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Merge" bpmnElement="Merge" bioc:fill="#ffffff" isMarkerVisible="true">
+        <dc:Bounds x="790" y="285" width="40" height="40"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Analyze" bpmnElement="Analyze" bioc:fill="#e6f2ff">
+        <dc:Bounds x="685" y="355" width="250" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Validate" bpmnElement="Validate" bioc:fill="#ffffff">
+        <dc:Bounds x="365" y="480" width="250" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Evidence" bpmnElement="Evidence" bioc:fill="#ffffff" isMarkerVisible="true">
+        <dc:Bounds x="460" y="605" width="60" height="60"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="605" width="85" height="60"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Collect" bpmnElement="Collect" bioc:fill="#ffffff">
+        <dc:Bounds x="365" y="715" width="250" height="85"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Actions" bpmnElement="Actions" bioc:fill="#e6f2ff">
+        <dc:Bounds x="685" y="715" width="250" height="85"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Confirm" bpmnElement="Confirm" bioc:fill="#ffffff">
+        <dc:Bounds x="365" y="840" width="250" height="75"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Report" bpmnElement="Report" bioc:fill="#e6f2ff">
+        <dc:Bounds x="685" y="950" width="250" height="85"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Review" bpmnElement="Review" bioc:fill="#ffffff">
+        <dc:Bounds x="75" y="1070" width="230" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Accepted" bpmnElement="Accepted" bioc:fill="#ffffff" isMarkerVisible="true">
+        <dc:Bounds x="160" y="1200" width="60" height="60"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="70" y="1200" width="85" height="60"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_Rework" bpmnElement="Rework" bioc:fill="#ffffff">
+        <dc:Bounds x="365" y="1190" width="250" height="85"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_End" bpmnElement="End" bioc:fill="#ffffff">
+        <dc:Bounds x="172" y="1320" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="77" y="1360" width="225" height="25"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_0" bpmnElement="Flow_0">
+        <di:waypoint x="490" y="181"/>
+        <di:waypoint x="490" y="210"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_1" bpmnElement="Flow_1">
+        <di:waypoint x="615" y="252"/>
+        <di:waypoint x="740" y="252"/>
+        <di:waypoint x="740" y="305"/>
+        <di:waypoint x="790" y="305"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_2" bpmnElement="Flow_2">
+        <di:waypoint x="810" y="325"/>
+        <di:waypoint x="810" y="355"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_3" bpmnElement="Flow_3">
+        <di:waypoint x="685" y="400"/>
+        <di:waypoint x="490" y="400"/>
+        <di:waypoint x="490" y="480"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_4" bpmnElement="Flow_4">
+        <di:waypoint x="490" y="570"/>
+        <di:waypoint x="490" y="605"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_5" bpmnElement="Flow_5">
+        <di:waypoint x="490" y="665"/>
+        <di:waypoint x="490" y="715"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="498.0" y="668.0" width="110" height="22"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_6" bpmnElement="Flow_6">
+        <di:waypoint x="615" y="757"/>
+        <di:waypoint x="645" y="757"/>
+        <di:waypoint x="645" y="305"/>
+        <di:waypoint x="790" y="305"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="638.0" y="735.0" width="110" height="22"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_7" bpmnElement="Flow_7">
+        <di:waypoint x="520" y="635"/>
+        <di:waypoint x="810" y="635"/>
+        <di:waypoint x="810" y="715"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="673.0" y="613.0" width="110" height="22"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_8" bpmnElement="Flow_8">
+        <di:waypoint x="685" y="757"/>
+        <di:waypoint x="670" y="757"/>
+        <di:waypoint x="670" y="877"/>
+        <di:waypoint x="615" y="877"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_9" bpmnElement="Flow_9">
+        <di:waypoint x="490" y="915"/>
+        <di:waypoint x="490" y="992"/>
+        <di:waypoint x="685" y="992"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_10" bpmnElement="Flow_10">
+        <di:waypoint x="810" y="1035"/>
+        <di:waypoint x="810" y="1050"/>
+        <di:waypoint x="190" y="1050"/>
+        <di:waypoint x="190" y="1070"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_11" bpmnElement="Flow_11">
+        <di:waypoint x="190" y="1150"/>
+        <di:waypoint x="190" y="1200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_12" bpmnElement="Flow_12">
+        <di:waypoint x="190" y="1260"/>
+        <di:waypoint x="190" y="1320"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="198.0" y="1268.0" width="110" height="22"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_13" bpmnElement="Flow_13">
+        <di:waypoint x="220" y="1230"/>
+        <di:waypoint x="365" y="1230"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="300.5" y="1208.0" width="110" height="22"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_14" bpmnElement="Flow_14">
+        <di:waypoint x="615" y="1230"/>
+        <di:waypoint x="945" y="1230"/>
+        <di:waypoint x="945" y="305"/>
+        <di:waypoint x="830" y="305"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="788.0" y="1208.0" width="110" height="22"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
