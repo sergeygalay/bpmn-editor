@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_SafetyStatsAnalysis" targetNamespace="https://sergeygalay.github.io/bpmn-editor/vns-safety-statistics-analysis-l1">
+  <bpmn:collaboration id="Collab_SafetyStatsAnalysis">
+    <bpmn:participant id="Participant_SafetyStatsAnalysis" name="Анализ статистики ПБиОТ руководителем" processRef="Process_SafetyStatsAnalysis"/>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_SafetyStatsAnalysis" name="Анализ статистики ПБиОТ руководителем — L1" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_SafetyStatsAnalysis">
+      <bpmn:lane id="Lane_Leader" name="Руководитель">
+        <bpmn:flowNodeRef>Start_NeedAssessment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_OpenApp</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SelectSlice</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ReviewSummary</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_NeedDetail</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ReviewDetail</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_NeedIncident</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_OpenIncident</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_NeedKub</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ContinueMonitoring</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_AssessmentComplete</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Kub" name="АС КУБ">
+        <bpmn:flowNodeRef>Task_OpenKubMaterials</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_KubOpened</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_NeedAssessment" name="Необходимо оценить состояние ПБиОТ"/>
+    <bpmn:userTask id="Task_OpenApp" name="Открыть SmartApp «Статистика»"/>
+    <bpmn:userTask id="Task_SelectSlice" name="Выбрать Компания / Подрядчики и период"/>
+    <bpmn:userTask id="Task_ReviewSummary" name="Оценить сводные показатели и динамику"/>
+    <bpmn:exclusiveGateway id="Gateway_NeedDetail" name="Нужна детализация?"/>
+    <bpmn:userTask id="Task_ReviewDetail" name="Изучить Пирамиду, FIFR или Ленту"/>
+    <bpmn:exclusiveGateway id="Gateway_NeedIncident" name="Нужно изучить конкретное происшествие?"/>
+    <bpmn:userTask id="Task_OpenIncident" name="Открыть карточку происшествия"/>
+    <bpmn:exclusiveGateway id="Gateway_NeedKub" name="Нужны материалы АС КУБ?"/>
+    <bpmn:userTask id="Task_ContinueMonitoring" name="Продолжить мониторинг показателей"/>
+    <bpmn:endEvent id="End_AssessmentComplete" name="Оценка состояния ПБиОТ завершена"/>
+    <bpmn:userTask id="Task_OpenKubMaterials" name="Перейти к материалам происшествия в АС КУБ"/>
+    <bpmn:endEvent id="End_KubOpened" name="Материалы происшествия открыты"/>
+    <bpmn:sequenceFlow id="Flow_A1" sourceRef="Start_NeedAssessment" targetRef="Task_OpenApp"/>
+    <bpmn:sequenceFlow id="Flow_A2" sourceRef="Task_OpenApp" targetRef="Task_SelectSlice"/>
+    <bpmn:sequenceFlow id="Flow_A3" sourceRef="Task_SelectSlice" targetRef="Task_ReviewSummary"/>
+    <bpmn:sequenceFlow id="Flow_A4" sourceRef="Task_ReviewSummary" targetRef="Gateway_NeedDetail"/>
+    <bpmn:sequenceFlow id="Flow_A5" sourceRef="Gateway_NeedDetail" targetRef="Task_ContinueMonitoring" name="Нет"/>
+    <bpmn:sequenceFlow id="Flow_A6" sourceRef="Gateway_NeedDetail" targetRef="Task_ReviewDetail" name="Да"/>
+    <bpmn:sequenceFlow id="Flow_A7" sourceRef="Task_ReviewDetail" targetRef="Gateway_NeedIncident"/>
+    <bpmn:sequenceFlow id="Flow_A8" sourceRef="Gateway_NeedIncident" targetRef="Task_ContinueMonitoring" name="Нет"/>
+    <bpmn:sequenceFlow id="Flow_A9" sourceRef="Gateway_NeedIncident" targetRef="Task_OpenIncident" name="Да"/>
+    <bpmn:sequenceFlow id="Flow_A10" sourceRef="Task_OpenIncident" targetRef="Gateway_NeedKub"/>
+    <bpmn:sequenceFlow id="Flow_A11" sourceRef="Gateway_NeedKub" targetRef="Task_ContinueMonitoring" name="Нет"/>
+    <bpmn:sequenceFlow id="Flow_A12" sourceRef="Gateway_NeedKub" targetRef="Task_OpenKubMaterials" name="Да"/>
+    <bpmn:sequenceFlow id="Flow_A13" sourceRef="Task_ContinueMonitoring" targetRef="End_AssessmentComplete"/>
+    <bpmn:sequenceFlow id="Flow_A14" sourceRef="Task_OpenKubMaterials" targetRef="End_KubOpened"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_SafetyStatsAnalysis">
+    <bpmndi:BPMNPlane id="Plane_SafetyStatsAnalysis" bpmnElement="Collab_SafetyStatsAnalysis">
+      <bpmndi:BPMNShape id="Participant_SafetyStatsAnalysis_di" bpmnElement="Participant_SafetyStatsAnalysis" isHorizontal="true"><dc:Bounds x="30" y="40" width="2770" height="470"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Leader_di" bpmnElement="Lane_Leader" isHorizontal="true"><dc:Bounds x="60" y="40" width="2740" height="280"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Kub_di" bpmnElement="Lane_Kub" isHorizontal="true"><dc:Bounds x="60" y="320" width="2740" height="190"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_NeedAssessment_di" bpmnElement="Start_NeedAssessment"><dc:Bounds x="100" y="150" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpenApp_di" bpmnElement="Task_OpenApp"><dc:Bounds x="190" y="125" width="180" height="85"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SelectSlice_di" bpmnElement="Task_SelectSlice"><dc:Bounds x="420" y="125" width="210" height="85"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReviewSummary_di" bpmnElement="Task_ReviewSummary"><dc:Bounds x="680" y="125" width="220" height="85"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_NeedDetail_di" bpmnElement="Gateway_NeedDetail" isMarkerVisible="true"><dc:Bounds x="950" y="143" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReviewDetail_di" bpmnElement="Task_ReviewDetail"><dc:Bounds x="1080" y="125" width="210" height="85"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_NeedIncident_di" bpmnElement="Gateway_NeedIncident" isMarkerVisible="true"><dc:Bounds x="1340" y="143" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpenIncident_di" bpmnElement="Task_OpenIncident"><dc:Bounds x="1470" y="125" width="210" height="85"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_NeedKub_di" bpmnElement="Gateway_NeedKub" isMarkerVisible="true"><dc:Bounds x="1730" y="143" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ContinueMonitoring_di" bpmnElement="Task_ContinueMonitoring"><dc:Bounds x="1900" y="95" width="210" height="85"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_AssessmentComplete_di" bpmnElement="End_AssessmentComplete"><dc:Bounds x="2210" y="120" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpenKubMaterials_di" bpmnElement="Task_OpenKubMaterials"><dc:Bounds x="1900" y="365" width="240" height="90"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_KubOpened_di" bpmnElement="End_KubOpened"><dc:Bounds x="2260" y="392" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_A1_di" bpmnElement="Flow_A1"><di:waypoint x="136" y="168"/><di:waypoint x="190" y="168"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A2_di" bpmnElement="Flow_A2"><di:waypoint x="370" y="168"/><di:waypoint x="420" y="168"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A3_di" bpmnElement="Flow_A3"><di:waypoint x="630" y="168"/><di:waypoint x="680" y="168"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A4_di" bpmnElement="Flow_A4"><di:waypoint x="900" y="168"/><di:waypoint x="950" y="168"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A5_di" bpmnElement="Flow_A5"><di:waypoint x="975" y="143"/><di:waypoint x="975" y="80"/><di:waypoint x="2005" y="80"/><di:waypoint x="2005" y="95"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A6_di" bpmnElement="Flow_A6"><di:waypoint x="1000" y="168"/><di:waypoint x="1080" y="168"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A7_di" bpmnElement="Flow_A7"><di:waypoint x="1290" y="168"/><di:waypoint x="1340" y="168"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A8_di" bpmnElement="Flow_A8"><di:waypoint x="1365" y="143"/><di:waypoint x="1365" y="90"/><di:waypoint x="1900" y="90"/><di:waypoint x="1900" y="138"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A9_di" bpmnElement="Flow_A9"><di:waypoint x="1390" y="168"/><di:waypoint x="1470" y="168"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A10_di" bpmnElement="Flow_A10"><di:waypoint x="1680" y="168"/><di:waypoint x="1730" y="168"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A11_di" bpmnElement="Flow_A11"><di:waypoint x="1755" y="143"/><di:waypoint x="1755" y="105"/><di:waypoint x="1900" y="105"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A12_di" bpmnElement="Flow_A12"><di:waypoint x="1755" y="193"/><di:waypoint x="1755" y="410"/><di:waypoint x="1900" y="410"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A13_di" bpmnElement="Flow_A13"><di:waypoint x="2110" y="138"/><di:waypoint x="2210" y="138"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_A14_di" bpmnElement="Flow_A14"><di:waypoint x="2140" y="410"/><di:waypoint x="2260" y="410"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
