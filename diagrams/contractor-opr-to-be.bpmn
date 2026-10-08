@@ -1,221 +1,288 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_contractor-opr-to-be" targetNamespace="https://sergeygalay.github.io/bpmn-editor/contractor-opr-to-be">
-<bpmn:collaboration id="Collaboration_contractor-opr-to-be">
-<bpmn:participant id="Participant_Company" name="Предприятие / оценка производителя работ" processRef="Process_Company" />
-<bpmn:participant id="Participant_Octant" name="Система «Октант» (способ обмена не определён)" processRef="Process_Octant" />
-<bpmn:messageFlow id="Message_1" sourceRef="Sync" targetRef="OctStart" name="Результат ОПР (канал уточняется)" />
-</bpmn:collaboration>
-<bpmn:process id="Process_Company" name="Оценка производителя работ — целевой процесс MVP" isExecutable="false">
-<bpmn:laneSet id="LaneSet_Company">
-<bpmn:lane id="Lane_Checker" name="Уполномоченный проверяющий">
-<bpmn:flowNodeRef>Open</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Fill</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Network</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Reopen</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Online</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>MergeNet</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Photo</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Choice</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Finish</bpmn:flowNodeRef>
-</bpmn:lane>
-<bpmn:lane id="Lane_App" name="«Суперника» / цифровой чек-лист">
-<bpmn:flowNodeRef>Auth</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Denied</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Critical</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Unsat</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>MergeGrade</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Sync</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>End</bpmn:flowNodeRef>
-</bpmn:lane>
-<bpmn:lane id="Lane_Window" name="Единое окно ПБиОТ">
-<bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Schedule</bpmn:flowNodeRef>
-</bpmn:lane>
-</bpmn:laneSet>
-<bpmn:startEvent id="Start" name="Плановая ОПР" />
-<bpmn:userTask id="Schedule" name="Организовать проверку по графику" />
-<bpmn:userTask id="Open" name="Открыть и заранее загрузить чек-лист" />
-<bpmn:exclusiveGateway id="Auth" name="Полномочия по ОРД подтверждены?" />
-<bpmn:endEvent id="Denied" name="Нет допуска к ОПР" />
-<bpmn:userTask id="Fill" name="Заполнить реквизиты, пункты и примечания (офлайн допустим)" />
-<bpmn:exclusiveGateway id="Network" name="Есть сеть для загрузки фото?" />
-<bpmn:userTask id="Reopen" name="Вернуться онлайн и повторно открыть приложение" />
-<bpmn:task id="Online" name="Связь доступна" />
-<bpmn:exclusiveGateway id="MergeNet" />
-<bpmn:userTask id="Photo" name="Добавить фото к конкретным пунктам (при наличии)" />
-<bpmn:exclusiveGateway id="Critical" name="Нарушен блокирующий критерий?" />
-<bpmn:businessRuleTask id="Unsat" name="Автоматически установить «неуд»" />
-<bpmn:userTask id="Choice" name="Выбрать итог «уд» / «неуд»" />
-<bpmn:exclusiveGateway id="MergeGrade" />
-<bpmn:userTask id="Finish" name="Завершить ОПР; при необходимости получить печатную форму" />
-<bpmn:serviceTask id="Sync" name="Сохранить и передать результат для учёта в «Октанте» (способ уточняется)" />
-<bpmn:endEvent id="End" name="ОПР завершена" />
-<bpmn:sequenceFlow id="Sequence_01" sourceRef="Start" targetRef="Schedule" />
-<bpmn:sequenceFlow id="Sequence_02" sourceRef="Schedule" targetRef="Open" />
-<bpmn:sequenceFlow id="Sequence_03" sourceRef="Open" targetRef="Auth" />
-<bpmn:sequenceFlow id="Sequence_04" sourceRef="Auth" targetRef="Denied" name="Нет" />
-<bpmn:sequenceFlow id="Sequence_05" sourceRef="Auth" targetRef="Fill" name="Да" />
-<bpmn:sequenceFlow id="Sequence_06" sourceRef="Fill" targetRef="Network" />
-<bpmn:sequenceFlow id="Sequence_07" sourceRef="Network" targetRef="Reopen" name="Нет" />
-<bpmn:sequenceFlow id="Sequence_08" sourceRef="Network" targetRef="Online" name="Да" />
-<bpmn:sequenceFlow id="Sequence_09" sourceRef="Reopen" targetRef="MergeNet" />
-<bpmn:sequenceFlow id="Sequence_10" sourceRef="Online" targetRef="MergeNet" />
-<bpmn:sequenceFlow id="Sequence_11" sourceRef="MergeNet" targetRef="Photo" />
-<bpmn:sequenceFlow id="Sequence_12" sourceRef="Photo" targetRef="Critical" />
-<bpmn:sequenceFlow id="Sequence_13" sourceRef="Critical" targetRef="Unsat" name="Да" />
-<bpmn:sequenceFlow id="Sequence_14" sourceRef="Critical" targetRef="Choice" name="Нет" />
-<bpmn:sequenceFlow id="Sequence_15" sourceRef="Unsat" targetRef="MergeGrade" />
-<bpmn:sequenceFlow id="Sequence_16" sourceRef="Choice" targetRef="MergeGrade" />
-<bpmn:sequenceFlow id="Sequence_17" sourceRef="MergeGrade" targetRef="Finish" />
-<bpmn:sequenceFlow id="Sequence_18" sourceRef="Finish" targetRef="Sync" />
-<bpmn:sequenceFlow id="Sequence_19" sourceRef="Sync" targetRef="End" />
-</bpmn:process>
-<bpmn:process id="Process_Octant" name="Регистрация результата в Октант" isExecutable="false">
-<bpmn:startEvent id="OctStart" name="Результат поступил" />
-<bpmn:task id="OctStore" name="Учесть результат ОПР" />
-<bpmn:endEvent id="OctEnd" name="Результат учтён" />
-<bpmn:sequenceFlow id="Sequence_20" sourceRef="OctStart" targetRef="OctStore" />
-<bpmn:sequenceFlow id="Sequence_21" sourceRef="OctStore" targetRef="OctEnd" />
-</bpmn:process>
-<bpmndi:BPMNDiagram id="Diagram_contractor-opr-to-be"><bpmndi:BPMNPlane id="Plane_contractor-opr-to-be" bpmnElement="Collaboration_contractor-opr-to-be">
-<bpmndi:BPMNShape id="Participant_Company_di" bpmnElement="Participant_Company" isHorizontal="true"><dc:Bounds x="40" y="50" width="3380" height="830" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Lane_Checker_di" bpmnElement="Lane_Checker" isHorizontal="true"><dc:Bounds x="40" y="50" width="3380" height="470" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Lane_App_di" bpmnElement="Lane_App" isHorizontal="true"><dc:Bounds x="40" y="520" width="3380" height="180" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Lane_Window_di" bpmnElement="Lane_Window" isHorizontal="true"><dc:Bounds x="40" y="700" width="3380" height="180" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Participant_Octant_di" bpmnElement="Participant_Octant" isHorizontal="true"><dc:Bounds x="40" y="920" width="3380" height="130" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Start_di" bpmnElement="Start"><dc:Bounds x="152" y="772" width="36" height="36" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Schedule_di" bpmnElement="Schedule"><dc:Bounds x="275" y="749" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Open_di" bpmnElement="Open"><dc:Bounds x="465" y="259" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Auth_di" bpmnElement="Auth"><dc:Bounds x="715" y="585" width="50" height="50" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Denied_di" bpmnElement="Denied"><dc:Bounds x="922" y="652" width="36" height="36" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Fill_di" bpmnElement="Fill"><dc:Bounds x="865" y="259" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Network_di" bpmnElement="Network"><dc:Bounds x="1125" y="275" width="50" height="50" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Reopen_di" bpmnElement="Reopen"><dc:Bounds x="1275" y="149" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Online_di" bpmnElement="Online"><dc:Bounds x="1275" y="364" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="MergeNet_di" bpmnElement="MergeNet"><dc:Bounds x="1515" y="275" width="50" height="50" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Photo_di" bpmnElement="Photo"><dc:Bounds x="1645" y="259" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Critical_di" bpmnElement="Critical"><dc:Bounds x="1915" y="585" width="50" height="50" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Unsat_di" bpmnElement="Unsat"><dc:Bounds x="2065" y="569" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Choice_di" bpmnElement="Choice"><dc:Bounds x="2065" y="259" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="MergeGrade_di" bpmnElement="MergeGrade"><dc:Bounds x="2335" y="585" width="50" height="50" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Finish_di" bpmnElement="Finish"><dc:Bounds x="2475" y="259" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Sync_di" bpmnElement="Sync"><dc:Bounds x="2705" y="569" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="End_di" bpmnElement="End"><dc:Bounds x="3012" y="592" width="36" height="36" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctStart_di" bpmnElement="OctStart"><dc:Bounds x="2772" y="967" width="36" height="36" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctStore_di" bpmnElement="OctStore"><dc:Bounds x="2935" y="944" width="170" height="82" /></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctEnd_di" bpmnElement="OctEnd"><dc:Bounds x="3242" y="967" width="36" height="36" /></bpmndi:BPMNShape>
-<bpmndi:BPMNEdge id="Sequence_01_di" bpmnElement="Sequence_01">
-<di:waypoint x="188" y="790" />
-<di:waypoint x="275" y="790" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_02_di" bpmnElement="Sequence_02">
-<di:waypoint x="445" y="790" />
-<di:waypoint x="455" y="790" />
-<di:waypoint x="455" y="300" />
-<di:waypoint x="465" y="300" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_03_di" bpmnElement="Sequence_03">
-<di:waypoint x="635" y="300" />
-<di:waypoint x="675" y="300" />
-<di:waypoint x="675" y="610" />
-<di:waypoint x="715" y="610" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_04_di" bpmnElement="Sequence_04">
-<di:waypoint x="765" y="610" />
-<di:waypoint x="844" y="610" />
-<di:waypoint x="844" y="670" />
-<di:waypoint x="922" y="670" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_05_di" bpmnElement="Sequence_05">
-<di:waypoint x="765" y="610" />
-<di:waypoint x="815" y="610" />
-<di:waypoint x="815" y="300" />
-<di:waypoint x="865" y="300" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_06_di" bpmnElement="Sequence_06">
-<di:waypoint x="1035" y="300" />
-<di:waypoint x="1125" y="300" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_07_di" bpmnElement="Sequence_07">
-<di:waypoint x="1175" y="300" />
-<di:waypoint x="1225" y="300" />
-<di:waypoint x="1225" y="190" />
-<di:waypoint x="1275" y="190" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_08_di" bpmnElement="Sequence_08">
-<di:waypoint x="1175" y="300" />
-<di:waypoint x="1225" y="300" />
-<di:waypoint x="1225" y="405" />
-<di:waypoint x="1275" y="405" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_09_di" bpmnElement="Sequence_09">
-<di:waypoint x="1445" y="190" />
-<di:waypoint x="1480" y="190" />
-<di:waypoint x="1480" y="300" />
-<di:waypoint x="1515" y="300" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_10_di" bpmnElement="Sequence_10">
-<di:waypoint x="1445" y="405" />
-<di:waypoint x="1480" y="405" />
-<di:waypoint x="1480" y="300" />
-<di:waypoint x="1515" y="300" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_11_di" bpmnElement="Sequence_11">
-<di:waypoint x="1565" y="300" />
-<di:waypoint x="1645" y="300" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_12_di" bpmnElement="Sequence_12">
-<di:waypoint x="1815" y="300" />
-<di:waypoint x="1865" y="300" />
-<di:waypoint x="1865" y="610" />
-<di:waypoint x="1915" y="610" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_13_di" bpmnElement="Sequence_13">
-<di:waypoint x="1965" y="610" />
-<di:waypoint x="2065" y="610" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_14_di" bpmnElement="Sequence_14">
-<di:waypoint x="1965" y="610" />
-<di:waypoint x="2015" y="610" />
-<di:waypoint x="2015" y="300" />
-<di:waypoint x="2065" y="300" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_15_di" bpmnElement="Sequence_15">
-<di:waypoint x="2235" y="610" />
-<di:waypoint x="2335" y="610" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_16_di" bpmnElement="Sequence_16">
-<di:waypoint x="2235" y="300" />
-<di:waypoint x="2285" y="300" />
-<di:waypoint x="2285" y="610" />
-<di:waypoint x="2335" y="610" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_17_di" bpmnElement="Sequence_17">
-<di:waypoint x="2385" y="610" />
-<di:waypoint x="2430" y="610" />
-<di:waypoint x="2430" y="300" />
-<di:waypoint x="2475" y="300" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_18_di" bpmnElement="Sequence_18">
-<di:waypoint x="2645" y="300" />
-<di:waypoint x="2675" y="300" />
-<di:waypoint x="2675" y="610" />
-<di:waypoint x="2705" y="610" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_19_di" bpmnElement="Sequence_19">
-<di:waypoint x="2875" y="610" />
-<di:waypoint x="3012" y="610" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_20_di" bpmnElement="Sequence_20">
-<di:waypoint x="2808" y="985" />
-<di:waypoint x="2935" y="985" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Sequence_21_di" bpmnElement="Sequence_21">
-<di:waypoint x="3105" y="985" />
-<di:waypoint x="3242" y="985" />
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_1_di" bpmnElement="Message_1">
-<di:waypoint x="2790" y="651" />
-<di:waypoint x="2790" y="967" />
-</bpmndi:BPMNEdge>
-</bpmndi:BPMNPlane></bpmndi:BPMNDiagram></bpmn:definitions>
+  <bpmn:collaboration id="Collaboration_contractor-opr-to-be">
+    <bpmn:participant id="Participant_Company" name="Предприятие / оценка производителя работ" processRef="Process_Company" />
+    <bpmn:participant id="Participant_Octant" name="Система «Октант» (способ обмена не определён)" processRef="Process_Octant" />
+    <bpmn:messageFlow id="Message_1" name="Результат ОПР (канал уточняется)" sourceRef="Sync" targetRef="OctStart" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_Company" name="Оценка производителя работ — целевой процесс MVP" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_Company">
+      <bpmn:lane id="Lane_Checker" name="Уполномоченный проверяющий">
+        <bpmn:flowNodeRef>Open</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Fill</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Network</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Reopen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Online</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>MergeNet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Photo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Choice</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Finish</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_App" name="«Суперника» / цифровой чек-лист">
+        <bpmn:flowNodeRef>Auth</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Critical</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Unsat</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>MergeGrade</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Sync</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Denied</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Window" name="Единое окно ПБиОТ">
+        <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Schedule</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start" name="Плановая ОПР" />
+    <bpmn:userTask id="Open" name="Открыть и заранее загрузить чек-лист" />
+    <bpmn:exclusiveGateway id="Auth" name="Полномочия по ОРД подтверждены?" />
+    <bpmn:userTask id="Fill" name="Заполнить реквизиты, пункты и примечания (офлайн допустим)" />
+    <bpmn:exclusiveGateway id="Network" name="Есть сеть для загрузки фото?" />
+    <bpmn:userTask id="Reopen" name="Вернуться онлайн и повторно открыть приложение" />
+    <bpmn:task id="Online" name="Связь доступна" />
+    <bpmn:exclusiveGateway id="MergeNet" />
+    <bpmn:userTask id="Photo" name="Добавить фото к конкретным пунктам (при наличии)" />
+    <bpmn:exclusiveGateway id="Critical" name="Нарушен блокирующий критерий?" />
+    <bpmn:businessRuleTask id="Unsat" name="Автоматически установить «неуд»" />
+    <bpmn:userTask id="Choice" name="Выбрать итог «уд» / «неуд»" />
+    <bpmn:exclusiveGateway id="MergeGrade" />
+    <bpmn:userTask id="Finish" name="Завершить ОПР; при необходимости получить печатную форму" />
+    <bpmn:serviceTask id="Sync" name="Сохранить и передать результат для учёта в «Октанте» (способ уточняется)" />
+    <bpmn:endEvent id="End" name="ОПР завершена" />
+    <bpmn:sequenceFlow id="Sequence_01" sourceRef="Start" targetRef="Schedule" />
+    <bpmn:sequenceFlow id="Sequence_02" sourceRef="Schedule" targetRef="Open" />
+    <bpmn:sequenceFlow id="Sequence_03" sourceRef="Open" targetRef="Auth" />
+    <bpmn:sequenceFlow id="Sequence_04" name="Нет" sourceRef="Auth" targetRef="Denied" />
+    <bpmn:sequenceFlow id="Sequence_05" name="Да" sourceRef="Auth" targetRef="Fill" />
+    <bpmn:sequenceFlow id="Sequence_06" sourceRef="Fill" targetRef="Network" />
+    <bpmn:sequenceFlow id="Sequence_07" name="Нет" sourceRef="Network" targetRef="Reopen" />
+    <bpmn:sequenceFlow id="Sequence_08" name="Да" sourceRef="Network" targetRef="Online" />
+    <bpmn:sequenceFlow id="Sequence_09" sourceRef="Reopen" targetRef="MergeNet" />
+    <bpmn:sequenceFlow id="Sequence_10" sourceRef="Online" targetRef="MergeNet" />
+    <bpmn:sequenceFlow id="Sequence_11" sourceRef="MergeNet" targetRef="Photo" />
+    <bpmn:sequenceFlow id="Sequence_12" sourceRef="Photo" targetRef="Critical" />
+    <bpmn:sequenceFlow id="Sequence_13" name="Да" sourceRef="Critical" targetRef="Unsat" />
+    <bpmn:sequenceFlow id="Sequence_14" name="Нет" sourceRef="Critical" targetRef="Choice" />
+    <bpmn:sequenceFlow id="Sequence_15" sourceRef="Unsat" targetRef="MergeGrade" />
+    <bpmn:sequenceFlow id="Sequence_16" sourceRef="Choice" targetRef="MergeGrade" />
+    <bpmn:sequenceFlow id="Sequence_17" sourceRef="MergeGrade" targetRef="Finish" />
+    <bpmn:sequenceFlow id="Sequence_18" sourceRef="Finish" targetRef="Sync" />
+    <bpmn:sequenceFlow id="Sequence_19" sourceRef="Sync" targetRef="End" />
+    <bpmn:userTask id="Schedule" name="Организовать проверку по графику" />
+    <bpmn:endEvent id="Denied" name="Нет допуска к ОПР" />
+  </bpmn:process>
+  <bpmn:process id="Process_Octant" name="Регистрация результата в Октант" isExecutable="false">
+    <bpmn:startEvent id="OctStart" name="Результат поступил" />
+    <bpmn:task id="OctStore" name="Учесть результат ОПР" />
+    <bpmn:endEvent id="OctEnd" name="Результат учтён" />
+    <bpmn:sequenceFlow id="Sequence_20" sourceRef="OctStart" targetRef="OctStore" />
+    <bpmn:sequenceFlow id="Sequence_21" sourceRef="OctStore" targetRef="OctEnd" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_contractor-opr-to-be">
+    <bpmndi:BPMNPlane id="Plane_contractor-opr-to-be" bpmnElement="Collaboration_contractor-opr-to-be">
+      <bpmndi:BPMNShape id="Participant_Company_di" bpmnElement="Participant_Company" isHorizontal="true">
+        <dc:Bounds x="40" y="50" width="3380" height="830" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Window_di" bpmnElement="Lane_Window" isHorizontal="true">
+        <dc:Bounds x="40" y="700" width="3380" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_App_di" bpmnElement="Lane_App" isHorizontal="true">
+        <dc:Bounds x="40" y="520" width="3380" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Checker_di" bpmnElement="Lane_Checker" isHorizontal="true">
+        <dc:Bounds x="40" y="50" width="3380" height="470" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_di" bpmnElement="Start">
+        <dc:Bounds x="152" y="772" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Open_di" bpmnElement="Open">
+        <dc:Bounds x="465" y="259" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Auth_di" bpmnElement="Auth" isMarkerVisible="true">
+        <dc:Bounds x="715" y="585" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fill_di" bpmnElement="Fill">
+        <dc:Bounds x="865" y="259" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Network_di" bpmnElement="Network" isMarkerVisible="true">
+        <dc:Bounds x="1125" y="275" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1185" y="286" width="78" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Reopen_di" bpmnElement="Reopen">
+        <dc:Bounds x="1275" y="149" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Online_di" bpmnElement="Online">
+        <dc:Bounds x="1275" y="364" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="MergeNet_di" bpmnElement="MergeNet" isMarkerVisible="true">
+        <dc:Bounds x="1515" y="275" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Photo_di" bpmnElement="Photo">
+        <dc:Bounds x="1645" y="259" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Critical_di" bpmnElement="Critical" isMarkerVisible="true">
+        <dc:Bounds x="1915" y="585" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Unsat_di" bpmnElement="Unsat">
+        <dc:Bounds x="2065" y="569" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Choice_di" bpmnElement="Choice">
+        <dc:Bounds x="2065" y="259" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="MergeGrade_di" bpmnElement="MergeGrade" isMarkerVisible="true">
+        <dc:Bounds x="2335" y="585" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Finish_di" bpmnElement="Finish">
+        <dc:Bounds x="2475" y="259" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Sync_di" bpmnElement="Sync">
+        <dc:Bounds x="2705" y="569" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_di" bpmnElement="End">
+        <dc:Bounds x="3012" y="592" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Schedule_di" bpmnElement="Schedule">
+        <dc:Bounds x="255" y="749" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Denied_di" bpmnElement="Denied">
+        <dc:Bounds x="922" y="592" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="905" y="628" width="71" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Sequence_01_di" bpmnElement="Sequence_01">
+        <di:waypoint x="188" y="790" />
+        <di:waypoint x="255" y="790" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_02_di" bpmnElement="Sequence_02">
+        <di:waypoint x="425" y="790" />
+        <di:waypoint x="440" y="790" />
+        <di:waypoint x="440" y="300" />
+        <di:waypoint x="465" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_03_di" bpmnElement="Sequence_03">
+        <di:waypoint x="635" y="300" />
+        <di:waypoint x="675" y="300" />
+        <di:waypoint x="675" y="610" />
+        <di:waypoint x="715" y="610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_04_di" bpmnElement="Sequence_04">
+        <di:waypoint x="765" y="610" />
+        <di:waypoint x="922" y="610" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="826" y="587" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_05_di" bpmnElement="Sequence_05">
+        <di:waypoint x="740" y="585" />
+        <di:waypoint x="740" y="300" />
+        <di:waypoint x="865" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="748" y="433" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_06_di" bpmnElement="Sequence_06">
+        <di:waypoint x="1035" y="300" />
+        <di:waypoint x="1125" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_07_di" bpmnElement="Sequence_07">
+        <di:waypoint x="1150" y="275" />
+        <di:waypoint x="1150" y="190" />
+        <di:waypoint x="1275" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1170" y="203" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_08_di" bpmnElement="Sequence_08">
+        <di:waypoint x="1150" y="325" />
+        <di:waypoint x="1150" y="405" />
+        <di:waypoint x="1275" y="405" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1158" y="356" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_09_di" bpmnElement="Sequence_09">
+        <di:waypoint x="1445" y="190" />
+        <di:waypoint x="1540" y="190" />
+        <di:waypoint x="1540" y="275" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_10_di" bpmnElement="Sequence_10">
+        <di:waypoint x="1445" y="405" />
+        <di:waypoint x="1540" y="405" />
+        <di:waypoint x="1540" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_11_di" bpmnElement="Sequence_11">
+        <di:waypoint x="1565" y="300" />
+        <di:waypoint x="1645" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_12_di" bpmnElement="Sequence_12">
+        <di:waypoint x="1815" y="300" />
+        <di:waypoint x="1865" y="300" />
+        <di:waypoint x="1865" y="610" />
+        <di:waypoint x="1915" y="610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_13_di" bpmnElement="Sequence_13">
+        <di:waypoint x="1965" y="610" />
+        <di:waypoint x="2065" y="610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_14_di" bpmnElement="Sequence_14">
+        <di:waypoint x="1940" y="585" />
+        <di:waypoint x="1940" y="300" />
+        <di:waypoint x="2065" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1935" y="433" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_15_di" bpmnElement="Sequence_15">
+        <di:waypoint x="2235" y="610" />
+        <di:waypoint x="2335" y="610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_16_di" bpmnElement="Sequence_16">
+        <di:waypoint x="2235" y="300" />
+        <di:waypoint x="2360" y="300" />
+        <di:waypoint x="2360" y="585" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_17_di" bpmnElement="Sequence_17">
+        <di:waypoint x="2385" y="610" />
+        <di:waypoint x="2430" y="610" />
+        <di:waypoint x="2430" y="300" />
+        <di:waypoint x="2475" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_18_di" bpmnElement="Sequence_18">
+        <di:waypoint x="2645" y="300" />
+        <di:waypoint x="2675" y="300" />
+        <di:waypoint x="2675" y="610" />
+        <di:waypoint x="2705" y="610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_19_di" bpmnElement="Sequence_19">
+        <di:waypoint x="2875" y="610" />
+        <di:waypoint x="3012" y="610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_Octant_di" bpmnElement="Participant_Octant" isHorizontal="true">
+        <dc:Bounds x="40" y="920" width="3380" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctStart_di" bpmnElement="OctStart">
+        <dc:Bounds x="2772" y="967" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctStore_di" bpmnElement="OctStore">
+        <dc:Bounds x="2935" y="944" width="170" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctEnd_di" bpmnElement="OctEnd">
+        <dc:Bounds x="3242" y="967" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Sequence_20_di" bpmnElement="Sequence_20">
+        <di:waypoint x="2808" y="985" />
+        <di:waypoint x="2935" y="985" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_21_di" bpmnElement="Sequence_21">
+        <di:waypoint x="3105" y="985" />
+        <di:waypoint x="3242" y="985" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_1_di" bpmnElement="Message_1">
+        <di:waypoint x="2790" y="651" />
+        <di:waypoint x="2790" y="967" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
