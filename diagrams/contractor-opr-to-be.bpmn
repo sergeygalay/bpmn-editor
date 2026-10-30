@@ -2,12 +2,12 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_contractor-opr-to-be" targetNamespace="https://sergeygalay.github.io/bpmn-editor/contractor-opr-to-be">
 <bpmn:collaboration id="Collaboration_contractor-opr-to-be">
 <bpmn:participant id="Participant_Company" name="Предприятие / проведение проверки" processRef="Process_Company"/>
-<bpmn:participant id="Participant_Octant" name="«Октант» — создание и управление формами (концепция)" processRef="Process_Octant"/>
+<bpmn:participant id="Participant_Octant" name="Октант" processRef="Process_Octant"/>
 <bpmn:messageFlow id="Message_1" name="Готовые контрольные листы — целевая концепция" sourceRef="Provide" targetRef="Available"/>
 </bpmn:collaboration>
 <bpmn:process id="Process_Company" name="Рейтинг подрядчиков — TO-BE MVP: выбор и заполнение готового контрольного листа" isExecutable="false">
 <bpmn:laneSet id="LaneSet_Company">
-<bpmn:lane id="Lane_Window" name="Ответственный сотрудник «единого окна»">
+<bpmn:lane id="Lane_Window" name="Единое окно">
 <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
 <bpmn:flowNodeRef>Organize</bpmn:flowNodeRef>
 <bpmn:flowNodeRef>Inform</bpmn:flowNodeRef>
@@ -18,7 +18,7 @@
 <bpmn:flowNodeRef>Fill</bpmn:flowNodeRef>
 <bpmn:flowNodeRef>Record</bpmn:flowNodeRef>
 </bpmn:lane>
-<bpmn:lane id="Lane_App" name="«Суперника» — заполнение готовых форм">
+<bpmn:lane id="Lane_App" name="Суперника">
 <bpmn:flowNodeRef>Available</bpmn:flowNodeRef>
 <bpmn:flowNodeRef>Save</bpmn:flowNodeRef>
 <bpmn:flowNodeRef>End</bpmn:flowNodeRef>
@@ -55,9 +55,9 @@
 </bpmn:process>
 <bpmndi:BPMNDiagram id="Diagram_contractor-opr-to-be"><bpmndi:BPMNPlane id="Plane_contractor-opr-to-be" bpmnElement="Collaboration_contractor-opr-to-be">
 <bpmndi:BPMNShape id="Participant_Company_di" bpmnElement="Participant_Company" isHorizontal="true"><dc:Bounds x="40" y="60" width="2490" height="710"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Lane_Window_di" bpmnElement="Lane_Window" isHorizontal="true"><dc:Bounds x="40" y="60" width="2490" height="190"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Lane_Checker_di" bpmnElement="Lane_Checker" isHorizontal="true"><dc:Bounds x="40" y="250" width="2490" height="245"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Lane_App_di" bpmnElement="Lane_App" isHorizontal="true"><dc:Bounds x="40" y="495" width="2490" height="275"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_Window_di" bpmnElement="Lane_Window" isHorizontal="true"><dc:Bounds x="70" y="60" width="2460" height="190"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_Checker_di" bpmnElement="Lane_Checker" isHorizontal="true"><dc:Bounds x="70" y="250" width="2460" height="245"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_App_di" bpmnElement="Lane_App" isHorizontal="true"><dc:Bounds x="70" y="495" width="2460" height="275"/></bpmndi:BPMNShape>
 <bpmndi:BPMNShape id="Participant_Octant_di" bpmnElement="Participant_Octant" isHorizontal="true"><dc:Bounds x="40" y="810" width="2490" height="180"/></bpmndi:BPMNShape>
 <bpmndi:BPMNShape id="Start_di" bpmnElement="Start"><dc:Bounds x="152" y="142" width="36" height="36"/></bpmndi:BPMNShape>
 <bpmndi:BPMNShape id="Organize_di" bpmnElement="Organize"><dc:Bounds x="295" y="114" width="210" height="92"/></bpmndi:BPMNShape>
