@@ -26,7 +26,7 @@
 </bpmn:laneSet>
 <bpmn:startEvent id="Start" name="Потребность в проверке" />
 <bpmn:userTask id="Organize" name="Организовать проверку вне приложения" />
-<bpmn:sendTask id="Inform" name="Сообщить проверяющему, какую форму использовать" />
+<bpmn:userTask id="Inform" name="Сообщить проверяющему, какую форму использовать" />
 <bpmn:userTask id="Open" name="Открыть «Супернику»" />
 <bpmn:task id="Available" name="Предоставить доступные готовые контрольные листы" />
 <bpmn:userTask id="Select" name="Выбрать нужный контрольный лист" />
