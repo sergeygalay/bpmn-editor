@@ -1,138 +1,181 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_contractor-opr-to-be" targetNamespace="https://sergeygalay.github.io/bpmn-editor/contractor-opr-to-be">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_contractor-opr-to-be" targetNamespace="https://sergeygalay.github.io/bpmn-editor/contractor-opr-to-be">
 <bpmn:collaboration id="Collaboration_contractor-opr-to-be">
-<bpmn:participant id="Participant_Company" name="Предприятие / проведение проверки" processRef="Process_Company"/>
+<bpmn:participant id="Participant_Window" name="Единое окно" processRef="Process_Window"/>
+<bpmn:participant id="Participant_Checker" name="Проверяющий" processRef="Process_Checker"/>
+<bpmn:participant id="Participant_App" name="Суперника" processRef="Process_App"/>
 <bpmn:participant id="Participant_Octant" name="Октант" processRef="Process_Octant"/>
-<bpmn:messageFlow id="Message_1" name="Готовые контрольные листы — целевая концепция" sourceRef="Provide" targetRef="Available"/>
+<bpmn:messageFlow id="Message_2" name="Какую форму использовать" sourceRef="Inform" targetRef="CheckerStart"/>
+<bpmn:messageFlow id="Message_3" name="Открытие приложения" sourceRef="Open" targetRef="AppStart"/>
+<bpmn:messageFlow id="Message_4" name="Готовые контрольные листы" sourceRef="Available" targetRef="Select"/>
+<bpmn:messageFlow id="Message_5" name="Заполненный лист и результат" sourceRef="Record" targetRef="AppWait"/>
+<bpmn:messageFlow id="Message_1" name="Готовые формы — целевая концепция" sourceRef="Provide" targetRef="Available"/>
 </bpmn:collaboration>
-<bpmn:process id="Process_Company" name="Рейтинг подрядчиков — TO-BE MVP: выбор и заполнение готового контрольного листа" isExecutable="false">
-<bpmn:laneSet id="LaneSet_Company">
-<bpmn:lane id="Lane_Window" name="Единое окно">
-<bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Organize</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Inform</bpmn:flowNodeRef>
-</bpmn:lane>
-<bpmn:lane id="Lane_Checker" name="Проверяющий">
-<bpmn:flowNodeRef>Open</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Select</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Fill</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Record</bpmn:flowNodeRef>
-</bpmn:lane>
-<bpmn:lane id="Lane_App" name="Суперника">
-<bpmn:flowNodeRef>Available</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>Save</bpmn:flowNodeRef>
-<bpmn:flowNodeRef>End</bpmn:flowNodeRef>
-</bpmn:lane>
-</bpmn:laneSet>
-<bpmn:startEvent id="Start" name="Потребность в проверке" />
-<bpmn:userTask id="Organize" name="Организовать проверку вне приложения" />
-<bpmn:userTask id="Inform" name="Сообщить проверяющему, какую форму использовать" />
-<bpmn:userTask id="Open" name="Открыть «Супернику»" />
-<bpmn:task id="Available" name="Предоставить доступные готовые контрольные листы" />
-<bpmn:userTask id="Select" name="Выбрать нужный контрольный лист" />
-<bpmn:userTask id="Fill" name="Заполнить контрольный лист" />
-<bpmn:userTask id="Record" name="Зафиксировать результат проверки" />
-<bpmn:task id="Save" name="Сохранить результат проверки" />
-<bpmn:endEvent id="End" name="Результат зафиксирован" />
-<bpmn:sequenceFlow id="Flow_1" sourceRef="Start" targetRef="Organize" />
-<bpmn:sequenceFlow id="Flow_2" sourceRef="Organize" targetRef="Inform" />
-<bpmn:sequenceFlow id="Flow_3" sourceRef="Inform" targetRef="Open" />
-<bpmn:sequenceFlow id="Flow_4" sourceRef="Open" targetRef="Available" />
-<bpmn:sequenceFlow id="Flow_5" sourceRef="Available" targetRef="Select" />
-<bpmn:sequenceFlow id="Flow_6" sourceRef="Select" targetRef="Fill" />
-<bpmn:sequenceFlow id="Flow_7" sourceRef="Fill" targetRef="Record" />
-<bpmn:sequenceFlow id="Flow_8" sourceRef="Record" targetRef="Save" />
-<bpmn:sequenceFlow id="Flow_9" sourceRef="Save" targetRef="End" />
+<bpmn:process id="Process_Window" name="Единое окно" isExecutable="false">
+<bpmn:startEvent id="Start" name="Нужно провести проверку"/>
+<bpmn:userTask id="Organize" name="Организовать проверку вне приложения"/>
+<bpmn:userTask id="Inform" name="Сообщить, какой лист использовать"/>
+<bpmn:endEvent id="WindowEnd" name="Проверяющий уведомлён"/>
+<bpmn:sequenceFlow id="Flow_1" sourceRef="Start" targetRef="Organize"/>
+<bpmn:sequenceFlow id="Flow_2" sourceRef="Organize" targetRef="Inform"/>
+<bpmn:sequenceFlow id="Flow_Window_End" sourceRef="Inform" targetRef="WindowEnd"/>
 </bpmn:process>
-<bpmn:process id="Process_Octant" name="Управление формами в Октант (целевая концепция, требует проверки)" isExecutable="false">
-<bpmn:startEvent id="OctStart" name="Потребность в актуальной форме" />
-<bpmn:userTask id="Manage" name="Создать / актуализировать форму (концепция)" />
-<bpmn:sendTask id="Provide" name="Предоставить актуальные готовые формы (способ уточняется)" />
-<bpmn:endEvent id="OctEnd" name="Форма предоставлена" />
-<bpmn:sequenceFlow id="Flow_10" sourceRef="OctStart" targetRef="Manage" />
-<bpmn:sequenceFlow id="Flow_11" sourceRef="Manage" targetRef="Provide" />
-<bpmn:sequenceFlow id="Flow_12" sourceRef="Provide" targetRef="OctEnd" />
+<bpmn:process id="Process_Checker" name="Проверяющий" isExecutable="false">
+<bpmn:startEvent id="CheckerStart" name="Получено поручение"/>
+<bpmn:userTask id="Open" name="Открыть «Супернику»"/>
+<bpmn:userTask id="Select" name="Выбрать контрольный лист"/>
+<bpmn:userTask id="Fill" name="Заполнить контрольный лист"/>
+<bpmn:userTask id="Record" name="Зафиксировать результат"/>
+<bpmn:endEvent id="CheckerEnd" name="Проверка завершена"/>
+<bpmn:sequenceFlow id="Flow_Checker_Start" sourceRef="CheckerStart" targetRef="Open"/>
+<bpmn:sequenceFlow id="Flow_4" sourceRef="Open" targetRef="Select"/>
+<bpmn:sequenceFlow id="Flow_6" sourceRef="Select" targetRef="Fill"/>
+<bpmn:sequenceFlow id="Flow_7" sourceRef="Fill" targetRef="Record"/>
+<bpmn:sequenceFlow id="Flow_Checker_End" sourceRef="Record" targetRef="CheckerEnd"/>
+</bpmn:process>
+<bpmn:process id="Process_App" name="Суперника" isExecutable="false">
+<bpmn:startEvent id="AppStart" name="Открыта форма"/>
+<bpmn:task id="Available" name="Предоставить готовые контрольные листы"/>
+<bpmn:receiveTask id="AppWait" name="Получить заполненный контрольный лист"/>
+<bpmn:task id="Save" name="Сохранить результат проверки"/>
+<bpmn:endEvent id="End" name="Результат зафиксирован"/>
+<bpmn:sequenceFlow id="Flow_App_Available" sourceRef="AppStart" targetRef="Available"/>
+<bpmn:sequenceFlow id="Flow_App_Wait" sourceRef="Available" targetRef="AppWait"/>
+<bpmn:sequenceFlow id="Flow_App_Save" sourceRef="AppWait" targetRef="Save"/>
+<bpmn:sequenceFlow id="Flow_9" sourceRef="Save" targetRef="End"/>
+</bpmn:process>
+<bpmn:process id="Process_Octant" name="Октант" isExecutable="false">
+<bpmn:startEvent id="OctStart" name="Нужна актуальная форма"/>
+<bpmn:userTask id="Manage" name="Вести актуальные формы (концепция)"/>
+<bpmn:sendTask id="Provide" name="Предоставить готовые формы (способ уточняется)"/>
+<bpmn:endEvent id="OctEnd" name="Формы предоставлены"/>
+<bpmn:sequenceFlow id="Flow_10" sourceRef="OctStart" targetRef="Manage"/>
+<bpmn:sequenceFlow id="Flow_11" sourceRef="Manage" targetRef="Provide"/>
+<bpmn:sequenceFlow id="Flow_12" sourceRef="Provide" targetRef="OctEnd"/>
 </bpmn:process>
 <bpmndi:BPMNDiagram id="Diagram_contractor-opr-to-be"><bpmndi:BPMNPlane id="Plane_contractor-opr-to-be" bpmnElement="Collaboration_contractor-opr-to-be">
-<bpmndi:BPMNShape id="Participant_Company_di" bpmnElement="Participant_Company" isHorizontal="true"><dc:Bounds x="40" y="60" width="2490" height="710"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Lane_Window_di" bpmnElement="Lane_Window" isHorizontal="true"><dc:Bounds x="70" y="60" width="2460" height="190"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Lane_Checker_di" bpmnElement="Lane_Checker" isHorizontal="true"><dc:Bounds x="70" y="250" width="2460" height="245"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Lane_App_di" bpmnElement="Lane_App" isHorizontal="true"><dc:Bounds x="70" y="495" width="2460" height="275"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Participant_Octant_di" bpmnElement="Participant_Octant" isHorizontal="true"><dc:Bounds x="40" y="810" width="2490" height="180"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Start_di" bpmnElement="Start"><dc:Bounds x="152" y="142" width="36" height="36"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Organize_di" bpmnElement="Organize"><dc:Bounds x="295" y="114" width="210" height="92"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Inform_di" bpmnElement="Inform"><dc:Bounds x="545" y="114" width="210" height="92"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Open_di" bpmnElement="Open"><dc:Bounds x="795" y="324" width="210" height="92"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Available_di" bpmnElement="Available"><dc:Bounds x="1030" y="579" width="210" height="92"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Select_di" bpmnElement="Select"><dc:Bounds x="1265" y="324" width="210" height="92"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Fill_di" bpmnElement="Fill"><dc:Bounds x="1505" y="324" width="210" height="92"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Record_di" bpmnElement="Record"><dc:Bounds x="1750" y="324" width="210" height="92"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Save_di" bpmnElement="Save"><dc:Bounds x="1995" y="579" width="210" height="92"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="End_di" bpmnElement="End"><dc:Bounds x="2322" y="607" width="36" height="36"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctStart_di" bpmnElement="OctStart"><dc:Bounds x="682" y="882" width="36" height="36"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Manage_di" bpmnElement="Manage"><dc:Bounds x="835" y="854" width="210" height="92"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Provide_di" bpmnElement="Provide"><dc:Bounds x="1085" y="854" width="210" height="92"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctEnd_di" bpmnElement="OctEnd"><dc:Bounds x="1422" y="882" width="36" height="36"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Participant_Window_di" bpmnElement="Participant_Window" isHorizontal="true"><dc:Bounds x="40" y="50" width="2900" height="180"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Participant_Checker_di" bpmnElement="Participant_Checker" isHorizontal="true"><dc:Bounds x="40" y="270" width="2900" height="190"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Participant_App_di" bpmnElement="Participant_App" isHorizontal="true"><dc:Bounds x="40" y="505" width="2900" height="195"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Participant_Octant_di" bpmnElement="Participant_Octant" isHorizontal="true"><dc:Bounds x="40" y="750" width="2900" height="190"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Start_di" bpmnElement="Start"><dc:Bounds x="182" y="122" width="36" height="36"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Organize_di" bpmnElement="Organize"><dc:Bounds x="393" y="99" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Inform_di" bpmnElement="Inform"><dc:Bounds x="723" y="99" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="WindowEnd_di" bpmnElement="WindowEnd"><dc:Bounds x="1102" y="122" width="36" height="36"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="CheckerStart_di" bpmnElement="CheckerStart"><dc:Bounds x="807" y="347" width="36" height="36"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Open_di" bpmnElement="Open"><dc:Bounds x="1018" y="324" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Select_di" bpmnElement="Select"><dc:Bounds x="1328" y="324" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Fill_di" bpmnElement="Fill"><dc:Bounds x="1638" y="324" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Record_di" bpmnElement="Record"><dc:Bounds x="1948" y="324" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="CheckerEnd_di" bpmnElement="CheckerEnd"><dc:Bounds x="2332" y="347" width="36" height="36"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="AppStart_di" bpmnElement="AppStart"><dc:Bounds x="1102" y="582" width="36" height="36"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Available_di" bpmnElement="Available"><dc:Bounds x="1328" y="559" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="AppWait_di" bpmnElement="AppWait"><dc:Bounds x="1948" y="559" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Save_di" bpmnElement="Save"><dc:Bounds x="2248" y="559" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="End_di" bpmnElement="End"><dc:Bounds x="2672" y="582" width="36" height="36"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="OctStart_di" bpmnElement="OctStart"><dc:Bounds x="182" y="827" width="36" height="36"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Manage_di" bpmnElement="Manage"><dc:Bounds x="393" y="804" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Provide_di" bpmnElement="Provide"><dc:Bounds x="723" y="804" width="205" height="82"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="OctEnd_di" bpmnElement="OctEnd"><dc:Bounds x="1102" y="827" width="36" height="36"/>
+</bpmndi:BPMNShape>
 <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
-<di:waypoint x="188" y="160"/>
-<di:waypoint x="295" y="160"/>
+<di:waypoint x="218" y="140"/>
+<di:waypoint x="393" y="140"/>
 </bpmndi:BPMNEdge>
 <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
-<di:waypoint x="505" y="160"/>
-<di:waypoint x="545" y="160"/>
+<di:waypoint x="598" y="140"/>
+<di:waypoint x="723" y="140"/>
 </bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
-<di:waypoint x="755" y="160"/>
-<di:waypoint x="775" y="160"/>
-<di:waypoint x="775" y="370"/>
-<di:waypoint x="795" y="370"/>
+<bpmndi:BPMNEdge id="Flow_Window_End_di" bpmnElement="Flow_Window_End">
+<di:waypoint x="928" y="140"/>
+<di:waypoint x="1102" y="140"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Flow_Checker_Start_di" bpmnElement="Flow_Checker_Start">
+<di:waypoint x="843" y="365"/>
+<di:waypoint x="1018" y="365"/>
 </bpmndi:BPMNEdge>
 <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
-<di:waypoint x="1005" y="370"/>
-<di:waypoint x="1018" y="370"/>
-<di:waypoint x="1018" y="625"/>
-<di:waypoint x="1030" y="625"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
-<di:waypoint x="1240" y="625"/>
-<di:waypoint x="1253" y="625"/>
-<di:waypoint x="1253" y="370"/>
-<di:waypoint x="1265" y="370"/>
+<di:waypoint x="1223" y="365"/>
+<di:waypoint x="1328" y="365"/>
 </bpmndi:BPMNEdge>
 <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
-<di:waypoint x="1475" y="370"/>
-<di:waypoint x="1505" y="370"/>
+<di:waypoint x="1533" y="365"/>
+<di:waypoint x="1638" y="365"/>
 </bpmndi:BPMNEdge>
 <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
-<di:waypoint x="1715" y="370"/>
-<di:waypoint x="1750" y="370"/>
+<di:waypoint x="1843" y="365"/>
+<di:waypoint x="1948" y="365"/>
 </bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
-<di:waypoint x="1960" y="370"/>
-<di:waypoint x="1978" y="370"/>
-<di:waypoint x="1978" y="625"/>
-<di:waypoint x="1995" y="625"/>
+<bpmndi:BPMNEdge id="Flow_Checker_End_di" bpmnElement="Flow_Checker_End">
+<di:waypoint x="2153" y="365"/>
+<di:waypoint x="2332" y="365"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Flow_App_Available_di" bpmnElement="Flow_App_Available">
+<di:waypoint x="1138" y="600"/>
+<di:waypoint x="1328" y="600"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Flow_App_Wait_di" bpmnElement="Flow_App_Wait">
+<di:waypoint x="1533" y="600"/>
+<di:waypoint x="1948" y="600"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Flow_App_Save_di" bpmnElement="Flow_App_Save">
+<di:waypoint x="2153" y="600"/>
+<di:waypoint x="2248" y="600"/>
 </bpmndi:BPMNEdge>
 <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
-<di:waypoint x="2205" y="625"/>
-<di:waypoint x="2322" y="625"/>
+<di:waypoint x="2453" y="600"/>
+<di:waypoint x="2672" y="600"/>
 </bpmndi:BPMNEdge>
 <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10">
-<di:waypoint x="718" y="900"/>
-<di:waypoint x="835" y="900"/>
+<di:waypoint x="218" y="845"/>
+<di:waypoint x="393" y="845"/>
 </bpmndi:BPMNEdge>
 <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11">
-<di:waypoint x="1045" y="900"/>
-<di:waypoint x="1085" y="900"/>
+<di:waypoint x="598" y="845"/>
+<di:waypoint x="723" y="845"/>
 </bpmndi:BPMNEdge>
 <bpmndi:BPMNEdge id="Flow_12_di" bpmnElement="Flow_12">
-<di:waypoint x="1295" y="900"/>
-<di:waypoint x="1422" y="900"/>
+<di:waypoint x="928" y="845"/>
+<di:waypoint x="1102" y="845"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Message_2_di" bpmnElement="Message_2">
+<di:waypoint x="825" y="181"/>
+<di:waypoint x="825" y="347"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Message_3_di" bpmnElement="Message_3">
+<di:waypoint x="1120" y="406"/>
+<di:waypoint x="1120" y="582"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Message_4_di" bpmnElement="Message_4">
+<di:waypoint x="1430" y="559"/>
+<di:waypoint x="1430" y="406"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Message_5_di" bpmnElement="Message_5">
+<di:waypoint x="2050" y="406"/>
+<di:waypoint x="2050" y="559"/>
 </bpmndi:BPMNEdge>
 <bpmndi:BPMNEdge id="Message_1_di" bpmnElement="Message_1">
-<di:waypoint x="1190" y="854"/>
-<di:waypoint x="1190" y="763"/>
-<di:waypoint x="1135" y="763"/>
-<di:waypoint x="1135" y="671"/>
+<di:waypoint x="825" y="804"/>
+<di:waypoint x="825" y="723"/>
+<di:waypoint x="1430" y="723"/>
+<di:waypoint x="1430" y="641"/>
 </bpmndi:BPMNEdge>
 </bpmndi:BPMNPlane></bpmndi:BPMNDiagram></bpmn:definitions>
