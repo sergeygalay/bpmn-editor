@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_contractor-opr-as-is" targetNamespace="https://sergeygalay.github.io/bpmn-editor/contractor-opr-as-is">
   <bpmn:collaboration id="Collaboration_contractor-opr-as-is">
-    <bpmn:participant id="Participant_Company" name="Предприятие / оценка производителя работ" processRef="Process_Company" />
-    <bpmn:participant id="Participant_Octant" name="Система «Октант»" processRef="Process_Octant" />
+    <bpmn:participant id="Participant_Company" name="Предприятие" processRef="Process_Company" />
+    <bpmn:participant id="Participant_Octant" name="Октант" processRef="Process_Octant" />
     <bpmn:messageFlow id="Message_1" name="Загрузка подписанного файла" sourceRef="Upload" targetRef="OctStart" />
   </bpmn:collaboration>
   <bpmn:process id="Process_Company" name="Оценка производителя работ — текущий процесс" isExecutable="false">
     <bpmn:laneSet id="LaneSet_Company">
-      <bpmn:lane id="Lane_Checker" name="Проверяющий (назначен по ОРД)">
+      <bpmn:lane id="Lane_Checker" name="Проверяющий">
         <bpmn:flowNodeRef>Print</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Inspect</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Critical</bpmn:flowNodeRef>
@@ -20,7 +20,7 @@
         <bpmn:flowNodeRef>MergeAct</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Send</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_Window" name="Единое окно ПБиОТ">
+      <bpmn:lane id="Lane_Window" name="Единое окно">
         <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Schedule</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Upload</bpmn:flowNodeRef>
@@ -72,10 +72,10 @@
         <dc:Bounds x="40" y="50" width="2970" height="710" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Window_di" bpmnElement="Lane_Window" isHorizontal="true">
-        <dc:Bounds x="40" y="550" width="2970" height="210" />
+        <dc:Bounds x="70" y="550" width="2940" height="210" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Checker_di" bpmnElement="Lane_Checker" isHorizontal="true">
-        <dc:Bounds x="40" y="50" width="2970" height="500" />
+        <dc:Bounds x="70" y="50" width="2940" height="500" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_di" bpmnElement="Start">
         <dc:Bounds x="162" y="632" width="36" height="36" />
