@@ -1,370 +1,715 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_contractor-opr-to-be" targetNamespace="https://sergeygalay.github.io/bpmn-editor/contractor-opr-to-be">
-<bpmn:collaboration id="Collaboration_contractor-opr-to-be">
-<bpmn:participant id="Participant_Window" name="Единое окно" processRef="Process_Window"/>
-<bpmn:participant id="Participant_Checker" name="Проверяющий" processRef="Process_Checker"/>
-<bpmn:participant id="Participant_App" name="Суперника" processRef="Process_App"/>
-<bpmn:participant id="Participant_Octant" name="Октант" processRef="Process_Octant"/>
-<bpmn:messageFlow id="Message_Assignment" name="Назначение проверяющего" sourceRef="Assign" targetRef="OctStart"/>
-<bpmn:messageFlow id="Message_ReferenceData" name="Назначения и контрольные листы" sourceRef="Provide" targetRef="Available"/>
-<bpmn:messageFlow id="Message_OpenApp" name="Открытие приложения" sourceRef="Open" targetRef="AppStart"/>
-<bpmn:messageFlow id="Message_List" name="Список назначений" sourceRef="Available" targetRef="Open"/>
-<bpmn:messageFlow id="Message_ChooseAssigned" name="Выбрана назначенная проверка" sourceRef="Select" targetRef="Form"/>
-<bpmn:messageFlow id="Message_ChooseManual" name="Новая проверка без назначения" sourceRef="Manual" targetRef="Form"/>
-<bpmn:messageFlow id="Message_ReadyForm" name="Контрольный лист / акт" sourceRef="Form" targetRef="Fill"/>
-<bpmn:messageFlow id="Message_CheckFilled" name="Заполненная форма и нарушения" sourceRef="Fill" targetRef="AppWaitResult"/>
-<bpmn:messageFlow id="Message_NotPerformed" name="Работа не проводится" sourceRef="NotWork" targetRef="AppWaitResult"/>
-<bpmn:messageFlow id="Message_Outcome" name="Расчётный итог / отметка" sourceRef="Calculate" targetRef="Record"/>
-<bpmn:messageFlow id="Message_Confirm" name="Подтверждение отправки" sourceRef="Record" targetRef="AppWaitConfirm"/>
-<bpmn:messageFlow id="Message_Result" name="Результат и приложения" sourceRef="Send" targetRef="OctResultStart"/>
-</bpmn:collaboration>
-<bpmn:process id="Process_Window" name="Единое окно — TO-BE" isExecutable="false">
-<bpmn:startEvent id="Start" name="Необходима проверка"/>
-<bpmn:userTask id="Organize" name="Запланировать проверку в «Октанте»"/>
-<bpmn:userTask id="Assign" name="Назначить проверяющего"/>
-<bpmn:endEvent id="WindowEnd" name="Проверка назначена"/>
-<bpmn:sequenceFlow id="Flow_Window_1" sourceRef="Start" targetRef="Organize"/>
-<bpmn:sequenceFlow id="Flow_Window_2" sourceRef="Organize" targetRef="Assign"/>
-<bpmn:sequenceFlow id="Flow_Window_3" sourceRef="Assign" targetRef="WindowEnd"/>
-</bpmn:process>
-<bpmn:process id="Process_Checker" name="Проверяющий — TO-BE" isExecutable="false">
-<bpmn:startEvent id="CheckerStart" name="Необходима проверка"/>
-<bpmn:userTask id="Open" name="Открыть «Супернику»"/>
-<bpmn:exclusiveGateway id="HasAssignment" name="Есть назначение?"/>
-<bpmn:userTask id="Select" name="Выбрать назначенную проверку"/>
-<bpmn:userTask id="Manual" name="Создать проверку без назначения"/>
-<bpmn:exclusiveGateway id="CanCheck" name="Проверку можно провести?"/>
-<bpmn:userTask id="Fill" name="Провести ОПР, аудит или КПР"/>
-<bpmn:userTask id="NotWork" name="Отметить «Работа не проводится»"/>
-<bpmn:exclusiveGateway id="MergeOutcome"/>
-<bpmn:userTask id="Record" name="Просмотреть итог и подтвердить отправку"/>
-<bpmn:endEvent id="CheckerEnd" name="Результат подтверждён"/>
-<bpmn:sequenceFlow id="Flow_Checker_1" sourceRef="CheckerStart" targetRef="Open"/>
-<bpmn:sequenceFlow id="Flow_Checker_2" sourceRef="Open" targetRef="HasAssignment"/>
-<bpmn:sequenceFlow id="Flow_Checker_3" sourceRef="HasAssignment" targetRef="Select" name="Да"/>
-<bpmn:sequenceFlow id="Flow_Checker_4" sourceRef="HasAssignment" targetRef="Manual" name="Нет"/>
-<bpmn:sequenceFlow id="Flow_Checker_5" sourceRef="Select" targetRef="CanCheck"/>
-<bpmn:sequenceFlow id="Flow_Checker_6" sourceRef="CanCheck" targetRef="Fill" name="Да"/>
-<bpmn:sequenceFlow id="Flow_Checker_7" sourceRef="CanCheck" targetRef="NotWork" name="Нет"/>
-<bpmn:sequenceFlow id="Flow_Checker_8" sourceRef="Manual" targetRef="Fill"/>
-<bpmn:sequenceFlow id="Flow_Checker_9" sourceRef="Fill" targetRef="MergeOutcome"/>
-<bpmn:sequenceFlow id="Flow_Checker_10" sourceRef="NotWork" targetRef="MergeOutcome"/>
-<bpmn:sequenceFlow id="Flow_Checker_11" sourceRef="Record" targetRef="CheckerEnd"/>
-<bpmn:sequenceFlow id="Flow_Checker_12" sourceRef="MergeOutcome" targetRef="Record"/>
-</bpmn:process>
-<bpmn:process id="Process_App" name="Суперника — TO-BE" isExecutable="false">
-<bpmn:startEvent id="AppStart" name="Открыто приложение"/>
-<bpmn:task id="Available" name="Определить проверяющего и показать назначения"/>
-<bpmn:task id="Form" name="Предоставить соответствующую форму"/>
-<bpmn:receiveTask id="AppWaitResult" name="Получить заполненный лист или отметку"/>
-<bpmn:task id="Calculate" name="Рассчитать результат или зафиксировать отметку"/>
-<bpmn:receiveTask id="AppWaitConfirm" name="Получить подтверждение результата"/>
-<bpmn:task id="Save" name="Сохранить результат проверки"/>
-<bpmn:exclusiveGateway id="Network" name="Есть связь?"/>
-<bpmn:task id="OfflineWait" name="Сохранить до восстановления связи"/>
-<bpmn:sendTask id="Send" name="Передать результат для учёта в «Октанте»"/>
-<bpmn:endEvent id="AppEnd" name="Результат передан"/>
-<bpmn:sequenceFlow id="Flow_App_1" sourceRef="AppStart" targetRef="Available"/>
-<bpmn:sequenceFlow id="Flow_App_2" sourceRef="Available" targetRef="Form"/>
-<bpmn:sequenceFlow id="Flow_App_3" sourceRef="Form" targetRef="AppWaitResult"/>
-<bpmn:sequenceFlow id="Flow_App_Result" sourceRef="AppWaitResult" targetRef="Calculate"/>
-<bpmn:sequenceFlow id="Flow_App_4" sourceRef="Calculate" targetRef="AppWaitConfirm"/>
-<bpmn:sequenceFlow id="Flow_App_5" sourceRef="AppWaitConfirm" targetRef="Save"/>
-<bpmn:sequenceFlow id="Flow_App_6" sourceRef="Save" targetRef="Network"/>
-<bpmn:sequenceFlow id="Flow_App_7" sourceRef="Network" targetRef="Send" name="Да"/>
-<bpmn:sequenceFlow id="Flow_App_8" sourceRef="Network" targetRef="OfflineWait" name="Нет"/>
-<bpmn:sequenceFlow id="Flow_App_9" sourceRef="OfflineWait" targetRef="Send"/>
-<bpmn:sequenceFlow id="Flow_App_10" sourceRef="Send" targetRef="AppEnd"/>
-</bpmn:process>
-<bpmn:process id="Process_Octant" name="Октант — TO-BE" isExecutable="false">
-<bpmn:startEvent id="OctStart" name="Создано назначение"/>
-<bpmn:task id="OctSaveAssignment" name="Сохранить план и назначение"/>
-<bpmn:sendTask id="Provide" name="Предоставить назначения, формы и справочники"/>
-<bpmn:endEvent id="OctAppointmentEnd" name="Назначение доступно"/>
-<bpmn:startEvent id="OctResultStart" name="Получен результат"/>
-<bpmn:task id="OctStore" name="Внести результат в журнал проверок"/>
-<bpmn:endEvent id="OctEnd" name="Результат учтён"/>
-<bpmn:sequenceFlow id="Flow_Octant_1" sourceRef="OctStart" targetRef="OctSaveAssignment"/>
-<bpmn:sequenceFlow id="Flow_Octant_2" sourceRef="OctSaveAssignment" targetRef="Provide"/>
-<bpmn:sequenceFlow id="Flow_Octant_3" sourceRef="Provide" targetRef="OctAppointmentEnd"/>
-<bpmn:sequenceFlow id="Flow_Octant_4" sourceRef="OctResultStart" targetRef="OctStore"/>
-<bpmn:sequenceFlow id="Flow_Octant_5" sourceRef="OctStore" targetRef="OctEnd"/>
-</bpmn:process>
-<bpmndi:BPMNDiagram id="Diagram_contractor-opr-to-be"><bpmndi:BPMNPlane id="Plane_contractor-opr-to-be" bpmnElement="Collaboration_contractor-opr-to-be">
-<bpmndi:BPMNShape id="Participant_Window_di" bpmnElement="Participant_Window" isHorizontal="true"><dc:Bounds x="40" y="50" width="3620" height="185"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Participant_Checker_di" bpmnElement="Participant_Checker" isHorizontal="true"><dc:Bounds x="40" y="270" width="3620" height="500"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Participant_App_di" bpmnElement="Participant_App" isHorizontal="true"><dc:Bounds x="40" y="810" width="3620" height="365"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Participant_Octant_di" bpmnElement="Participant_Octant" isHorizontal="true"><dc:Bounds x="40" y="1215" width="3620" height="335"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Start_di" bpmnElement="Start"><dc:Bounds x="192" y="122" width="36" height="36"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Organize_di" bpmnElement="Organize"><dc:Bounds x="393" y="97" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Assign_di" bpmnElement="Assign"><dc:Bounds x="693" y="97" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="WindowEnd_di" bpmnElement="WindowEnd"><dc:Bounds x="1082" y="122" width="36" height="36"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="CheckerStart_di" bpmnElement="CheckerStart"><dc:Bounds x="197" y="402" width="36" height="36"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Open_di" bpmnElement="Open"><dc:Bounds x="388" y="377" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="HasAssignment_di" bpmnElement="HasAssignment" isMarkerVisible="true"><dc:Bounds x="740" y="395" width="50" height="50"/>
-<bpmndi:BPMNLabel><dc:Bounds x="635" y="330" width="260" height="44"/></bpmndi:BPMNLabel>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Select_di" bpmnElement="Select"><dc:Bounds x="933" y="312" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Manual_di" bpmnElement="Manual"><dc:Bounds x="933" y="592" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="CanCheck_di" bpmnElement="CanCheck" isMarkerVisible="true"><dc:Bounds x="1285" y="330" width="50" height="50"/>
-<bpmndi:BPMNLabel><dc:Bounds x="1180" y="265" width="260" height="44"/></bpmndi:BPMNLabel>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Fill_di" bpmnElement="Fill"><dc:Bounds x="1473" y="312" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="NotWork_di" bpmnElement="NotWork"><dc:Bounds x="1473" y="587" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="MergeOutcome_di" bpmnElement="MergeOutcome" isMarkerVisible="true"><dc:Bounds x="1905" y="465" width="50" height="50"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Record_di" bpmnElement="Record"><dc:Bounds x="2063" y="397" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="CheckerEnd_di" bpmnElement="CheckerEnd"><dc:Bounds x="2452" y="422" width="36" height="36"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="AppStart_di" bpmnElement="AppStart"><dc:Bounds x="477" y="917" width="36" height="36"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Available_di" bpmnElement="Available"><dc:Bounds x="658" y="892" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Form_di" bpmnElement="Form"><dc:Bounds x="1203" y="892" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="AppWaitResult_di" bpmnElement="AppWaitResult"><dc:Bounds x="1482" y="892" width="215" height="86"/></bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Calculate_di" bpmnElement="Calculate"><dc:Bounds x="1763" y="892" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="AppWaitConfirm_di" bpmnElement="AppWaitConfirm"><dc:Bounds x="2063" y="892" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Save_di" bpmnElement="Save"><dc:Bounds x="2303" y="892" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Network_di" bpmnElement="Network" isMarkerVisible="true"><dc:Bounds x="2635" y="910" width="50" height="50"/>
-<bpmndi:BPMNLabel><dc:Bounds x="2530" y="852" width="260" height="44"/></bpmndi:BPMNLabel>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OfflineWait_di" bpmnElement="OfflineWait"><dc:Bounds x="2803" y="1032" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Send_di" bpmnElement="Send"><dc:Bounds x="3053" y="892" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="AppEnd_di" bpmnElement="AppEnd"><dc:Bounds x="3482" y="917" width="36" height="36"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctStart_di" bpmnElement="OctStart"><dc:Bounds x="682" y="1287" width="36" height="36"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctSaveAssignment_di" bpmnElement="OctSaveAssignment"><dc:Bounds x="883" y="1262" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="Provide_di" bpmnElement="Provide"><dc:Bounds x="1173" y="1262" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctAppointmentEnd_di" bpmnElement="OctAppointmentEnd"><dc:Bounds x="1542" y="1287" width="36" height="36"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctResultStart_di" bpmnElement="OctResultStart"><dc:Bounds x="3002" y="1437" width="36" height="36"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctStore_di" bpmnElement="OctStore"><dc:Bounds x="3153" y="1412" width="215" height="86"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNShape id="OctEnd_di" bpmnElement="OctEnd"><dc:Bounds x="3512" y="1437" width="36" height="36"/>
-</bpmndi:BPMNShape>
-<bpmndi:BPMNEdge id="Flow_Window_1_di" bpmnElement="Flow_Window_1">
-<di:waypoint x="228" y="140"/>
-<di:waypoint x="393" y="140"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Window_2_di" bpmnElement="Flow_Window_2">
-<di:waypoint x="608" y="140"/>
-<di:waypoint x="693" y="140"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Window_3_di" bpmnElement="Flow_Window_3">
-<di:waypoint x="908" y="140"/>
-<di:waypoint x="1082" y="140"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_1_di" bpmnElement="Flow_Checker_1">
-<di:waypoint x="233" y="420"/>
-<di:waypoint x="388" y="420"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_2_di" bpmnElement="Flow_Checker_2">
-<di:waypoint x="603" y="420"/>
-<di:waypoint x="740" y="420"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_3_di" bpmnElement="Flow_Checker_3">
-<di:waypoint x="790" y="420"/>
-<di:waypoint x="861" y="420"/>
-<di:waypoint x="861" y="355"/>
-<di:waypoint x="933" y="355"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_4_di" bpmnElement="Flow_Checker_4">
-<di:waypoint x="790" y="420"/>
-<di:waypoint x="861" y="420"/>
-<di:waypoint x="861" y="635"/>
-<di:waypoint x="933" y="635"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_5_di" bpmnElement="Flow_Checker_5">
-<di:waypoint x="1148" y="355"/>
-<di:waypoint x="1285" y="355"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_6_di" bpmnElement="Flow_Checker_6">
-<di:waypoint x="1335" y="355"/>
-<di:waypoint x="1473" y="355"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_7_di" bpmnElement="Flow_Checker_7">
-<di:waypoint x="1335" y="355"/>
-<di:waypoint x="1404" y="355"/>
-<di:waypoint x="1404" y="630"/>
-<di:waypoint x="1473" y="630"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_8_di" bpmnElement="Flow_Checker_8">
-<di:waypoint x="1148" y="635"/>
-<di:waypoint x="1450" y="635"/>
-<di:waypoint x="1450" y="355"/>
-<di:waypoint x="1472" y="355"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_9_di" bpmnElement="Flow_Checker_9">
-<di:waypoint x="1688" y="355"/>
-<di:waypoint x="1800" y="355"/>
-<di:waypoint x="1800" y="490"/>
-<di:waypoint x="1905" y="490"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_10_di" bpmnElement="Flow_Checker_10">
-<di:waypoint x="1688" y="630"/>
-<di:waypoint x="1800" y="630"/>
-<di:waypoint x="1800" y="490"/>
-<di:waypoint x="1905" y="490"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_12_di" bpmnElement="Flow_Checker_12"><di:waypoint x="1955" y="490"/><di:waypoint x="2008" y="490"/><di:waypoint x="2008" y="440"/><di:waypoint x="2062" y="440"/></bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Checker_11_di" bpmnElement="Flow_Checker_11">
-<di:waypoint x="2278" y="440"/>
-<di:waypoint x="2452" y="440"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_1_di" bpmnElement="Flow_App_1">
-<di:waypoint x="513" y="935"/>
-<di:waypoint x="658" y="935"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_2_di" bpmnElement="Flow_App_2">
-<di:waypoint x="873" y="935"/>
-<di:waypoint x="1203" y="935"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_3_di" bpmnElement="Flow_App_3">
-<di:waypoint x="1418" y="935"/>
-<di:waypoint x="1482" y="935"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_Result_di" bpmnElement="Flow_App_Result"><di:waypoint x="1697" y="935"/><di:waypoint x="1762" y="935"/></bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_4_di" bpmnElement="Flow_App_4">
-<di:waypoint x="1978" y="935"/>
-<di:waypoint x="2063" y="935"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_5_di" bpmnElement="Flow_App_5">
-<di:waypoint x="2278" y="935"/>
-<di:waypoint x="2303" y="935"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_6_di" bpmnElement="Flow_App_6">
-<di:waypoint x="2518" y="935"/>
-<di:waypoint x="2635" y="935"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_7_di" bpmnElement="Flow_App_7">
-<di:waypoint x="2685" y="935"/>
-<di:waypoint x="3053" y="935"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_8_di" bpmnElement="Flow_App_8">
-<di:waypoint x="2685" y="935"/>
-<di:waypoint x="2744" y="935"/>
-<di:waypoint x="2744" y="1075"/>
-<di:waypoint x="2803" y="1075"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_9_di" bpmnElement="Flow_App_9">
-<di:waypoint x="3018" y="1075"/>
-<di:waypoint x="3035" y="1075"/>
-<di:waypoint x="3035" y="935"/>
-<di:waypoint x="3053" y="935"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_App_10_di" bpmnElement="Flow_App_10">
-<di:waypoint x="3268" y="935"/>
-<di:waypoint x="3482" y="935"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Octant_1_di" bpmnElement="Flow_Octant_1">
-<di:waypoint x="718" y="1305"/>
-<di:waypoint x="883" y="1305"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Octant_2_di" bpmnElement="Flow_Octant_2">
-<di:waypoint x="1098" y="1305"/>
-<di:waypoint x="1173" y="1305"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Octant_3_di" bpmnElement="Flow_Octant_3">
-<di:waypoint x="1388" y="1305"/>
-<di:waypoint x="1542" y="1305"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Octant_4_di" bpmnElement="Flow_Octant_4">
-<di:waypoint x="3038" y="1455"/>
-<di:waypoint x="3153" y="1455"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Flow_Octant_5_di" bpmnElement="Flow_Octant_5">
-<di:waypoint x="3368" y="1455"/>
-<di:waypoint x="3512" y="1455"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_Assignment_di" bpmnElement="Message_Assignment">
-<di:waypoint x="800" y="183"/>
-<di:waypoint x="800" y="205"/>
-<di:waypoint x="19" y="205"/>
-<di:waypoint x="19" y="1195"/>
-<di:waypoint x="700" y="1195"/>
-<di:waypoint x="700" y="1287"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_ReferenceData_di" bpmnElement="Message_ReferenceData">
-<di:waypoint x="1280" y="1262"/>
-<di:waypoint x="1280" y="1190"/>
-<di:waypoint x="765" y="1190"/>
-<di:waypoint x="765" y="978"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_OpenApp_di" bpmnElement="Message_OpenApp">
-<di:waypoint x="495" y="463"/>
-<di:waypoint x="495" y="917"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_List_di" bpmnElement="Message_List">
-<di:waypoint x="765" y="892"/>
-<di:waypoint x="765" y="678"/>
-<di:waypoint x="495" y="678"/>
-<di:waypoint x="495" y="463"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_ChooseAssigned_di" bpmnElement="Message_ChooseAssigned">
-<di:waypoint x="1040" y="398"/>
-<di:waypoint x="1170" y="400"/>
-<di:waypoint x="1170" y="790"/>
-<di:waypoint x="1310" y="790"/>
-<di:waypoint x="1310" y="892"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_ChooseManual_di" bpmnElement="Message_ChooseManual">
-<di:waypoint x="1040" y="678"/>
-<di:waypoint x="1040" y="785"/>
-<di:waypoint x="1310" y="785"/>
-<di:waypoint x="1310" y="892"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_ReadyForm_di" bpmnElement="Message_ReadyForm">
-<di:waypoint x="1310" y="892"/>
-<di:waypoint x="1310" y="785"/>
-<di:waypoint x="1435" y="785"/>
-<di:waypoint x="1435" y="398"/>
-<di:waypoint x="1580" y="398"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_CheckFilled_di" bpmnElement="Message_CheckFilled">
-<di:waypoint x="1580" y="398"/>
-<di:waypoint x="1725" y="398"/>
-<di:waypoint x="1725" y="795"/>
-<di:waypoint x="1590" y="795"/>
-<di:waypoint x="1590" y="892"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_NotPerformed_di" bpmnElement="Message_NotPerformed">
-<di:waypoint x="1580" y="673"/>
-<di:waypoint x="1580" y="892"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_Outcome_di" bpmnElement="Message_Outcome">
-<di:waypoint x="1870" y="892"/>
-<di:waypoint x="1870" y="795"/>
-<di:waypoint x="2110" y="795"/>
-<di:waypoint x="2110" y="483"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_Confirm_di" bpmnElement="Message_Confirm">
-<di:waypoint x="2170" y="483"/>
-<di:waypoint x="2170" y="892"/>
-</bpmndi:BPMNEdge>
-<bpmndi:BPMNEdge id="Message_Result_di" bpmnElement="Message_Result">
-<di:waypoint x="3160" y="978"/>
-<di:waypoint x="3160" y="1208"/>
-<di:waypoint x="3020" y="1208"/>
-<di:waypoint x="3020" y="1437"/>
-</bpmndi:BPMNEdge>
-</bpmndi:BPMNPlane></bpmndi:BPMNDiagram></bpmn:definitions>
+  <bpmn:collaboration id="Collaboration_contractor-opr-to-be">
+    <bpmn:participant id="Participant_Window" name="Аналитик / специалист «Единого окна» (в «Октанте»)" processRef="Process_Window" />
+    <bpmn:participant id="Participant_Checker" name="Проверяющий" processRef="Process_Checker" />
+    <bpmn:participant id="Participant_App" name="МП «Суперника» (и платформенный конструктор форм)" processRef="Process_App" />
+    <bpmn:participant id="Participant_Octant" name="Система «Октант» (и сетевая папка обмена)" processRef="Process_Octant" />
+    <bpmn:messageFlow id="Message_Assignment" sourceRef="Assign" targetRef="OctStart" name="Формы, график и назначения" />
+    <bpmn:messageFlow id="Message_ReferenceData" sourceRef="Provide" targetRef="SyncData" name="Справочники, роли, назначения и конфигурации форм (раз в сутки)" />
+    <bpmn:messageFlow id="Message_OpenApp" sourceRef="Open" targetRef="Available" name="Открытие МП (учётная запись)" />
+    <bpmn:messageFlow id="Message_List" sourceRef="Available" targetRef="Open" name="Доступные виды проверок и список назначений" />
+    <bpmn:messageFlow id="Message_ChooseAssigned" sourceRef="Select" targetRef="Form" name="Выбрана назначенная проверка" />
+    <bpmn:messageFlow id="Message_ChooseManual" sourceRef="Manual" targetRef="Form" name="Создана проверка без назначения / КПР" />
+    <bpmn:messageFlow id="Message_ReadyForm" sourceRef="Form" targetRef="Fill" name="Динамическая форма (конструктор)" />
+    <bpmn:messageFlow id="Message_NotPerformed" sourceRef="NotWork" targetRef="AppWaitResult" name="Отметка «Работа не проводится» и комментарий" />
+    <bpmn:messageFlow id="Message_CheckFilled" sourceRef="SelectViolationsForAct" targetRef="AppWaitResult" name="Заполненный чек-лист и отобранные нарушения" />
+    <bpmn:messageFlow id="Message_KprFilled" sourceRef="FillKpr" targetRef="AppWaitResult" name="Заполненная форма КПР и нарушения" />
+    <bpmn:messageFlow id="Message_Outcome" sourceRef="Calculate" targetRef="Record" name="Расчётный итог и предпросмотр PDF" />
+    <bpmn:messageFlow id="Message_Confirm" sourceRef="Record" targetRef="AppWaitConfirm" name="Нажатие «Отправить»" />
+    <bpmn:messageFlow id="Message_ExportPdf" sourceRef="Save" targetRef="ExportAndSignAct" name="PDF контрольного листа и единого Акта" />
+    <bpmn:messageFlow id="Message_Result" sourceRef="Send" targetRef="OctResultStart" name="Каталог проверки (result.json, PDF, вложения)" />
+    <bpmn:messageFlow id="Message_BellNotify" sourceRef="OctNotifyBell" targetRef="AnalystNotifyStart" name="Уведомление «колокольчик»" />
+    <bpmn:messageFlow id="Message_TransferAll" sourceRef="AnalystTransferAll" targetRef="OctWaitTransfer" name="Привязка к графику и «Перенести всё»" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_Window" name="Единое окно и аналитик — TO-BE" isExecutable="false">
+    <bpmn:startEvent id="Start" name="Необходима настройка форм или планирование проверок" />
+    <bpmn:userTask id="ConfigureForms" name="Настроить / отредактировать опросники, чек-листы (ОПР, аудит) и формы КПР в «Октанте»" />
+    <bpmn:userTask id="Organize" name="Запланировать график проверок (ОПР, аудит) в «Октанте»" />
+    <bpmn:userTask id="Assign" name="Назначить ответственных проверяющих" />
+    <bpmn:endEvent id="WindowEnd" name="Формы и назначения сохранены в «Октанте»" />
+    <bpmn:sequenceFlow id="Flow_Window_0" sourceRef="Start" targetRef="ConfigureForms" />
+    <bpmn:sequenceFlow id="Flow_Window_1" sourceRef="ConfigureForms" targetRef="Organize" />
+    <bpmn:sequenceFlow id="Flow_Window_2" sourceRef="Organize" targetRef="Assign" />
+    <bpmn:sequenceFlow id="Flow_Window_3" sourceRef="Assign" targetRef="WindowEnd" />
+    <bpmn:startEvent id="AnalystNotifyStart" name="Уведомление («колокольчик») о новых проверках" />
+    <bpmn:userTask id="AnalystReview" name="Просмотреть входящие и при необходимости привязать проверки без назначения к графику" />
+    <bpmn:userTask id="AnalystTransferAll" name="Нажать «Перенести всё» для сохранения в журнал" />
+    <bpmn:endEvent id="AnalystEnd" name="Результаты перенесены в журнал" />
+    <bpmn:sequenceFlow id="Flow_Analyst_1" sourceRef="AnalystNotifyStart" targetRef="AnalystReview" />
+    <bpmn:sequenceFlow id="Flow_Analyst_2" sourceRef="AnalystReview" targetRef="AnalystTransferAll" />
+    <bpmn:sequenceFlow id="Flow_Analyst_3" sourceRef="AnalystTransferAll" targetRef="AnalystEnd" />
+  </bpmn:process>
+  <bpmn:process id="Process_Checker" name="Проверяющий — TO-BE" isExecutable="false">
+    <bpmn:startEvent id="CheckerStart" name="Необходима проверка (ОПР, аудит или КПР)" />
+    <bpmn:userTask id="Open" name="Открыть МП в «Супернике»" />
+    <bpmn:exclusiveGateway id="HasAssignment" name="Проверка из календаря назначений?" />
+    <bpmn:userTask id="Select" name="Выбрать назначенную проверку (ОПР / аудит)" />
+    <bpmn:exclusiveGateway id="CanCheck" name="Работы на объекте ведутся?" />
+    <bpmn:userTask id="NotWork" name="Отметить «Работа не проводится» и заполнить обязательный комментарий" />
+    <bpmn:userTask id="Manual" name="Создать проверку без назначения и заполнить реквизиты шапки" />
+    <bpmn:exclusiveGateway id="IsKprGateway" name="Вид проверки — КПР?" />
+    <bpmn:userTask id="Fill" name="Заполнить чек-лист (ОПР / аудит), примечания и вложения (доступен офлайн-черновик)" />
+    <bpmn:userTask id="FillKpr" name="Внести нарушения КПР, вложения и ФИО проверяемого представителя подрядчика" />
+    <bpmn:exclusiveGateway id="HasViolations" name="Выявлены нарушения?" />
+    <bpmn:userTask id="SelectViolationsForAct" name="Отобрать нарушения из чек-листа в Акт проверки и детализировать описание" />
+    <bpmn:exclusiveGateway id="MergeOutcome" />
+    <bpmn:userTask id="Record" name="Просмотреть итог / печатные формы и нажать «Отправить»" />
+    <bpmn:exclusiveGateway id="NeedPaperSign" name="Сформирован Акт проверки?" />
+    <bpmn:userTask id="ExportAndSignAct" name="Выгрузить PDF (на телефон или ПК через веб), распечатать и подписать Акт на бумаге" />
+    <bpmn:exclusiveGateway id="MergeCheckerEnd" />
+    <bpmn:endEvent id="CheckerEnd" name="Проверка завершена" />
+    <bpmn:sequenceFlow id="Flow_Checker_1" sourceRef="CheckerStart" targetRef="Open" />
+    <bpmn:sequenceFlow id="Flow_Checker_2" sourceRef="Open" targetRef="HasAssignment" />
+    <bpmn:sequenceFlow id="Flow_Checker_3" sourceRef="HasAssignment" targetRef="Select" name="Да" />
+    <bpmn:sequenceFlow id="Flow_Checker_4" sourceRef="HasAssignment" targetRef="Manual" name="Нет (КПР или внеплановая)" />
+    <bpmn:sequenceFlow id="Flow_Checker_5" sourceRef="Select" targetRef="CanCheck" />
+    <bpmn:sequenceFlow id="Flow_Checker_6" sourceRef="CanCheck" targetRef="Fill" name="Да" />
+    <bpmn:sequenceFlow id="Flow_Checker_7" sourceRef="CanCheck" targetRef="NotWork" name="Нет" />
+    <bpmn:sequenceFlow id="Flow_Checker_ManualFlow" sourceRef="Manual" targetRef="IsKprGateway" />
+    <bpmn:sequenceFlow id="Flow_Checker_8" sourceRef="IsKprGateway" targetRef="Fill" name="Нет (ОПР / аудит)" />
+    <bpmn:sequenceFlow id="Flow_Checker_ManualKpr" sourceRef="IsKprGateway" targetRef="FillKpr" name="Да (КПР)" />
+    <bpmn:sequenceFlow id="Flow_Fill_Violations" sourceRef="Fill" targetRef="HasViolations" />
+    <bpmn:sequenceFlow id="Flow_Violations_Yes" sourceRef="HasViolations" targetRef="SelectViolationsForAct" name="Да" />
+    <bpmn:sequenceFlow id="Flow_Violations_No" sourceRef="HasViolations" targetRef="MergeOutcome" name="Нет" />
+    <bpmn:sequenceFlow id="Flow_Checker_9" sourceRef="SelectViolationsForAct" targetRef="MergeOutcome" />
+    <bpmn:sequenceFlow id="Flow_Checker_10" sourceRef="NotWork" targetRef="MergeOutcome" />
+    <bpmn:sequenceFlow id="Flow_Kpr_Merge" sourceRef="FillKpr" targetRef="MergeOutcome" />
+    <bpmn:sequenceFlow id="Flow_Checker_12" sourceRef="MergeOutcome" targetRef="Record" />
+    <bpmn:sequenceFlow id="Flow_To_PaperSign" sourceRef="Record" targetRef="NeedPaperSign" />
+    <bpmn:sequenceFlow id="Flow_PaperSign_Yes" sourceRef="NeedPaperSign" targetRef="ExportAndSignAct" name="Да" />
+    <bpmn:sequenceFlow id="Flow_PaperSign_No" sourceRef="NeedPaperSign" targetRef="MergeCheckerEnd" name="Нет" />
+    <bpmn:sequenceFlow id="Flow_Export_Merge" sourceRef="ExportAndSignAct" targetRef="MergeCheckerEnd" />
+    <bpmn:sequenceFlow id="Flow_Checker_11" sourceRef="MergeCheckerEnd" targetRef="CheckerEnd" />
+  </bpmn:process>
+  <bpmn:process id="Process_App" name="Суперника — TO-BE" isExecutable="false">
+    <bpmn:startEvent id="AppStart" name="Синхронизация и запуск МП" />
+    <bpmn:serviceTask id="SyncData" name="Ежесуточно (после 18:00 МСК) загрузить справочники, роли, назначения и конфигурации форм" />
+    <bpmn:serviceTask id="Available" name="Идентифицировать проверяющего (БЕ, таб. №), проверить роли и показать назначения" />
+    <bpmn:serviceTask id="Form" name="Динамически отобразить форму (ОПР, аудит, КПР) через платформенный конструктор" />
+    <bpmn:receiveTask id="AppWaitResult" name="Получить заполненную форму, отобранные для Акта нарушения или отметку" />
+    <bpmn:serviceTask id="Calculate" name="Рассчитать результат проверки и сформировать PDF чек-листа и единого Акта проверки" />
+    <bpmn:receiveTask id="AppWaitConfirm" name="Получить подтверждение («Отправить») и заблокировать редактирование" />
+    <bpmn:serviceTask id="Save" name="Сохранить пакет проверки и предоставить выгрузку PDF (в МП и веб-версии)" />
+    <bpmn:exclusiveGateway id="Network" name="Есть связь?" />
+    <bpmn:task id="OfflineWait" name="Сохранить в очереди до восстановления связи" />
+    <bpmn:sendTask id="Send" name="Выгрузить каталог проверки (result.json, PDF, вложения) в сетевую папку «Октанта»" />
+    <bpmn:endEvent id="AppEnd" name="Результат передан в папку обмена" />
+    <bpmn:sequenceFlow id="Flow_App_0" sourceRef="AppStart" targetRef="SyncData" />
+    <bpmn:sequenceFlow id="Flow_App_1" sourceRef="SyncData" targetRef="Available" />
+    <bpmn:sequenceFlow id="Flow_App_2" sourceRef="Available" targetRef="Form" />
+    <bpmn:sequenceFlow id="Flow_App_3" sourceRef="Form" targetRef="AppWaitResult" />
+    <bpmn:sequenceFlow id="Flow_App_Result" sourceRef="AppWaitResult" targetRef="Calculate" />
+    <bpmn:sequenceFlow id="Flow_App_4" sourceRef="Calculate" targetRef="AppWaitConfirm" />
+    <bpmn:sequenceFlow id="Flow_App_5" sourceRef="AppWaitConfirm" targetRef="Save" />
+    <bpmn:sequenceFlow id="Flow_App_6" sourceRef="Save" targetRef="Network" />
+    <bpmn:sequenceFlow id="Flow_App_7" sourceRef="Network" targetRef="Send" name="Да" />
+    <bpmn:sequenceFlow id="Flow_App_8" sourceRef="Network" targetRef="OfflineWait" name="Нет" />
+    <bpmn:sequenceFlow id="Flow_App_9" sourceRef="OfflineWait" targetRef="Send" />
+    <bpmn:sequenceFlow id="Flow_App_10" sourceRef="Send" targetRef="AppEnd" />
+  </bpmn:process>
+  <bpmn:process id="Process_Octant" name="Октант — TO-BE" isExecutable="false">
+    <bpmn:startEvent id="OctStart" name="Сохранены формы и назначения" />
+    <bpmn:task id="OctSaveAssignment" name="Сохранить конфигурации опросников / чек-листов / КПР, роли и график проверок" />
+    <bpmn:sendTask id="Provide" name="Предоставить в сетевой папке справочники, роли, формы и назначения (после 18:00 МСК)" />
+    <bpmn:endEvent id="OctAppointmentEnd" name="Данные выгружены для синхронизации" />
+    <bpmn:sequenceFlow id="Flow_Octant_1" sourceRef="OctStart" targetRef="OctSaveAssignment" />
+    <bpmn:sequenceFlow id="Flow_Octant_2" sourceRef="OctSaveAssignment" targetRef="Provide" />
+    <bpmn:sequenceFlow id="Flow_Octant_3" sourceRef="Provide" targetRef="OctAppointmentEnd" />
+    <bpmn:startEvent id="OctResultStart" name="Получен каталог результата в сетевой папке" />
+    <bpmn:sendTask id="OctNotifyBell" name="Показать уведомление («колокольчик») о поступивших проверках подразделения" />
+    <bpmn:receiveTask id="OctWaitTransfer" name="Получить подтверждение разбора («Перенести всё»)" />
+    <bpmn:task id="OctStore" name="Внести результаты, печатные формы и вложения в журнал проверок «Октанта»" />
+    <bpmn:endEvent id="OctEnd" name="Результат учтён в журнале «Октанта»" />
+    <bpmn:sequenceFlow id="Flow_Octant_Bell" sourceRef="OctResultStart" targetRef="OctNotifyBell" />
+    <bpmn:sequenceFlow id="Flow_Octant_Wait" sourceRef="OctNotifyBell" targetRef="OctWaitTransfer" />
+    <bpmn:sequenceFlow id="Flow_Octant_4" sourceRef="OctWaitTransfer" targetRef="OctStore" />
+    <bpmn:sequenceFlow id="Flow_Octant_5" sourceRef="OctStore" targetRef="OctEnd" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_contractor-opr-to-be">
+    <bpmndi:BPMNPlane id="Plane_contractor-opr-to-be" bpmnElement="Collaboration_contractor-opr-to-be">
+      <bpmndi:BPMNShape id="Participant_Window_di" bpmnElement="Participant_Window" isHorizontal="true">
+        <dc:Bounds x="40" y="50" width="6020" height="190" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_Checker_di" bpmnElement="Participant_Checker" isHorizontal="true">
+        <dc:Bounds x="40" y="290" width="6020" height="460" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_App_di" bpmnElement="Participant_App" isHorizontal="true">
+        <dc:Bounds x="40" y="810" width="6020" height="380" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_Octant_di" bpmnElement="Participant_Octant" isHorizontal="true">
+        <dc:Bounds x="40" y="1250" width="6020" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_di" bpmnElement="Start">
+        <dc:Bounds x="132" y="127" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="75" y="168" width="150" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ConfigureForms_di" bpmnElement="ConfigureForms">
+        <dc:Bounds x="225" y="101" width="220" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Organize_di" bpmnElement="Organize">
+        <dc:Bounds x="490" y="102" width="210" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Assign_di" bpmnElement="Assign">
+        <dc:Bounds x="740" y="102" width="210" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="WindowEnd_di" bpmnElement="WindowEnd">
+        <dc:Bounds x="1017" y="127" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="960" y="168" width="150" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AnalystNotifyStart_di" bpmnElement="AnalystNotifyStart">
+        <dc:Bounds x="4942" y="127" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4880" y="74" width="160" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AnalystReview_di" bpmnElement="AnalystReview">
+        <dc:Bounds x="5068" y="101" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AnalystTransferAll_di" bpmnElement="AnalystTransferAll">
+        <dc:Bounds x="5335" y="102" width="210" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AnalystEnd_di" bpmnElement="AnalystEnd">
+        <dc:Bounds x="5622" y="127" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="5570" y="168" width="140" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CheckerStart_di" bpmnElement="CheckerStart">
+        <dc:Bounds x="1412" y="557" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1350" y="600" width="160" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Open_di" bpmnElement="Open">
+        <dc:Bounds x="1545" y="532" width="210" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="HasAssignment_di" bpmnElement="HasAssignment" isMarkerVisible="true">
+        <dc:Bounds x="1835" y="550" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1760" y="495" width="92" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Select_di" bpmnElement="Select">
+        <dc:Bounds x="1965" y="457" width="210" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CanCheck_di" bpmnElement="CanCheck" isMarkerVisible="true">
+        <dc:Bounds x="2265" y="475" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2185" y="420" width="95" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotWork_di" bpmnElement="NotWork">
+        <dc:Bounds x="2848" y="317" width="225" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Manual_di" bpmnElement="Manual">
+        <dc:Bounds x="1962" y="617" width="215" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IsKprGateway_di" bpmnElement="IsKprGateway" isMarkerVisible="true">
+        <dc:Bounds x="2265" y="635" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2230" y="692" width="120" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fill_di" bpmnElement="Fill">
+        <dc:Bounds x="2618" y="456" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="FillKpr_di" bpmnElement="FillKpr">
+        <dc:Bounds x="2618" y="616" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="HasViolations_di" bpmnElement="HasViolations" isMarkerVisible="true">
+        <dc:Bounds x="2935" y="475" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2895" y="442" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SelectViolationsForAct_di" bpmnElement="SelectViolationsForAct">
+        <dc:Bounds x="3080" y="456" width="220" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="MergeOutcome_di" bpmnElement="MergeOutcome" isMarkerVisible="true">
+        <dc:Bounds x="3375" y="550" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Record_di" bpmnElement="Record">
+        <dc:Bounds x="3510" y="531" width="220" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NeedPaperSign_di" bpmnElement="NeedPaperSign" isMarkerVisible="true">
+        <dc:Bounds x="3825" y="550" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3780" y="632" width="140" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExportAndSignAct_di" bpmnElement="ExportAndSignAct">
+        <dc:Bounds x="3968" y="531" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="MergeCheckerEnd_di" bpmnElement="MergeCheckerEnd" isMarkerVisible="true">
+        <dc:Bounds x="4265" y="550" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CheckerEnd_di" bpmnElement="CheckerEnd">
+        <dc:Bounds x="4402" y="557" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4355" y="600" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AppStart_di" bpmnElement="AppStart">
+        <dc:Bounds x="1077" y="922" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1032" y="966" width="125" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SyncData_di" bpmnElement="SyncData">
+        <dc:Bounds x="1172" y="896" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Available_di" bpmnElement="Available">
+        <dc:Bounds x="1538" y="896" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Form_di" bpmnElement="Form">
+        <dc:Bounds x="2368" y="896" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AppWaitResult_di" bpmnElement="AppWaitResult">
+        <dc:Bounds x="3078" y="896" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Calculate_di" bpmnElement="Calculate">
+        <dc:Bounds x="3348" y="896" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AppWaitConfirm_di" bpmnElement="AppWaitConfirm">
+        <dc:Bounds x="3620" y="896" width="220" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Save_di" bpmnElement="Save">
+        <dc:Bounds x="3908" y="896" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Network_di" bpmnElement="Network" isMarkerVisible="true">
+        <dc:Bounds x="4215" y="915" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4195" y="875" width="90" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OfflineWait_di" bpmnElement="OfflineWait">
+        <dc:Bounds x="4345" y="1047" width="210" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Send_di" bpmnElement="Send">
+        <dc:Bounds x="4548" y="896" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AppEnd_di" bpmnElement="AppEnd">
+        <dc:Bounds x="4842" y="922" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4790" y="965" width="140" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctStart_di" bpmnElement="OctStart">
+        <dc:Bounds x="827" y="1352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="775" y="1395" width="140" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctSaveAssignment_di" bpmnElement="OctSaveAssignment">
+        <dc:Bounds x="925" y="1326" width="220" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Provide_di" bpmnElement="Provide">
+        <dc:Bounds x="1172" y="1326" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctAppointmentEnd_di" bpmnElement="OctAppointmentEnd">
+        <dc:Bounds x="1462" y="1352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1405" y="1395" width="150" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctResultStart_di" bpmnElement="OctResultStart">
+        <dc:Bounds x="4642" y="1352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4585" y="1395" width="150" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctNotifyBell_di" bpmnElement="OctNotifyBell">
+        <dc:Bounds x="4848" y="1326" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctWaitTransfer_di" bpmnElement="OctWaitTransfer">
+        <dc:Bounds x="5330" y="1326" width="220" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctStore_di" bpmnElement="OctStore">
+        <dc:Bounds x="5588" y="1326" width="225" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctEnd_di" bpmnElement="OctEnd">
+        <dc:Bounds x="5882" y="1352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="5830" y="1395" width="140" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_Window_0_di" bpmnElement="Flow_Window_0">
+        <di:waypoint x="168" y="145" />
+        <di:waypoint x="225" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Window_1_di" bpmnElement="Flow_Window_1">
+        <di:waypoint x="445" y="145" />
+        <di:waypoint x="490" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Window_2_di" bpmnElement="Flow_Window_2">
+        <di:waypoint x="700" y="145" />
+        <di:waypoint x="740" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Window_3_di" bpmnElement="Flow_Window_3">
+        <di:waypoint x="950" y="145" />
+        <di:waypoint x="1017" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Analyst_1_di" bpmnElement="Flow_Analyst_1">
+        <di:waypoint x="4978" y="145" />
+        <di:waypoint x="5068" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Analyst_2_di" bpmnElement="Flow_Analyst_2">
+        <di:waypoint x="5292" y="145" />
+        <di:waypoint x="5335" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Analyst_3_di" bpmnElement="Flow_Analyst_3">
+        <di:waypoint x="5545" y="145" />
+        <di:waypoint x="5622" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_1_di" bpmnElement="Flow_Checker_1">
+        <di:waypoint x="1448" y="575" />
+        <di:waypoint x="1545" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_2_di" bpmnElement="Flow_Checker_2">
+        <di:waypoint x="1755" y="575" />
+        <di:waypoint x="1835" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_3_di" bpmnElement="Flow_Checker_3">
+        <di:waypoint x="1860" y="550" />
+        <di:waypoint x="1860" y="500" />
+        <di:waypoint x="1965" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1895" y="480" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_4_di" bpmnElement="Flow_Checker_4">
+        <di:waypoint x="1860" y="600" />
+        <di:waypoint x="1860" y="660" />
+        <di:waypoint x="1962" y="660" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1745" y="622" width="108" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_5_di" bpmnElement="Flow_Checker_5">
+        <di:waypoint x="2175" y="500" />
+        <di:waypoint x="2265" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_6_di" bpmnElement="Flow_Checker_6">
+        <di:waypoint x="2315" y="500" />
+        <di:waypoint x="2618" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2440" y="480" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_7_di" bpmnElement="Flow_Checker_7">
+        <di:waypoint x="2290" y="475" />
+        <di:waypoint x="2290" y="360" />
+        <di:waypoint x="2848" y="360" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2300" y="340" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_ManualFlow_di" bpmnElement="Flow_Checker_ManualFlow">
+        <di:waypoint x="2178" y="660" />
+        <di:waypoint x="2265" y="660" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_8_di" bpmnElement="Flow_Checker_8">
+        <di:waypoint x="2290" y="635" />
+        <di:waypoint x="2290" y="580" />
+        <di:waypoint x="2585" y="580" />
+        <di:waypoint x="2585" y="520" />
+        <di:waypoint x="2618" y="520" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2315" y="560" width="120" height="16" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_ManualKpr_di" bpmnElement="Flow_Checker_ManualKpr">
+        <di:waypoint x="2315" y="660" />
+        <di:waypoint x="2618" y="660" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2420" y="668" width="60" height="16" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Fill_Violations_di" bpmnElement="Flow_Fill_Violations">
+        <di:waypoint x="2842" y="500" />
+        <di:waypoint x="2935" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Violations_Yes_di" bpmnElement="Flow_Violations_Yes">
+        <di:waypoint x="2985" y="500" />
+        <di:waypoint x="3080" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3020" y="480" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Violations_No_di" bpmnElement="Flow_Violations_No">
+        <di:waypoint x="2960" y="525" />
+        <di:waypoint x="2960" y="575" />
+        <di:waypoint x="3375" y="575" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2970" y="555" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_9_di" bpmnElement="Flow_Checker_9">
+        <di:waypoint x="3300" y="500" />
+        <di:waypoint x="3340" y="500" />
+        <di:waypoint x="3340" y="555" />
+        <di:waypoint x="3382" y="555" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_10_di" bpmnElement="Flow_Checker_10">
+        <di:waypoint x="3072" y="360" />
+        <di:waypoint x="3400" y="360" />
+        <di:waypoint x="3400" y="550" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Kpr_Merge_di" bpmnElement="Flow_Kpr_Merge">
+        <di:waypoint x="2842" y="660" />
+        <di:waypoint x="3400" y="660" />
+        <di:waypoint x="3400" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_12_di" bpmnElement="Flow_Checker_12">
+        <di:waypoint x="3425" y="575" />
+        <di:waypoint x="3510" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_PaperSign_di" bpmnElement="Flow_To_PaperSign">
+        <di:waypoint x="3730" y="575" />
+        <di:waypoint x="3825" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PaperSign_Yes_di" bpmnElement="Flow_PaperSign_Yes">
+        <di:waypoint x="3875" y="575" />
+        <di:waypoint x="3968" y="575" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3905" y="555" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PaperSign_No_di" bpmnElement="Flow_PaperSign_No">
+        <di:waypoint x="3850" y="550" />
+        <di:waypoint x="3850" y="460" />
+        <di:waypoint x="4290" y="460" />
+        <di:waypoint x="4290" y="550" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3860" y="440" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Export_Merge_di" bpmnElement="Flow_Export_Merge">
+        <di:waypoint x="4192" y="575" />
+        <di:waypoint x="4265" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_11_di" bpmnElement="Flow_Checker_11">
+        <di:waypoint x="4315" y="575" />
+        <di:waypoint x="4402" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_0_di" bpmnElement="Flow_App_0">
+        <di:waypoint x="1113" y="940" />
+        <di:waypoint x="1172" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_1_di" bpmnElement="Flow_App_1">
+        <di:waypoint x="1398" y="940" />
+        <di:waypoint x="1538" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_2_di" bpmnElement="Flow_App_2">
+        <di:waypoint x="1762" y="940" />
+        <di:waypoint x="2368" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_3_di" bpmnElement="Flow_App_3">
+        <di:waypoint x="2592" y="940" />
+        <di:waypoint x="3078" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_Result_di" bpmnElement="Flow_App_Result">
+        <di:waypoint x="3302" y="940" />
+        <di:waypoint x="3348" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_4_di" bpmnElement="Flow_App_4">
+        <di:waypoint x="3572" y="940" />
+        <di:waypoint x="3620" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_5_di" bpmnElement="Flow_App_5">
+        <di:waypoint x="3840" y="940" />
+        <di:waypoint x="3908" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_6_di" bpmnElement="Flow_App_6">
+        <di:waypoint x="4132" y="940" />
+        <di:waypoint x="4215" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_7_di" bpmnElement="Flow_App_7">
+        <di:waypoint x="4265" y="940" />
+        <di:waypoint x="4548" y="940" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4385" y="920" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_8_di" bpmnElement="Flow_App_8">
+        <di:waypoint x="4240" y="965" />
+        <di:waypoint x="4240" y="1090" />
+        <di:waypoint x="4345" y="1090" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4250" y="1005" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_9_di" bpmnElement="Flow_App_9">
+        <di:waypoint x="4555" y="1090" />
+        <di:waypoint x="4610" y="1090" />
+        <di:waypoint x="4610" y="984" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_App_10_di" bpmnElement="Flow_App_10">
+        <di:waypoint x="4772" y="940" />
+        <di:waypoint x="4842" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Octant_1_di" bpmnElement="Flow_Octant_1">
+        <di:waypoint x="863" y="1370" />
+        <di:waypoint x="925" y="1370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Octant_2_di" bpmnElement="Flow_Octant_2">
+        <di:waypoint x="1145" y="1370" />
+        <di:waypoint x="1172" y="1370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Octant_3_di" bpmnElement="Flow_Octant_3">
+        <di:waypoint x="1398" y="1370" />
+        <di:waypoint x="1462" y="1370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Octant_Bell_di" bpmnElement="Flow_Octant_Bell">
+        <di:waypoint x="4678" y="1370" />
+        <di:waypoint x="4848" y="1370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Octant_Wait_di" bpmnElement="Flow_Octant_Wait">
+        <di:waypoint x="5072" y="1370" />
+        <di:waypoint x="5330" y="1370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Octant_4_di" bpmnElement="Flow_Octant_4">
+        <di:waypoint x="5550" y="1370" />
+        <di:waypoint x="5588" y="1370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Octant_5_di" bpmnElement="Flow_Octant_5">
+        <di:waypoint x="5812" y="1370" />
+        <di:waypoint x="5882" y="1370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_Assignment_di" bpmnElement="Message_Assignment">
+        <di:waypoint x="845" y="188" />
+        <di:waypoint x="845" y="1352" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="855" y="248" width="150" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_ReferenceData_di" bpmnElement="Message_ReferenceData">
+        <di:waypoint x="1285" y="1326" />
+        <di:waypoint x="1285" y="984" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1295" y="1198" width="210" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_OpenApp_di" bpmnElement="Message_OpenApp">
+        <di:waypoint x="1610" y="618" />
+        <di:waypoint x="1610" y="896" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1450" y="762" width="150" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_List_di" bpmnElement="Message_List">
+        <di:waypoint x="1690" y="896" />
+        <di:waypoint x="1690" y="618" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1700" y="762" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_ChooseAssigned_di" bpmnElement="Message_ChooseAssigned">
+        <di:waypoint x="2175" y="515" />
+        <di:waypoint x="2210" y="515" />
+        <di:waypoint x="2210" y="772" />
+        <di:waypoint x="2430" y="772" />
+        <di:waypoint x="2430" y="896" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2225" y="738" width="155" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_ChooseManual_di" bpmnElement="Message_ChooseManual">
+        <di:waypoint x="2070" y="703" />
+        <di:waypoint x="2070" y="788" />
+        <di:waypoint x="2400" y="788" />
+        <di:waypoint x="2400" y="896" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2080" y="792" width="175" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_ReadyForm_di" bpmnElement="Message_ReadyForm">
+        <di:waypoint x="2540" y="896" />
+        <di:waypoint x="2540" y="772" />
+        <di:waypoint x="2565" y="772" />
+        <di:waypoint x="2565" y="480" />
+        <di:waypoint x="2617" y="480" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2552" y="778" width="145" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_NotPerformed_di" bpmnElement="Message_NotPerformed">
+        <di:waypoint x="3072" y="360" />
+        <di:waypoint x="3322" y="360" />
+        <di:waypoint x="3322" y="772" />
+        <di:waypoint x="3230" y="772" />
+        <di:waypoint x="3230" y="896" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3105" y="316" width="185" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_CheckFilled_di" bpmnElement="Message_CheckFilled">
+        <di:waypoint x="3190" y="544" />
+        <di:waypoint x="3190" y="896" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3032" y="742" width="150" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_KprFilled_di" bpmnElement="Message_KprFilled">
+        <di:waypoint x="2730" y="704" />
+        <di:waypoint x="2730" y="788" />
+        <di:waypoint x="3140" y="788" />
+        <di:waypoint x="3140" y="896" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2760" y="792" width="175" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_Outcome_di" bpmnElement="Message_Outcome">
+        <di:waypoint x="3460" y="896" />
+        <di:waypoint x="3460" y="772" />
+        <di:waypoint x="3575" y="772" />
+        <di:waypoint x="3575" y="619" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3305" y="778" width="148" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_Confirm_di" bpmnElement="Message_Confirm">
+        <di:waypoint x="3665" y="619" />
+        <di:waypoint x="3665" y="772" />
+        <di:waypoint x="3730" y="772" />
+        <di:waypoint x="3730" y="896" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3740" y="778" width="115" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_ExportPdf_di" bpmnElement="Message_ExportPdf">
+        <di:waypoint x="4080" y="896" />
+        <di:waypoint x="4080" y="619" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4090" y="762" width="175" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_Result_di" bpmnElement="Message_Result">
+        <di:waypoint x="4660" y="984" />
+        <di:waypoint x="4660" y="1352" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4670" y="1200" width="195" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_BellNotify_di" bpmnElement="Message_BellNotify">
+        <di:waypoint x="4960" y="1326" />
+        <di:waypoint x="4960" y="163" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4970" y="248" width="150" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_TransferAll_di" bpmnElement="Message_TransferAll">
+        <di:waypoint x="5440" y="188" />
+        <di:waypoint x="5440" y="1326" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="5450" y="248" width="175" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
