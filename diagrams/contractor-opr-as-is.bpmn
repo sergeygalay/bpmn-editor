@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_contractor-opr-as-is" targetNamespace="https://sergeygalay.github.io/bpmn-editor/contractor-opr-as-is">
   <bpmn:collaboration id="Collaboration_contractor-opr-as-is">
-    <bpmn:participant id="Participant_Window" name="Аналитик / специалист «Единого окна» ПБиОТ" processRef="Process_Window" />
+    <bpmn:participant id="Participant_Window" name="Аналитик «Октанта»" processRef="Process_Window" />
     <bpmn:participant id="Participant_Checker" name="Проверяющий" processRef="Process_Checker" />
     <bpmn:participant id="Participant_Octant" name="Система «Октант» (локальные экземпляры в филиалах)" processRef="Process_Octant" />
     <bpmn:messageFlow id="Message_Plan" name="График и назначение" sourceRef="Schedule" targetRef="OctPlanStart" />
@@ -9,7 +9,7 @@
     <bpmn:messageFlow id="Message_3" name="Сканы и файлы чек-листа / Акта" sourceRef="Send" targetRef="ReceiveCheck" />
     <bpmn:messageFlow id="Message_1" name="Ручной ввод данных и загрузка файлов" sourceRef="Upload" targetRef="OctStart" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_Window" name="Единое окно и аналитик — AS-IS" isExecutable="false">
+  <bpmn:process id="Process_Window" name="Аналитик «Октанта» — AS-IS" isExecutable="false">
     <bpmn:startEvent id="Start" name="Необходимость плановой проверки (ОПР / аудит)" />
     <bpmn:userTask id="Schedule" name="Запланировать проверку (ОПР / аудит) и назначить проверяющего в «Октанте»" />
     <bpmn:receiveTask id="ReceiveCheck" name="Получить сканы и файлы проверки" />
@@ -32,7 +32,7 @@
     <bpmn:exclusiveGateway id="MergeAct" />
     <bpmn:manualTask id="Sign" name="Распечатать и подписать документы на бумаге (при необходимости — у подрядчика)" />
     <bpmn:manualTask id="Scan" name="Отсканировать подписанные документы" />
-    <bpmn:sendTask id="Send" name="Направить сканы и файлы специалисту «Единого окна» / аналитику" />
+    <bpmn:sendTask id="Send" name="Направить сканы и файлы аналитику «Октанта» (напрямую или через «Единое окно»)" />
     <bpmn:endEvent id="CheckerEnd" name="Документы переданы" />
     <bpmn:sequenceFlow id="Flow_Checker_Start" sourceRef="CheckerStart" targetRef="Gateway_CheckType" />
     <bpmn:sequenceFlow id="Flow_Type_Planned" name="Плановая (ОПР / аудит)" sourceRef="Gateway_CheckType" targetRef="Print" />

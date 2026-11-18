@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_contractor-opr-to-be" targetNamespace="https://sergeygalay.github.io/bpmn-editor/contractor-opr-to-be">
   <bpmn:collaboration id="Collaboration_contractor-opr-to-be">
-    <bpmn:participant id="Participant_Window" name="Аналитик / специалист «Единого окна» (в «Октанте»)" processRef="Process_Window" />
+    <bpmn:participant id="Participant_Window" name="Аналитик «Октанта»" processRef="Process_Window" />
     <bpmn:participant id="Participant_Checker" name="Проверяющий" processRef="Process_Checker" />
     <bpmn:participant id="Participant_App" name="МП «Суперника» (и платформенный конструктор форм)" processRef="Process_App" />
     <bpmn:participant id="Participant_Octant" name="Система «Октант» (и сетевая папка обмена)" processRef="Process_Octant" />
@@ -22,7 +22,7 @@
     <bpmn:messageFlow id="Message_BellNotify" name="Уведомление «колокольчик»" sourceRef="OctNotifyBell" targetRef="AnalystNotifyStart" />
     <bpmn:messageFlow id="Message_TransferAll" name="Привязка к графику и «Перенести всё»" sourceRef="AnalystTransferAll" targetRef="OctWaitTransfer" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_Window" name="Единое окно и аналитик — TO-BE" isExecutable="false">
+  <bpmn:process id="Process_Window" name="Аналитик «Октанта» — TO-BE" isExecutable="false">
     <bpmn:startEvent id="Start" name="Необходима настройка форм или планирование проверок" />
     <bpmn:userTask id="ConfigureForms" name="Настроить / отредактировать опросники, чек-листы (ОПР, аудит) и формы КПР в «Октанте»" />
     <bpmn:userTask id="Organize" name="Запланировать график проверок (ОПР, аудит) в «Октанте»" />
