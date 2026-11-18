@@ -1,18 +1,18 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_contractor-opr-as-is" targetNamespace="https://sergeygalay.github.io/bpmn-editor/contractor-opr-as-is">
   <bpmn:collaboration id="Collaboration_contractor-opr-as-is">
     <bpmn:participant id="Participant_Window" name="Аналитик / специалист «Единого окна» ПБиОТ" processRef="Process_Window" />
     <bpmn:participant id="Participant_Checker" name="Проверяющий" processRef="Process_Checker" />
     <bpmn:participant id="Participant_Octant" name="Система «Октант» (локальные экземпляры в филиалах)" processRef="Process_Octant" />
-    <bpmn:messageFlow id="Message_Plan" sourceRef="Schedule" targetRef="OctPlanStart" name="График и назначение" />
-    <bpmn:messageFlow id="Message_2" sourceRef="Schedule" targetRef="CheckerStart" name="Поручение на плановую проверку" />
-    <bpmn:messageFlow id="Message_3" sourceRef="Send" targetRef="ReceiveCheck" name="Сканы и файлы чек-листа / Акта" />
-    <bpmn:messageFlow id="Message_1" sourceRef="Upload" targetRef="OctStart" name="Ручной ввод данных и загрузка файлов" />
+    <bpmn:messageFlow id="Message_Plan" name="График и назначение" sourceRef="Schedule" targetRef="OctPlanStart" />
+    <bpmn:messageFlow id="Message_2" name="Поручение на плановую проверку" sourceRef="Schedule" targetRef="CheckerStart" />
+    <bpmn:messageFlow id="Message_3" name="Сканы и файлы чек-листа / Акта" sourceRef="Send" targetRef="ReceiveCheck" />
+    <bpmn:messageFlow id="Message_1" name="Ручной ввод данных и загрузка файлов" sourceRef="Upload" targetRef="OctStart" />
   </bpmn:collaboration>
   <bpmn:process id="Process_Window" name="Единое окно и аналитик — AS-IS" isExecutable="false">
     <bpmn:startEvent id="Start" name="Необходимость плановой проверки (ОПР / аудит)" />
     <bpmn:userTask id="Schedule" name="Запланировать проверку (ОПР / аудит) и назначить проверяющего в «Октанте»" />
-    <bpmn:receiveTask id="ReceiveCheck" name="Получить сканы и файлы проверки (с задержкой 2–3 дня)" />
+    <bpmn:receiveTask id="ReceiveCheck" name="Получить сканы и файлы проверки" />
     <bpmn:userTask id="Upload" name="Вручную внести данные и прикрепить файлы в «Октанте»" />
     <bpmn:endEvent id="End" name="Данные и файлы внесены в «Октант»" />
     <bpmn:sequenceFlow id="Sequence_01" sourceRef="Start" targetRef="Schedule" />
@@ -21,7 +21,6 @@
     <bpmn:sequenceFlow id="Sequence_16" sourceRef="Upload" targetRef="End" />
   </bpmn:process>
   <bpmn:process id="Process_Checker" name="Проверяющий — AS-IS" isExecutable="false">
-    <bpmn:startEvent id="CheckerStart" name="Поручение по графику или внеплановый обход (КПР)" />
     <bpmn:exclusiveGateway id="Gateway_CheckType" name="Вид проверки?" />
     <bpmn:manualTask id="Print" name="Распечатать бумажный бланк чек-листа (ОПР / аудит)" />
     <bpmn:manualTask id="Inspect" name="Провести проверку на объекте и заполнить бумажный бланк" />
@@ -36,20 +35,21 @@
     <bpmn:sendTask id="Send" name="Направить сканы и файлы специалисту «Единого окна» / аналитику" />
     <bpmn:endEvent id="CheckerEnd" name="Документы переданы" />
     <bpmn:sequenceFlow id="Flow_Checker_Start" sourceRef="CheckerStart" targetRef="Gateway_CheckType" />
-    <bpmn:sequenceFlow id="Flow_Type_Planned" sourceRef="Gateway_CheckType" targetRef="Print" name="Плановая (ОПР / аудит)" />
-    <bpmn:sequenceFlow id="Flow_Type_Kpr" sourceRef="Gateway_CheckType" targetRef="InspectKpr" name="Внеплановый обход (КПР)" />
+    <bpmn:sequenceFlow id="Flow_Type_Planned" name="Плановая (ОПР / аудит)" sourceRef="Gateway_CheckType" targetRef="Print" />
+    <bpmn:sequenceFlow id="Flow_Type_Kpr" name="Внеплановый обход (КПР)" sourceRef="Gateway_CheckType" targetRef="InspectKpr" />
     <bpmn:sequenceFlow id="Sequence_03" sourceRef="Print" targetRef="Inspect" />
     <bpmn:sequenceFlow id="Flow_Inspect_Merge" sourceRef="Inspect" targetRef="MergeInspect" />
     <bpmn:sequenceFlow id="Flow_Kpr_Merge" sourceRef="InspectKpr" targetRef="MergeInspect" />
     <bpmn:sequenceFlow id="Flow_To_WordExcel" sourceRef="MergeInspect" targetRef="PrepareWordExcel" />
     <bpmn:sequenceFlow id="Sequence_10" sourceRef="PrepareWordExcel" targetRef="Risk" />
-    <bpmn:sequenceFlow id="Sequence_11" sourceRef="Risk" targetRef="Act" name="Да" />
-    <bpmn:sequenceFlow id="Sequence_12" sourceRef="Risk" targetRef="MergeAct" name="Нет" />
+    <bpmn:sequenceFlow id="Sequence_11" name="Да" sourceRef="Risk" targetRef="Act" />
+    <bpmn:sequenceFlow id="Sequence_12" name="Нет" sourceRef="Risk" targetRef="MergeAct" />
     <bpmn:sequenceFlow id="Sequence_13" sourceRef="Act" targetRef="MergeAct" />
     <bpmn:sequenceFlow id="Sequence_14" sourceRef="MergeAct" targetRef="Sign" />
     <bpmn:sequenceFlow id="Flow_Sign_Scan" sourceRef="Sign" targetRef="Scan" />
     <bpmn:sequenceFlow id="Flow_Scan_Send" sourceRef="Scan" targetRef="Send" />
     <bpmn:sequenceFlow id="Flow_Checker_End" sourceRef="Send" targetRef="CheckerEnd" />
+    <bpmn:startEvent id="CheckerStart" name="Поручение по графику или внеплановый обход (КПР)" />
   </bpmn:process>
   <bpmn:process id="Process_Octant" name="Октант — AS-IS" isExecutable="false">
     <bpmn:startEvent id="OctPlanStart" name="Ввод плана проверки" />
@@ -68,12 +68,6 @@
       <bpmndi:BPMNShape id="Participant_Window_di" bpmnElement="Participant_Window" isHorizontal="true">
         <dc:Bounds x="40" y="50" width="3820" height="220" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Participant_Checker_di" bpmnElement="Participant_Checker" isHorizontal="true">
-        <dc:Bounds x="40" y="320" width="3820" height="480" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Participant_Octant_di" bpmnElement="Participant_Octant" isHorizontal="true">
-        <dc:Bounds x="40" y="860" width="3820" height="220" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_di" bpmnElement="Start">
         <dc:Bounds x="142" y="142" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -85,6 +79,7 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ReceiveCheck_di" bpmnElement="ReceiveCheck">
         <dc:Bounds x="2820" y="116" width="220" height="88" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Upload_di" bpmnElement="Upload">
         <dc:Bounds x="3200" y="116" width="220" height="88" />
@@ -95,11 +90,24 @@
           <dc:Bounds x="3465" y="185" width="150" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CheckerStart_di" bpmnElement="CheckerStart">
-        <dc:Bounds x="512" y="537" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="450" y="580" width="160" height="42" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNEdge id="Sequence_01_di" bpmnElement="Sequence_01">
+        <di:waypoint x="178" y="160" />
+        <di:waypoint x="270" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Window_Wait_di" bpmnElement="Flow_Window_Wait">
+        <di:waypoint x="490" y="160" />
+        <di:waypoint x="2820" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Window_Upload_di" bpmnElement="Flow_Window_Upload">
+        <di:waypoint x="3040" y="160" />
+        <di:waypoint x="3200" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sequence_16_di" bpmnElement="Sequence_16">
+        <di:waypoint x="3420" y="160" />
+        <di:waypoint x="3522" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_Checker_di" bpmnElement="Participant_Checker" isHorizontal="true">
+        <dc:Bounds x="40" y="320" width="3820" height="480" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_CheckType_di" bpmnElement="Gateway_CheckType" isMarkerVisible="true">
         <dc:Bounds x="665" y="530" width="50" height="50" />
@@ -149,54 +157,14 @@
           <dc:Bounds x="3065" y="580" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OctPlanStart_di" bpmnElement="OctPlanStart">
-        <dc:Bounds x="312" y="952" width="36" height="36" />
+      <bpmndi:BPMNShape id="CheckerStart_di" bpmnElement="CheckerStart">
+        <dc:Bounds x="412" y="537" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="265" y="995" width="130" height="28" />
+          <dc:Bounds x="361" y="580" width="138" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OctPlanStore_di" bpmnElement="OctPlanStore">
-        <dc:Bounds x="465" y="927" width="210" height="86" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OctPlanEnd_di" bpmnElement="OctPlanEnd">
-        <dc:Bounds x="762" y="952" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="720" y="995" width="120" height="28" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OctStart_di" bpmnElement="OctStart">
-        <dc:Bounds x="3292" y="952" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="3240" y="995" width="140" height="40" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OctStore_di" bpmnElement="OctStore">
-        <dc:Bounds x="3402" y="927" width="215" height="86" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="OctEnd_di" bpmnElement="OctEnd">
-        <dc:Bounds x="3702" y="952" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="3665" y="995" width="110" height="28" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Sequence_01_di" bpmnElement="Sequence_01">
-        <di:waypoint x="178" y="160" />
-        <di:waypoint x="270" y="160" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Window_Wait_di" bpmnElement="Flow_Window_Wait">
-        <di:waypoint x="490" y="160" />
-        <di:waypoint x="2820" y="160" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Window_Upload_di" bpmnElement="Flow_Window_Upload">
-        <di:waypoint x="3040" y="160" />
-        <di:waypoint x="3200" y="160" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Sequence_16_di" bpmnElement="Sequence_16">
-        <di:waypoint x="3420" y="160" />
-        <di:waypoint x="3522" y="160" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Checker_Start_di" bpmnElement="Flow_Checker_Start">
-        <di:waypoint x="548" y="555" />
+        <di:waypoint x="448" y="555" />
         <di:waypoint x="665" y="555" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Type_Planned_di" bpmnElement="Flow_Type_Planned">
@@ -273,6 +241,39 @@
         <di:waypoint x="3040" y="555" />
         <di:waypoint x="3112" y="555" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_Octant_di" bpmnElement="Participant_Octant" isHorizontal="true">
+        <dc:Bounds x="40" y="860" width="3820" height="220" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctPlanStart_di" bpmnElement="OctPlanStart">
+        <dc:Bounds x="312" y="952" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="265" y="995" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctPlanStore_di" bpmnElement="OctPlanStore">
+        <dc:Bounds x="465" y="927" width="210" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctPlanEnd_di" bpmnElement="OctPlanEnd">
+        <dc:Bounds x="762" y="952" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="720" y="995" width="120" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctStart_di" bpmnElement="OctStart">
+        <dc:Bounds x="3292" y="952" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3240" y="995" width="140" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctStore_di" bpmnElement="OctStore">
+        <dc:Bounds x="3402" y="927" width="215" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OctEnd_di" bpmnElement="OctEnd">
+        <dc:Bounds x="3702" y="952" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3665" y="995" width="110" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_OctPlan_1_di" bpmnElement="Flow_OctPlan_1">
         <di:waypoint x="348" y="970" />
         <di:waypoint x="465" y="970" />
@@ -298,11 +299,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_2_di" bpmnElement="Message_2">
         <di:waypoint x="430" y="204" />
-        <di:waypoint x="430" y="290" />
-        <di:waypoint x="530" y="290" />
-        <di:waypoint x="530" y="537" />
+        <di:waypoint x="430" y="537" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="542" y="280" width="165" height="28" />
+          <dc:Bounds x="462" y="195" width="125" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_3_di" bpmnElement="Message_3">
