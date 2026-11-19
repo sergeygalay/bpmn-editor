@@ -3,8 +3,8 @@
   <bpmn:collaboration id="Collaboration_contractor-opr-to-be">
     <bpmn:participant id="Participant_Window" name="Аналитик «Октанта»" processRef="Process_Window" />
     <bpmn:participant id="Participant_Checker" name="Проверяющий" processRef="Process_Checker" />
-    <bpmn:participant id="Participant_App" name="МП «Суперника» (и платформенный конструктор форм)" processRef="Process_App" />
-    <bpmn:participant id="Participant_Octant" name="Система «Октант» (и сетевая папка обмена)" processRef="Process_Octant" />
+    <bpmn:participant id="Participant_App" name="МП «Суперника»" processRef="Process_App" />
+    <bpmn:participant id="Participant_Octant" name="Система «Октант»" processRef="Process_Octant" />
     <bpmn:messageFlow id="Message_Assignment" name="Формы, график и назначения" sourceRef="Assign" targetRef="OctStart" />
     <bpmn:messageFlow id="Message_ReferenceData" name="Справочники, роли, назначения и конфигурации форм (раз в сутки)" sourceRef="Provide" targetRef="SyncData" />
     <bpmn:messageFlow id="Message_OpenApp" name="Открытие МП (учётная запись)" sourceRef="Open" targetRef="Available" />
@@ -412,6 +412,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_App_di" bpmnElement="Participant_App" isHorizontal="true">
         <dc:Bounds x="40" y="810" width="6020" height="380" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="SyncData_di" bpmnElement="SyncData">
         <dc:Bounds x="1172" y="896" width="225" height="88" />
@@ -517,6 +518,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_Octant_di" bpmnElement="Participant_Octant" isHorizontal="true">
         <dc:Bounds x="40" y="1250" width="6020" height="240" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="OctStart_di" bpmnElement="OctStart">
         <dc:Bounds x="827" y="1352" width="36" height="36" />
