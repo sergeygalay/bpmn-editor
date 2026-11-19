@@ -134,7 +134,7 @@
       <bpmndi:BPMNShape id="CheckerStart_di" bpmnElement="CheckerStart">
         <dc:Bounds x="412" y="412" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="250" y="408" width="150" height="42" />
+          <dc:Bounds x="345" y="456" width="150" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CheckerStartUnplanned_di" bpmnElement="CheckerStartUnplanned">
@@ -191,7 +191,7 @@
       <bpmndi:BPMNShape id="CheckerEnd_di" bpmnElement="CheckerEnd">
         <dc:Bounds x="3092" y="582" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="3045" y="625" width="130" height="28" />
+          <dc:Bounds x="3046" y="544" width="104" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_Checker_PlannedStart_di" bpmnElement="Flow_Checker_PlannedStart">

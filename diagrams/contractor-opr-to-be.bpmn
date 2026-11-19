@@ -721,20 +721,20 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_ChooseAssigned_di" bpmnElement="Message_ChooseAssigned">
         <di:waypoint x="2355" y="548" />
-        <di:waypoint x="2355" y="838" />
-        <di:waypoint x="2600" y="838" />
-        <di:waypoint x="2600" y="986" />
+        <di:waypoint x="2355" y="846" />
+        <di:waypoint x="2595" y="846" />
+        <di:waypoint x="2595" y="986" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2370" y="814" width="135" height="20" />
+          <dc:Bounds x="2368" y="808" width="140" height="32" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_ChooseManual_di" bpmnElement="Message_ChooseManual">
         <di:waypoint x="2282" y="753" />
-        <di:waypoint x="2282" y="892" />
-        <di:waypoint x="2645" y="892" />
+        <di:waypoint x="2282" y="902" />
+        <di:waypoint x="2645" y="902" />
         <di:waypoint x="2645" y="986" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2138" y="820" width="136" height="40" />
+          <dc:Bounds x="2136" y="820" width="134" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_ReadyForm_di" bpmnElement="Message_ReadyForm">
@@ -742,7 +742,7 @@
         <di:waypoint x="2705" y="522" />
         <di:waypoint x="2760" y="522" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2550" y="852" width="145" height="30" />
+          <dc:Bounds x="2548" y="808" width="146" height="32" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_ReadyFormKpr_di" bpmnElement="Message_ReadyFormKpr">
@@ -750,39 +750,39 @@
         <di:waypoint x="2735" y="730" />
         <di:waypoint x="2760" y="730" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2744" y="852" width="76" height="20" />
+          <dc:Bounds x="2746" y="852" width="84" height="24" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_KprFilled_di" bpmnElement="Message_KprFilled">
         <di:waypoint x="2875" y="754" />
-        <di:waypoint x="2875" y="892" />
-        <di:waypoint x="3210" y="892" />
-        <di:waypoint x="3210" y="986" />
+        <di:waypoint x="2875" y="902" />
+        <di:waypoint x="3195" y="902" />
+        <di:waypoint x="3195" y="986" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2886" y="862" width="160" height="28" />
+          <dc:Bounds x="2888" y="858" width="155" height="34" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_CheckFilled_di" bpmnElement="Message_CheckFilled">
         <di:waypoint x="2955" y="549" />
-        <di:waypoint x="2955" y="838" />
-        <di:waypoint x="3265" y="838" />
-        <di:waypoint x="3265" y="986" />
+        <di:waypoint x="2955" y="846" />
+        <di:waypoint x="3250" y="846" />
+        <di:waypoint x="3250" y="986" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2968" y="814" width="150" height="20" />
+          <dc:Bounds x="2968" y="808" width="155" height="32" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_ActViolations_di" bpmnElement="Message_ActViolations">
-        <di:waypoint x="3320" y="549" />
-        <di:waypoint x="3320" y="986" />
+        <di:waypoint x="3305" y="549" />
+        <di:waypoint x="3305" y="986" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="3172" y="852" width="138" height="28" />
+          <dc:Bounds x="3316" y="832" width="128" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_NotPerformed_di" bpmnElement="Message_NotPerformed">
         <di:waypoint x="3230" y="355" />
         <di:waypoint x="3455" y="355" />
-        <di:waypoint x="3455" y="892" />
-        <di:waypoint x="3375" y="892" />
+        <di:waypoint x="3455" y="902" />
+        <di:waypoint x="3375" y="902" />
         <di:waypoint x="3375" y="986" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="3250" y="318" width="190" height="30" />
