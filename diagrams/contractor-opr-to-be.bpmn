@@ -8,9 +8,9 @@
     <bpmn:messageFlow id="Message_Assignment" name="Контрольные листы, график и назначения" sourceRef="Assign" targetRef="OctStart" />
     <bpmn:messageFlow id="Message_ReferenceData" name="Справочники, назначения и контрольные листы (раз в сутки)" sourceRef="Provide" targetRef="SyncData" />
     <bpmn:messageFlow id="Message_OpenApp" name="Открытие МП (учётная запись)" sourceRef="Open" targetRef="AppOpenStart" />
-    <bpmn:messageFlow id="Message_List" name="Список назначений (ОПР, аудит) и фиксация КПР" sourceRef="Available" targetRef="Open" />
+    <bpmn:messageFlow id="Message_List" name="Список назначений (ОПР, аудит) и создание без назначения" sourceRef="Available" targetRef="Open" />
     <bpmn:messageFlow id="Message_ChooseAssigned" name="Выбрана назначенная проверка" sourceRef="Select" targetRef="Form" />
-    <bpmn:messageFlow id="Message_ChooseManual" name="Инициирована фиксация КПР (при нарушениях)" sourceRef="Manual" targetRef="Form" />
+    <bpmn:messageFlow id="Message_ChooseManual" name="Создана КПР или резервный ОПР / аудит" sourceRef="Manual" targetRef="Form" />
     <bpmn:messageFlow id="Message_ReadyForm" name="Контрольный лист (ОПР / аудит)" sourceRef="Form" targetRef="Fill" />
     <bpmn:messageFlow id="Message_ReadyFormKpr" name="Карточка фиксации нарушений КПР" sourceRef="Form" targetRef="FillKpr" />
     <bpmn:messageFlow id="Message_CheckFilled" name="Заполненный контрольный лист" sourceRef="Fill" targetRef="AppWaitResult" />
@@ -22,7 +22,7 @@
     <bpmn:messageFlow id="Message_ExportPdf" name="Файлы Excel (.xlsx / .xls): контрольный лист и (при нарушениях) Акт" sourceRef="Save" targetRef="ExportAndSignAct" />
     <bpmn:messageFlow id="Message_Result" name="Результаты проверки (JSON, файлы Excel, вложения)" sourceRef="Send" targetRef="OctResultStart" />
     <bpmn:messageFlow id="Message_BellNotify" name="Уведомление «колокольчик»" sourceRef="OctNotifyBell" targetRef="AnalystNotifyStart" />
-    <bpmn:messageFlow id="Message_TransferAll" name="Подтверждение разбора («Перенести всё»)" sourceRef="AnalystTransferAll" targetRef="OctWaitTransfer" />
+    <bpmn:messageFlow id="Message_TransferAll" name="Привязка к графику (при необходимости) и «Перенести всё»" sourceRef="AnalystTransferAll" targetRef="OctWaitTransfer" />
   </bpmn:collaboration>
   <bpmn:process id="Process_Window" name="Аналитик «Октанта» — TO-BE" isExecutable="false">
     <bpmn:startEvent id="Start" name="Необходима настройка форм или планирование проверок" />
@@ -33,7 +33,7 @@
     <bpmn:startEvent id="AnalystNotifyStart" name="Уведомление («колокольчик») о новых проверках">
       <bpmn:messageEventDefinition id="MED_AnalystNotifyStart" />
     </bpmn:startEvent>
-    <bpmn:userTask id="AnalystReview" name="Просмотреть входящие результаты проверок (при необходимости прикрепить скан подписанного Акта)" />
+    <bpmn:userTask id="AnalystReview" name="Просмотреть входящие, при необходимости привязать к графику резервные ОПР / аудит и прикрепить скан Акта" />
     <bpmn:userTask id="AnalystTransferAll" name="Нажать «Перенести всё» для сохранения в журнал" />
     <bpmn:endEvent id="AnalystEnd" name="Результаты перенесены в журнал" />
     <bpmn:sequenceFlow id="Flow_Window_0" sourceRef="Start" targetRef="ConfigureForms" />
@@ -45,13 +45,15 @@
     <bpmn:sequenceFlow id="Flow_Analyst_3" sourceRef="AnalystTransferAll" targetRef="AnalystEnd" />
   </bpmn:process>
   <bpmn:process id="Process_Checker" name="Проверяющий — TO-BE" isExecutable="false">
-    <bpmn:startEvent id="CheckerStart" name="Необходима проверка (ОПР, аудит по графику или КПР при нарушениях)" />
+    <bpmn:startEvent id="CheckerStart" name="Необходима проверка (ОПР, аудит или КПР при нарушениях)" />
     <bpmn:userTask id="Open" name="Открыть МП в «Супернике»" />
-    <bpmn:exclusiveGateway id="HasAssignment" name="Плановая проверка по календарю (ОПР / аудит)?" />
+    <bpmn:exclusiveGateway id="HasAssignment" name="Проверка из календаря назначений?" />
     <bpmn:userTask id="Select" name="Выбрать назначенную проверку (ОПР / аудит)" />
     <bpmn:exclusiveGateway id="CanCheck" name="Работы на объекте ведутся?" />
     <bpmn:userTask id="NotWork" name="Отметить «Работа не проводится» и заполнить обязательный комментарий" />
-    <bpmn:userTask id="Manual" name="Инициировать фиксацию КПР (только при выявлении нарушений)" />
+    <bpmn:userTask id="Manual" name="Создать без назначения (КПР при нарушениях или резервный ОПР / аудит) и заполнить шапку" />
+    <bpmn:exclusiveGateway id="IsKprGateway" name="Вид проверки — КПР?" />
+    <bpmn:exclusiveGateway id="MergeBeforeFill" />
     <bpmn:userTask id="Fill" name="Заполнить контрольный лист (ОПР / аудит), примечания и вложения (доступен офлайн-черновик)" />
     <bpmn:userTask id="FillKpr" name="Заполнить реквизиты КПР (вкл. ФИО проверяемого), состав комиссии, нарушения и вложения" />
     <bpmn:exclusiveGateway id="HasViolations" name="Выявлены нарушения (нужен Акт проверки)?" />
@@ -65,11 +67,14 @@
     <bpmn:sequenceFlow id="Flow_Checker_1" sourceRef="CheckerStart" targetRef="Open" />
     <bpmn:sequenceFlow id="Flow_Checker_2" sourceRef="Open" targetRef="HasAssignment" />
     <bpmn:sequenceFlow id="Flow_Checker_3" name="Да (ОПР / аудит)" sourceRef="HasAssignment" targetRef="Select" />
-    <bpmn:sequenceFlow id="Flow_Checker_4" name="Нет (КПР при нарушениях)" sourceRef="HasAssignment" targetRef="Manual" />
+    <bpmn:sequenceFlow id="Flow_Checker_4" name="Нет (КПР или резервный ОПР / аудит)" sourceRef="HasAssignment" targetRef="Manual" />
     <bpmn:sequenceFlow id="Flow_Checker_5" sourceRef="Select" targetRef="CanCheck" />
-    <bpmn:sequenceFlow id="Flow_Checker_6" name="Да" sourceRef="CanCheck" targetRef="Fill" />
+    <bpmn:sequenceFlow id="Flow_Checker_6" name="Да" sourceRef="CanCheck" targetRef="MergeBeforeFill" />
     <bpmn:sequenceFlow id="Flow_Checker_7" name="Нет" sourceRef="CanCheck" targetRef="NotWork" />
-    <bpmn:sequenceFlow id="Flow_Checker_ManualFlow" sourceRef="Manual" targetRef="FillKpr" />
+    <bpmn:sequenceFlow id="Flow_Checker_ManualFlow" sourceRef="Manual" targetRef="IsKprGateway" />
+    <bpmn:sequenceFlow id="Flow_Checker_8" name="Нет (резервный ОПР / аудит)" sourceRef="IsKprGateway" targetRef="MergeBeforeFill" />
+    <bpmn:sequenceFlow id="Flow_Checker_ManualKpr" name="Да (КПР)" sourceRef="IsKprGateway" targetRef="FillKpr" />
+    <bpmn:sequenceFlow id="Flow_Checker_ToFill" sourceRef="MergeBeforeFill" targetRef="Fill" />
     <bpmn:sequenceFlow id="Flow_Fill_Violations" sourceRef="Fill" targetRef="HasViolations" />
     <bpmn:sequenceFlow id="Flow_Violations_Yes" name="Да" sourceRef="HasViolations" targetRef="SelectViolationsForAct" />
     <bpmn:sequenceFlow id="Flow_Violations_No" name="Нет" sourceRef="HasViolations" targetRef="MergeOutcome" />
@@ -185,7 +190,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AnalystReview_di" bpmnElement="AnalystReview">
-        <dc:Bounds x="5625" y="101" width="225" height="88" />
+        <dc:Bounds x="5625" y="101" width="240" height="88" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AnalystTransferAll_di" bpmnElement="AnalystTransferAll">
         <dc:Bounds x="5900" y="102" width="210" height="86" />
@@ -217,7 +222,7 @@
         <di:waypoint x="5625" y="145" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Analyst_2_di" bpmnElement="Flow_Analyst_2">
-        <di:waypoint x="5850" y="145" />
+        <di:waypoint x="5865" y="145" />
         <di:waypoint x="5900" y="145" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Analyst_3_di" bpmnElement="Flow_Analyst_3">
@@ -241,7 +246,7 @@
       <bpmndi:BPMNShape id="HasAssignment_di" bpmnElement="HasAssignment" isMarkerVisible="true">
         <dc:Bounds x="2045" y="570" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1950" y="494" width="110" height="48" />
+          <dc:Bounds x="1965" y="500" width="95" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Select_di" bpmnElement="Select">
@@ -257,7 +262,16 @@
         <dc:Bounds x="3000" y="332" width="230" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Manual_di" bpmnElement="Manual">
-        <dc:Bounds x="2170" y="667" width="225" height="86" />
+        <dc:Bounds x="2170" y="662" width="225" height="96" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IsKprGateway_di" bpmnElement="IsKprGateway" isMarkerVisible="true">
+        <dc:Bounds x="2455" y="685" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2428" y="742" width="112" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="MergeBeforeFill_di" bpmnElement="MergeBeforeFill" isMarkerVisible="true">
+        <dc:Bounds x="2625" y="480" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Fill_di" bpmnElement="Fill">
         <dc:Bounds x="2760" y="461" width="225" height="88" />
@@ -320,7 +334,7 @@
         <di:waypoint x="2070" y="710" />
         <di:waypoint x="2170" y="710" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1946" y="652" width="114" height="34" />
+          <dc:Bounds x="1946" y="646" width="114" height="46" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Checker_5_di" bpmnElement="Flow_Checker_5">
@@ -329,9 +343,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Checker_6_di" bpmnElement="Flow_Checker_6">
         <di:waypoint x="2505" y="505" />
-        <di:waypoint x="2760" y="505" />
+        <di:waypoint x="2625" y="505" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2610" y="480" width="24" height="18" />
+          <dc:Bounds x="2550" y="482" width="24" height="18" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Checker_7_di" bpmnElement="Flow_Checker_7">
@@ -344,7 +358,27 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Checker_ManualFlow_di" bpmnElement="Flow_Checker_ManualFlow">
         <di:waypoint x="2395" y="710" />
+        <di:waypoint x="2455" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_8_di" bpmnElement="Flow_Checker_8">
+        <di:waypoint x="2480" y="685" />
+        <di:waypoint x="2480" y="595" />
+        <di:waypoint x="2650" y="595" />
+        <di:waypoint x="2650" y="530" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2488" y="560" width="152" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_ManualKpr_di" bpmnElement="Flow_Checker_ManualKpr">
+        <di:waypoint x="2505" y="710" />
         <di:waypoint x="2760" y="710" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2575" y="684" width="60" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Checker_ToFill_di" bpmnElement="Flow_Checker_ToFill">
+        <di:waypoint x="2675" y="505" />
+        <di:waypoint x="2760" y="505" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Fill_Violations_di" bpmnElement="Flow_Fill_Violations">
         <di:waypoint x="2985" y="505" />
@@ -697,7 +731,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_ChooseManual_di" bpmnElement="Message_ChooseManual">
-        <di:waypoint x="2282" y="753" />
+        <di:waypoint x="2282" y="758" />
         <di:waypoint x="2282" y="910" />
         <di:waypoint x="2645" y="910" />
         <di:waypoint x="2645" y="986" />
@@ -799,7 +833,7 @@
         <di:waypoint x="6005" y="188" />
         <di:waypoint x="6005" y="1456" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="6017" y="256" width="175" height="28" />
+          <dc:Bounds x="6017" y="254" width="185" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
