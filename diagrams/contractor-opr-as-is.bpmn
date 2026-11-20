@@ -24,35 +24,34 @@
     <bpmn:sequenceFlow id="Sequence_16" sourceRef="Upload" targetRef="End" />
   </bpmn:process>
   <bpmn:process id="Process_Checker" name="Проверяющий — AS-IS" isExecutable="false">
-    <bpmn:startEvent id="CheckerStart" name="Получено поручение по графику">
+    <bpmn:startEvent id="CheckerStart" name="Получено поручение по графику (ОПР / аудит)">
       <bpmn:messageEventDefinition id="MED_CheckerStart" />
     </bpmn:startEvent>
-    <bpmn:startEvent id="CheckerStartUnplanned" name="Инициирована внеплановая проверка" />
-    <bpmn:exclusiveGateway id="MergeStart" />
-    <bpmn:exclusiveGateway id="Gateway_CheckType" name="Вид проверки?" />
+    <bpmn:startEvent id="CheckerStartUnplanned" name="Проведение обхода территории (КПР)" />
     <bpmn:manualTask id="Print" name="Распечатать бумажный бланк контрольного листа (ОПР / аудит)" />
     <bpmn:manualTask id="Inspect" name="Провести проверку на объекте и заполнить бумажный бланк" />
     <bpmn:userTask id="PrepareWordExcel" name="Вручную оформить на рабочем месте в Word / Excel контрольный лист и итог проверки" />
     <bpmn:exclusiveGateway id="Risk" name="Выявлены нарушения (нужен Акт проверки)?" />
-    <bpmn:manualTask id="InspectKpr" name="Провести проверку (КПР) на объекте и зафиксировать нарушения" />
+    <bpmn:manualTask id="InspectKpr" name="Осмотреть участок / работы подрядчика (КПР — мероприятие, не документ)" />
+    <bpmn:exclusiveGateway id="KprHasViolations" name="Выявлены нарушения?" />
+    <bpmn:endEvent id="KprEndNoViolations" name="Документы и Акт не оформляются" />
     <bpmn:exclusiveGateway id="MergeBeforeAct" />
-    <bpmn:userTask id="Act" name="Вручную составить Акт проверки в Word (при необходимости — приостановка работ)" />
+    <bpmn:userTask id="Act" name="Вручную составить Акт проверки (Word / Excel; при необходимости — приостановка работ)" />
     <bpmn:exclusiveGateway id="MergeAct" />
     <bpmn:manualTask id="Sign" name="Распечатать и подписать документы на бумаге (при необходимости — у подрядчика)" />
     <bpmn:manualTask id="Scan" name="Отсканировать подписанные документы" />
     <bpmn:sendTask id="Send" name="Направить сканы и файлы аналитику «Октанта» (напрямую или через «Единое окно»)" />
     <bpmn:endEvent id="CheckerEnd" name="Документы переданы" />
-    <bpmn:sequenceFlow id="Flow_Checker_PlannedStart" sourceRef="CheckerStart" targetRef="MergeStart" />
-    <bpmn:sequenceFlow id="Flow_Checker_UnplannedStart" sourceRef="CheckerStartUnplanned" targetRef="MergeStart" />
-    <bpmn:sequenceFlow id="Flow_Checker_Start" sourceRef="MergeStart" targetRef="Gateway_CheckType" />
-    <bpmn:sequenceFlow id="Flow_Type_Planned" name="ОПР / аудит" sourceRef="Gateway_CheckType" targetRef="Print" />
-    <bpmn:sequenceFlow id="Flow_Type_Kpr" name="КПР" sourceRef="Gateway_CheckType" targetRef="InspectKpr" />
+    <bpmn:sequenceFlow id="Flow_Planned_Print" sourceRef="CheckerStart" targetRef="Print" />
+    <bpmn:sequenceFlow id="Flow_Kpr_Inspect" sourceRef="CheckerStartUnplanned" targetRef="InspectKpr" />
+    <bpmn:sequenceFlow id="Flow_Kpr_Check" sourceRef="InspectKpr" targetRef="KprHasViolations" />
+    <bpmn:sequenceFlow id="Flow_Kpr_No" name="Нет" sourceRef="KprHasViolations" targetRef="KprEndNoViolations" />
     <bpmn:sequenceFlow id="Sequence_03" sourceRef="Print" targetRef="Inspect" />
     <bpmn:sequenceFlow id="Flow_To_WordExcel" sourceRef="Inspect" targetRef="PrepareWordExcel" />
     <bpmn:sequenceFlow id="Sequence_10" sourceRef="PrepareWordExcel" targetRef="Risk" />
     <bpmn:sequenceFlow id="Sequence_11" name="Да" sourceRef="Risk" targetRef="MergeBeforeAct" />
     <bpmn:sequenceFlow id="Sequence_12" name="Нет" sourceRef="Risk" targetRef="MergeAct" />
-    <bpmn:sequenceFlow id="Flow_Kpr_Merge" sourceRef="InspectKpr" targetRef="MergeBeforeAct" />
+    <bpmn:sequenceFlow id="Flow_Kpr_Yes" name="Да" sourceRef="KprHasViolations" targetRef="MergeBeforeAct" />
     <bpmn:sequenceFlow id="Flow_To_Act" sourceRef="MergeBeforeAct" targetRef="Act" />
     <bpmn:sequenceFlow id="Sequence_13" sourceRef="Act" targetRef="MergeAct" />
     <bpmn:sequenceFlow id="Sequence_14" sourceRef="MergeAct" targetRef="Sign" />
@@ -140,26 +139,17 @@
       <bpmndi:BPMNShape id="CheckerStartUnplanned_di" bpmnElement="CheckerStartUnplanned">
         <dc:Bounds x="412" y="737" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="350" y="780" width="160" height="42" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="MergeStart_di" bpmnElement="MergeStart" isMarkerVisible="true">
-        <dc:Bounds x="535" y="575" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_CheckType_di" bpmnElement="Gateway_CheckType" isMarkerVisible="true">
-        <dc:Bounds x="665" y="575" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="728" y="586" width="95" height="28" />
+          <dc:Bounds x="345" y="780" width="155" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Print_di" bpmnElement="Print">
-        <dc:Bounds x="810" y="386" width="220" height="88" />
+        <dc:Bounds x="680" y="386" width="220" height="88" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Inspect_di" bpmnElement="Inspect">
-        <dc:Bounds x="1090" y="386" width="220" height="88" />
+        <dc:Bounds x="980" y="386" width="220" height="88" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="PrepareWordExcel_di" bpmnElement="PrepareWordExcel">
-        <dc:Bounds x="1370" y="386" width="230" height="88" />
+        <dc:Bounds x="1280" y="386" width="230" height="88" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Risk_di" bpmnElement="Risk" isMarkerVisible="true">
         <dc:Bounds x="1675" y="405" width="50" height="50" />
@@ -168,7 +158,19 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="InspectKpr_di" bpmnElement="InspectKpr">
-        <dc:Bounds x="980" y="711" width="240" height="88" />
+        <dc:Bounds x="680" y="711" width="240" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="KprHasViolations_di" bpmnElement="KprHasViolations" isMarkerVisible="true">
+        <dc:Bounds x="1030" y="730" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="975" y="788" width="160" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="KprEndNoViolations_di" bpmnElement="KprEndNoViolations">
+        <dc:Bounds x="1212" y="582" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1148" y="626" width="165" height="34" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="MergeBeforeAct_di" bpmnElement="MergeBeforeAct" isMarkerVisible="true">
         <dc:Bounds x="1675" y="575" width="50" height="50" />
@@ -194,46 +196,36 @@
           <dc:Bounds x="3046" y="544" width="104" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_Checker_PlannedStart_di" bpmnElement="Flow_Checker_PlannedStart">
+      <bpmndi:BPMNEdge id="Flow_Planned_Print_di" bpmnElement="Flow_Planned_Print">
         <di:waypoint x="448" y="430" />
-        <di:waypoint x="560" y="430" />
-        <di:waypoint x="560" y="575" />
+        <di:waypoint x="680" y="430" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Checker_UnplannedStart_di" bpmnElement="Flow_Checker_UnplannedStart">
+      <bpmndi:BPMNEdge id="Flow_Kpr_Inspect_di" bpmnElement="Flow_Kpr_Inspect">
         <di:waypoint x="448" y="755" />
-        <di:waypoint x="560" y="755" />
-        <di:waypoint x="560" y="625" />
+        <di:waypoint x="680" y="755" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Checker_Start_di" bpmnElement="Flow_Checker_Start">
-        <di:waypoint x="585" y="600" />
-        <di:waypoint x="665" y="600" />
+      <bpmndi:BPMNEdge id="Flow_Kpr_Check_di" bpmnElement="Flow_Kpr_Check">
+        <di:waypoint x="920" y="755" />
+        <di:waypoint x="1030" y="755" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Type_Planned_di" bpmnElement="Flow_Type_Planned">
-        <di:waypoint x="690" y="575" />
-        <di:waypoint x="690" y="430" />
-        <di:waypoint x="810" y="430" />
+      <bpmndi:BPMNEdge id="Flow_Kpr_No_di" bpmnElement="Flow_Kpr_No">
+        <di:waypoint x="1055" y="730" />
+        <di:waypoint x="1055" y="600" />
+        <di:waypoint x="1212" y="600" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="700" y="405" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Type_Kpr_di" bpmnElement="Flow_Type_Kpr">
-        <di:waypoint x="690" y="625" />
-        <di:waypoint x="690" y="755" />
-        <di:waypoint x="980" y="755" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="705" y="732" width="40" height="20" />
+          <dc:Bounds x="1064" y="645" width="28" height="18" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Sequence_03_di" bpmnElement="Sequence_03">
-        <di:waypoint x="1030" y="430" />
-        <di:waypoint x="1090" y="430" />
+        <di:waypoint x="900" y="430" />
+        <di:waypoint x="980" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_To_WordExcel_di" bpmnElement="Flow_To_WordExcel">
-        <di:waypoint x="1310" y="430" />
-        <di:waypoint x="1370" y="430" />
+        <di:waypoint x="1200" y="430" />
+        <di:waypoint x="1280" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Sequence_10_di" bpmnElement="Sequence_10">
-        <di:waypoint x="1600" y="430" />
+        <di:waypoint x="1510" y="430" />
         <di:waypoint x="1675" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Sequence_11_di" bpmnElement="Sequence_11">
@@ -251,10 +243,13 @@
           <dc:Bounds x="1950" y="408" width="26" height="16" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Kpr_Merge_di" bpmnElement="Flow_Kpr_Merge">
-        <di:waypoint x="1220" y="755" />
+      <bpmndi:BPMNEdge id="Flow_Kpr_Yes_di" bpmnElement="Flow_Kpr_Yes">
+        <di:waypoint x="1080" y="755" />
         <di:waypoint x="1700" y="755" />
         <di:waypoint x="1700" y="625" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1115" y="732" width="24" height="18" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_To_Act_di" bpmnElement="Flow_To_Act">
         <di:waypoint x="1725" y="600" />

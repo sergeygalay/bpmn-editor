@@ -5,35 +5,35 @@
     <bpmn:participant id="Participant_Checker" name="Проверяющий" processRef="Process_Checker" />
     <bpmn:participant id="Participant_App" name="МП «Суперника»" processRef="Process_App" />
     <bpmn:participant id="Participant_Octant" name="Система «Октант»" processRef="Process_Octant" />
-    <bpmn:messageFlow id="Message_Assignment" name="Формы, график и назначения" sourceRef="Assign" targetRef="OctStart" />
-    <bpmn:messageFlow id="Message_ReferenceData" name="Справочники, назначения и конфигурации форм (раз в сутки)" sourceRef="Provide" targetRef="SyncData" />
+    <bpmn:messageFlow id="Message_Assignment" name="Контрольные листы, график и назначения" sourceRef="Assign" targetRef="OctStart" />
+    <bpmn:messageFlow id="Message_ReferenceData" name="Справочники, назначения и контрольные листы (раз в сутки)" sourceRef="Provide" targetRef="SyncData" />
     <bpmn:messageFlow id="Message_OpenApp" name="Открытие МП (учётная запись)" sourceRef="Open" targetRef="AppOpenStart" />
-    <bpmn:messageFlow id="Message_List" name="Доступные виды проверок и список назначений" sourceRef="Available" targetRef="Open" />
+    <bpmn:messageFlow id="Message_List" name="Список назначений (ОПР, аудит) и фиксация КПР" sourceRef="Available" targetRef="Open" />
     <bpmn:messageFlow id="Message_ChooseAssigned" name="Выбрана назначенная проверка" sourceRef="Select" targetRef="Form" />
-    <bpmn:messageFlow id="Message_ChooseManual" name="Создана проверка без назначения (выбран вид)" sourceRef="Manual" targetRef="Form" />
-    <bpmn:messageFlow id="Message_ReadyForm" name="Отображаемая форма (ОПР / аудит)" sourceRef="Form" targetRef="Fill" />
-    <bpmn:messageFlow id="Message_ReadyFormKpr" name="Форма КПР" sourceRef="Form" targetRef="FillKpr" />
+    <bpmn:messageFlow id="Message_ChooseManual" name="Инициирована фиксация КПР (при нарушениях)" sourceRef="Manual" targetRef="Form" />
+    <bpmn:messageFlow id="Message_ReadyForm" name="Контрольный лист (ОПР / аудит)" sourceRef="Form" targetRef="Fill" />
+    <bpmn:messageFlow id="Message_ReadyFormKpr" name="Карточка фиксации нарушений КПР" sourceRef="Form" targetRef="FillKpr" />
     <bpmn:messageFlow id="Message_CheckFilled" name="Заполненный контрольный лист" sourceRef="Fill" targetRef="AppWaitResult" />
     <bpmn:messageFlow id="Message_ActViolations" name="Нарушения, отобранные в Акт" sourceRef="SelectViolationsForAct" targetRef="AppWaitResult" />
-    <bpmn:messageFlow id="Message_KprFilled" name="Заполненная форма КПР и нарушения" sourceRef="FillKpr" targetRef="AppWaitResult" />
+    <bpmn:messageFlow id="Message_KprFilled" name="Зафиксированные нарушения КПР (для Акта)" sourceRef="FillKpr" targetRef="AppWaitResult" />
     <bpmn:messageFlow id="Message_NotPerformed" name="Отметка «Работа не проводится» и комментарий" sourceRef="NotWork" targetRef="AppWaitResult" />
-    <bpmn:messageFlow id="Message_Outcome" name="Расчётный итог и предпросмотр PDF" sourceRef="Calculate" targetRef="Record" />
+    <bpmn:messageFlow id="Message_Outcome" name="Расчётный итог и предпросмотр" sourceRef="Calculate" targetRef="Record" />
     <bpmn:messageFlow id="Message_Confirm" name="Нажатие «Отправить»" sourceRef="Record" targetRef="AppWaitConfirm" />
-    <bpmn:messageFlow id="Message_ExportPdf" name="Файлы PDF (контрольный лист и/или Акт)" sourceRef="Save" targetRef="ExportAndSignAct" />
-    <bpmn:messageFlow id="Message_Result" name="Результаты проверки (печатные формы, вложения)" sourceRef="Send" targetRef="OctResultStart" />
+    <bpmn:messageFlow id="Message_ExportPdf" name="Файлы Excel (.xlsx / .xls): контрольный лист и (при нарушениях) Акт" sourceRef="Save" targetRef="ExportAndSignAct" />
+    <bpmn:messageFlow id="Message_Result" name="Результаты проверки (JSON, файлы Excel, вложения)" sourceRef="Send" targetRef="OctResultStart" />
     <bpmn:messageFlow id="Message_BellNotify" name="Уведомление «колокольчик»" sourceRef="OctNotifyBell" targetRef="AnalystNotifyStart" />
-    <bpmn:messageFlow id="Message_TransferAll" name="Привязка к графику и «Перенести всё»" sourceRef="AnalystTransferAll" targetRef="OctWaitTransfer" />
+    <bpmn:messageFlow id="Message_TransferAll" name="Подтверждение разбора («Перенести всё»)" sourceRef="AnalystTransferAll" targetRef="OctWaitTransfer" />
   </bpmn:collaboration>
   <bpmn:process id="Process_Window" name="Аналитик «Октанта» — TO-BE" isExecutable="false">
     <bpmn:startEvent id="Start" name="Необходима настройка форм или планирование проверок" />
-    <bpmn:userTask id="ConfigureForms" name="Настроить / отредактировать контрольные листы (ОПР, аудит) и формы КПР в «Октанте»" />
+    <bpmn:userTask id="ConfigureForms" name="Настроить / отредактировать контрольные листы (ОПР, аудит) в «Октанте»" />
     <bpmn:userTask id="Organize" name="Запланировать график проверок (ОПР, аудит) в «Октанте»" />
     <bpmn:userTask id="Assign" name="Назначить ответственных проверяющих" />
     <bpmn:endEvent id="WindowEnd" name="Формы и назначения сохранены в «Октанте»" />
     <bpmn:startEvent id="AnalystNotifyStart" name="Уведомление («колокольчик») о новых проверках">
       <bpmn:messageEventDefinition id="MED_AnalystNotifyStart" />
     </bpmn:startEvent>
-    <bpmn:userTask id="AnalystReview" name="Просмотреть входящие и при необходимости привязать проверки без назначения к графику" />
+    <bpmn:userTask id="AnalystReview" name="Просмотреть входящие результаты проверок (при необходимости прикрепить скан подписанного Акта)" />
     <bpmn:userTask id="AnalystTransferAll" name="Нажать «Перенести всё» для сохранения в журнал" />
     <bpmn:endEvent id="AnalystEnd" name="Результаты перенесены в журнал" />
     <bpmn:sequenceFlow id="Flow_Window_0" sourceRef="Start" targetRef="ConfigureForms" />
@@ -45,36 +45,31 @@
     <bpmn:sequenceFlow id="Flow_Analyst_3" sourceRef="AnalystTransferAll" targetRef="AnalystEnd" />
   </bpmn:process>
   <bpmn:process id="Process_Checker" name="Проверяющий — TO-BE" isExecutable="false">
-    <bpmn:startEvent id="CheckerStart" name="Необходима проверка (ОПР, аудит или КПР)" />
+    <bpmn:startEvent id="CheckerStart" name="Необходима проверка (ОПР, аудит по графику или КПР при нарушениях)" />
     <bpmn:userTask id="Open" name="Открыть МП в «Супернике»" />
-    <bpmn:exclusiveGateway id="HasAssignment" name="Проверка из календаря назначений?" />
+    <bpmn:exclusiveGateway id="HasAssignment" name="Плановая проверка по календарю (ОПР / аудит)?" />
     <bpmn:userTask id="Select" name="Выбрать назначенную проверку (ОПР / аудит)" />
     <bpmn:exclusiveGateway id="CanCheck" name="Работы на объекте ведутся?" />
     <bpmn:userTask id="NotWork" name="Отметить «Работа не проводится» и заполнить обязательный комментарий" />
-    <bpmn:userTask id="Manual" name="Создать проверку без назначения, выбрать вид и заполнить реквизиты шапки (вкл. ФИО проверяемого)" />
-    <bpmn:exclusiveGateway id="IsKprGateway" name="Вид проверки — КПР?" />
-    <bpmn:exclusiveGateway id="MergeBeforeFill" />
+    <bpmn:userTask id="Manual" name="Инициировать фиксацию КПР (только при выявлении нарушений)" />
     <bpmn:userTask id="Fill" name="Заполнить контрольный лист (ОПР / аудит), примечания и вложения (доступен офлайн-черновик)" />
-    <bpmn:userTask id="FillKpr" name="Внести нарушения КПР, состав комиссии и вложения" />
-    <bpmn:exclusiveGateway id="HasViolations" name="Выявлены нарушения?" />
-    <bpmn:userTask id="SelectViolationsForAct" name="Отобрать нарушения из контрольного листа в Акт проверки и детализировать описание" />
+    <bpmn:userTask id="FillKpr" name="Заполнить реквизиты КПР (вкл. ФИО проверяемого), состав комиссии, нарушения и вложения" />
+    <bpmn:exclusiveGateway id="HasViolations" name="Выявлены нарушения (нужен Акт проверки)?" />
+    <bpmn:userTask id="SelectViolationsForAct" name="Сформировать состав нарушений для Акта (ОПР — все, аудит — отобранные) и детализировать описание" />
     <bpmn:exclusiveGateway id="MergeOutcome" />
-    <bpmn:userTask id="Record" name="Просмотреть итог / предпросмотр PDF (при проведении) и нажать «Отправить»" />
-    <bpmn:exclusiveGateway id="NeedPaperSign" name="Требуется выгрузка PDF / подписание на бумаге?" />
-    <bpmn:userTask id="ExportAndSignAct" name="Выгрузить PDF (контрольный лист и/или Акт проверки) и при необходимости подписать на бумаге" />
+    <bpmn:userTask id="Record" name="Просмотреть итог / предпросмотр (при проведении) и нажать «Отправить»" />
+    <bpmn:exclusiveGateway id="NeedPaperSign" name="Требуется выгрузка Excel (.xlsx / .xls) / подписание на бумаге?" />
+    <bpmn:userTask id="ExportAndSignAct" name="Выгрузить Excel (.xlsx / .xls) (контрольный лист и при нарушениях — Акт) и при необходимости подписать на бумаге" />
     <bpmn:exclusiveGateway id="MergeCheckerEnd" />
     <bpmn:endEvent id="CheckerEnd" name="Проверка завершена" />
     <bpmn:sequenceFlow id="Flow_Checker_1" sourceRef="CheckerStart" targetRef="Open" />
     <bpmn:sequenceFlow id="Flow_Checker_2" sourceRef="Open" targetRef="HasAssignment" />
-    <bpmn:sequenceFlow id="Flow_Checker_3" name="Да" sourceRef="HasAssignment" targetRef="Select" />
-    <bpmn:sequenceFlow id="Flow_Checker_4" name="Нет (КПР или внеплановая)" sourceRef="HasAssignment" targetRef="Manual" />
+    <bpmn:sequenceFlow id="Flow_Checker_3" name="Да (ОПР / аудит)" sourceRef="HasAssignment" targetRef="Select" />
+    <bpmn:sequenceFlow id="Flow_Checker_4" name="Нет (КПР при нарушениях)" sourceRef="HasAssignment" targetRef="Manual" />
     <bpmn:sequenceFlow id="Flow_Checker_5" sourceRef="Select" targetRef="CanCheck" />
-    <bpmn:sequenceFlow id="Flow_Checker_6" name="Да" sourceRef="CanCheck" targetRef="MergeBeforeFill" />
+    <bpmn:sequenceFlow id="Flow_Checker_6" name="Да" sourceRef="CanCheck" targetRef="Fill" />
     <bpmn:sequenceFlow id="Flow_Checker_7" name="Нет" sourceRef="CanCheck" targetRef="NotWork" />
-    <bpmn:sequenceFlow id="Flow_Checker_ManualFlow" sourceRef="Manual" targetRef="IsKprGateway" />
-    <bpmn:sequenceFlow id="Flow_Checker_8" name="Нет (ОПР / аудит)" sourceRef="IsKprGateway" targetRef="MergeBeforeFill" />
-    <bpmn:sequenceFlow id="Flow_Checker_ManualKpr" name="Да (КПР)" sourceRef="IsKprGateway" targetRef="FillKpr" />
-    <bpmn:sequenceFlow id="Flow_Checker_ToFill" sourceRef="MergeBeforeFill" targetRef="Fill" />
+    <bpmn:sequenceFlow id="Flow_Checker_ManualFlow" sourceRef="Manual" targetRef="FillKpr" />
     <bpmn:sequenceFlow id="Flow_Fill_Violations" sourceRef="Fill" targetRef="HasViolations" />
     <bpmn:sequenceFlow id="Flow_Violations_Yes" name="Да" sourceRef="HasViolations" targetRef="SelectViolationsForAct" />
     <bpmn:sequenceFlow id="Flow_Violations_No" name="Нет" sourceRef="HasViolations" targetRef="MergeOutcome" />
@@ -92,19 +87,19 @@
     <bpmn:startEvent id="AppStart" name="Ночная синхронизация (раз в сутки)">
       <bpmn:timerEventDefinition id="TimerEventDefinition_05gyqv1" />
     </bpmn:startEvent>
-    <bpmn:serviceTask id="SyncData" name="Ежесуточно (в ночное время) загрузить справочники, назначения и конфигурации форм" />
+    <bpmn:serviceTask id="SyncData" name="Ежесуточно (в ночное время) загрузить справочники, назначения (ОПР, аудит) и конфигурации контрольных листов" />
     <bpmn:endEvent id="AppSyncEnd" name="Данные синхронизированы" />
     <bpmn:startEvent id="AppOpenStart" name="Открытие МП пользователем">
       <bpmn:messageEventDefinition id="MED_AppOpenStart" />
     </bpmn:startEvent>
     <bpmn:serviceTask id="Available" name="Идентифицировать проверяющего (БЕ, таб. №) и показать назначения" />
-    <bpmn:serviceTask id="Form" name="Динамически отобразить форму (ОПР, аудит, КПР)" />
-    <bpmn:receiveTask id="AppWaitResult" name="Получить заполненную форму, отобранные для Акта нарушения или отметку «Работа не проводится»" />
+    <bpmn:serviceTask id="Form" name="Динамически отобразить контрольный лист (ОПР, аудит) или карточку фиксации нарушений КПР" />
+    <bpmn:receiveTask id="AppWaitResult" name="Получить заполненный контрольный лист, нарушения для Акта (вкл. КПР) или отметку «Работа не проводится»" />
     <bpmn:exclusiveGateway id="AppIsNotWork" name="Отметка «Работа не проводится»?" />
-    <bpmn:serviceTask id="Calculate" name="Рассчитать результат проверки и сформировать PDF контрольного листа и/или единого Акта проверки" />
+    <bpmn:serviceTask id="Calculate" name="Рассчитать результат проверки и сформировать Excel (.xlsx / .xls) контрольного листа и (при нарушениях) Акта" />
     <bpmn:exclusiveGateway id="MergeAppBeforeConfirm" />
     <bpmn:receiveTask id="AppWaitConfirm" name="Получить подтверждение («Отправить») и заблокировать редактирование" />
-    <bpmn:serviceTask id="Save" name="Сохранить проверку и сформировать файлы PDF (контрольный лист и/или Акт проверки) для выгрузки" />
+    <bpmn:serviceTask id="Save" name="Сохранить проверку и сформировать файлы Excel (.xlsx / .xls) (контрольный лист и при нарушениях — Акт)" />
     <bpmn:exclusiveGateway id="Network" name="Есть связь?" />
     <bpmn:task id="OfflineWait" name="Сохранить в очереди отправки" />
     <bpmn:intermediateCatchEvent id="WaitConnection" name="Связь восстановлена и МП открыто">
@@ -113,7 +108,7 @@
       </bpmn:conditionalEventDefinition>
     </bpmn:intermediateCatchEvent>
     <bpmn:exclusiveGateway id="MergeNetwork" />
-    <bpmn:sendTask id="Send" name="Выгрузить результаты проверки (печатные формы, вложения) в сетевую папку «Октанта»" />
+    <bpmn:sendTask id="Send" name="Выгрузить результаты проверки (JSON, файлы Excel, вложения) в сетевую папку «Октанта»" />
     <bpmn:endEvent id="AppEnd" name="Результат передан в сетевую папку" />
     <bpmn:sequenceFlow id="Flow_App_0" sourceRef="AppStart" targetRef="SyncData" />
     <bpmn:sequenceFlow id="Flow_App_SyncEnd" sourceRef="SyncData" targetRef="AppSyncEnd" />
@@ -135,18 +130,18 @@
     <bpmn:sequenceFlow id="Flow_App_10" sourceRef="Send" targetRef="AppEnd" />
   </bpmn:process>
   <bpmn:process id="Process_Octant" name="Октант — TO-BE" isExecutable="false">
-    <bpmn:startEvent id="OctStart" name="Сохранены формы и назначения">
+    <bpmn:startEvent id="OctStart" name="Сохранены контрольные листы и назначения">
       <bpmn:messageEventDefinition id="MED_OctStart" />
     </bpmn:startEvent>
-    <bpmn:task id="OctSaveAssignment" name="Сохранить конфигурации контрольных листов (ОПР, аудит), форм КПР и график проверок" />
-    <bpmn:sendTask id="Provide" name="Предоставить в сетевой папке справочники, формы и назначения" />
+    <bpmn:task id="OctSaveAssignment" name="Сохранить конфигурации контрольных листов (ОПР, аудит) и график проверок" />
+    <bpmn:sendTask id="Provide" name="Предоставить в сетевой папке справочники, контрольные листы и назначения" />
     <bpmn:endEvent id="OctAppointmentEnd" name="Данные выгружены для синхронизации" />
     <bpmn:startEvent id="OctResultStart" name="Получены результаты проверки в сетевой папке">
       <bpmn:messageEventDefinition id="MED_OctResultStart" />
     </bpmn:startEvent>
     <bpmn:sendTask id="OctNotifyBell" name="Показать уведомление («колокольчик») о поступивших проверках подразделения" />
     <bpmn:receiveTask id="OctWaitTransfer" name="Получить подтверждение разбора («Перенести всё»)" />
-    <bpmn:task id="OctStore" name="Внести результаты, печатные формы и вложения в журнал проверок «Октанта»" />
+    <bpmn:task id="OctStore" name="Внести результаты (JSON), файлы Excel и вложения в журнал проверок «Октанта»" />
     <bpmn:endEvent id="OctEnd" name="Результат учтён в журнале «Октанта»" />
     <bpmn:sequenceFlow id="Flow_Octant_1" sourceRef="OctStart" targetRef="OctSaveAssignment" />
     <bpmn:sequenceFlow id="Flow_Octant_2" sourceRef="OctSaveAssignment" targetRef="Provide" />
@@ -237,7 +232,7 @@
       <bpmndi:BPMNShape id="CheckerStart_di" bpmnElement="CheckerStart">
         <dc:Bounds x="1632" y="577" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1575" y="620" width="150" height="42" />
+          <dc:Bounds x="1565" y="620" width="170" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Open_di" bpmnElement="Open">
@@ -246,7 +241,7 @@
       <bpmndi:BPMNShape id="HasAssignment_di" bpmnElement="HasAssignment" isMarkerVisible="true">
         <dc:Bounds x="2045" y="570" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1975" y="512" width="95" height="42" />
+          <dc:Bounds x="1950" y="494" width="110" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Select_di" bpmnElement="Select">
@@ -264,15 +259,6 @@
       <bpmndi:BPMNShape id="Manual_di" bpmnElement="Manual">
         <dc:Bounds x="2170" y="667" width="225" height="86" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="IsKprGateway_di" bpmnElement="IsKprGateway" isMarkerVisible="true">
-        <dc:Bounds x="2455" y="685" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2428" y="742" width="112" height="28" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="MergeBeforeFill_di" bpmnElement="MergeBeforeFill" isMarkerVisible="true">
-        <dc:Bounds x="2625" y="480" width="50" height="50" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Fill_di" bpmnElement="Fill">
         <dc:Bounds x="2760" y="461" width="225" height="88" />
       </bpmndi:BPMNShape>
@@ -282,7 +268,7 @@
       <bpmndi:BPMNShape id="HasViolations_di" bpmnElement="HasViolations" isMarkerVisible="true">
         <dc:Bounds x="3055" y="480" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="3015" y="444" width="130" height="28" />
+          <dc:Bounds x="3005" y="428" width="150" height="44" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="SelectViolationsForAct_di" bpmnElement="SelectViolationsForAct">
@@ -297,7 +283,7 @@
       <bpmndi:BPMNShape id="NeedPaperSign_di" bpmnElement="NeedPaperSign" isMarkerVisible="true">
         <dc:Bounds x="4225" y="570" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="4175" y="628" width="150" height="42" />
+          <dc:Bounds x="4168" y="628" width="166" height="46" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExportAndSignAct_di" bpmnElement="ExportAndSignAct">
@@ -326,7 +312,7 @@
         <di:waypoint x="2070" y="505" />
         <di:waypoint x="2170" y="505" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2095" y="485" width="22" height="16" />
+          <dc:Bounds x="2078" y="468" width="90" height="32" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Checker_4_di" bpmnElement="Flow_Checker_4">
@@ -334,7 +320,7 @@
         <di:waypoint x="2070" y="710" />
         <di:waypoint x="2170" y="710" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1950" y="662" width="110" height="28" />
+          <dc:Bounds x="1946" y="652" width="114" height="34" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Checker_5_di" bpmnElement="Flow_Checker_5">
@@ -343,9 +329,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Checker_6_di" bpmnElement="Flow_Checker_6">
         <di:waypoint x="2505" y="505" />
-        <di:waypoint x="2625" y="505" />
+        <di:waypoint x="2760" y="505" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2550" y="485" width="22" height="16" />
+          <dc:Bounds x="2610" y="480" width="24" height="18" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Checker_7_di" bpmnElement="Flow_Checker_7">
@@ -358,27 +344,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Checker_ManualFlow_di" bpmnElement="Flow_Checker_ManualFlow">
         <di:waypoint x="2395" y="710" />
-        <di:waypoint x="2455" y="710" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Checker_8_di" bpmnElement="Flow_Checker_8">
-        <di:waypoint x="2480" y="685" />
-        <di:waypoint x="2480" y="595" />
-        <di:waypoint x="2650" y="595" />
-        <di:waypoint x="2650" y="530" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2495" y="572" width="120" height="16" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Checker_ManualKpr_di" bpmnElement="Flow_Checker_ManualKpr">
-        <di:waypoint x="2505" y="710" />
         <di:waypoint x="2760" y="710" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2585" y="688" width="60" height="16" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Checker_ToFill_di" bpmnElement="Flow_Checker_ToFill">
-        <di:waypoint x="2675" y="505" />
-        <di:waypoint x="2760" y="505" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Fill_Violations_di" bpmnElement="Flow_Fill_Violations">
         <di:waypoint x="2985" y="505" />
@@ -716,7 +682,7 @@
         <di:waypoint x="1940" y="986" />
         <di:waypoint x="1940" y="639" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1952" y="852" width="175" height="30" />
+          <dc:Bounds x="1950" y="838" width="170" height="44" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_ChooseAssigned_di" bpmnElement="Message_ChooseAssigned">
@@ -752,7 +718,7 @@
         <di:waypoint x="2735" y="730" />
         <di:waypoint x="2760" y="730" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2746" y="856" width="84" height="24" />
+          <dc:Bounds x="2744" y="844" width="120" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_KprFilled_di" bpmnElement="Message_KprFilled">
@@ -812,7 +778,7 @@
         <di:waypoint x="4385" y="986" />
         <di:waypoint x="4385" y="639" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="4398" y="852" width="175" height="30" />
+          <dc:Bounds x="4398" y="840" width="200" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Message_Result_di" bpmnElement="Message_Result">
